@@ -10,6 +10,10 @@
 
     </a>
 
+    <a href="/post" style="color: white">
+      <strong>POST</strong>
+    </a>
+
     @if(Auth::check())
     <div class="ml-auto">
       <strong style="color: white;">{{ Auth::user()->name}}</strong>
@@ -25,8 +29,8 @@
     <div class="ml-auto">
       <a href="/login">
         <strong style="color: white;">LOGIN</strong>
-      </a> 
-       <a href="/register">
+      </a>
+      <a href="/register">
         <strong style="color: white;">REGISTER</strong>
       </a>
     </div>

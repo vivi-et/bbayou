@@ -9,14 +9,17 @@ use Illuminate\Support\Facades\Route;
 //     });
 
 Route::get('/', 'HomeController@index')->name('home');
-
-// Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/post/create', 'PostController@create');
-Route::get('/post', 'PostController@index');
-Route::get('/post/{post}', 'PostController@show');
-Route::post('/post', 'PostController@store');
 Route::post('/post/{post}/comment', 'CommentController@store');
+Route::resource('/post', 'PostController');
+
+// // Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/post/create', 'PostController@create');
+// Route::get('/post', 'PostController@index');
 // Route::get('/post/{post}', 'PostController@show');
+// Route::delete('/post/{post}', 'PostController@destroy');
+// Route::post('/post', 'PostController@store');
+// Route::get('/post/{post}/edit', 'PostController@edit');
+// Route::post('/post/{post}/edit', 'PostController@update');
 
 Auth::routes();
 

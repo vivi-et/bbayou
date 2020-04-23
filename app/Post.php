@@ -28,4 +28,9 @@ class Post extends Model
         // $this->comments() = all this post's comments
         $this->comments()->create(compact('body'));
     }
+
+    public function tags()
+    {
+        return $this->belongsTo(Tag::class);
+    }
 }

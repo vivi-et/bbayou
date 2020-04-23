@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.6">
-    <title>Album example · Bootstrap</title>
+    <title>{{ config('app.name', '빠유') }}</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/album/">
 
@@ -44,13 +44,12 @@
 
 
         textarea {
-        resize: none;
-    }
+            resize: none;
+        }
 
-    textarea.body {
-        height: 10em;
-    }
-    
+        textarea.body {
+            height: 10em;
+        }
     </style>
     <!-- Custom styles for this template -->
     <link href="/css/album.css" rel="stylesheet">
@@ -58,8 +57,8 @@
 
 <body>
 
-    
-    
+
+
     <header>
         <div class="collapse bg-dark" id="navbarHeader">
             <div class="container">
@@ -69,25 +68,26 @@
                         <p class="text-muted">Add some information about the album below, the author, or any other
                             background context. Make it a few sentences long so folks can pick up some informative
                             tidbits. Then, link them off to some social networking sites or contact information.</p>
-                        </div>
-                        <div class="col-sm-4 offset-md-1 py-4">
-                            <h4 class="text-white">Contact</h4>
-                            <ul class="list-unstyled">
-                                <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                                <li><a href="#" class="text-white">Like on Facebook</a></li>
-                                <li><a href="#" class="text-white">Email me</a></li>
-                            </ul>
-                        </div>
+                    </div>
+                    <div class="col-sm-4 offset-md-1 py-4">
+                        <h4 class="text-white">Contact</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-white">Follow on Twitter</a></li>
+                            <li><a href="#" class="text-white">Like on Facebook</a></li>
+                            <li><a href="#" class="text-white">Email me</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            
-            @include('layouts.navbar')
+        </div>
 
-           <div class="alert-success">
-               {{ session('message') }}
-           </div>
+        @include('layouts.navbar')
 
+        @if($flash = session('message'))
+        <div class="alert alert-success" role="alert">
+            {{ $flash }}
+        </div>
+        @endif
 
 
     </header>

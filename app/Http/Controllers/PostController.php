@@ -13,7 +13,7 @@ class PostController extends Controller
     {
         $this->middleware('auth')->except(['index', 'show']);
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -57,20 +57,22 @@ class PostController extends Controller
 
         // $post->save();
 
-            $this->validate(request(),[
-            'title'=>'required|max:10', // 최대 10글자
-            'body'=>'required'
+        $this->validate(request(), [
+            'title' => 'required|max:10', // 최대 10글자
+            'body' => 'required'
         ]);
 
         //Post::create(request(['title','body']));
         //auth()->user()->publish(new Post(request([title',body'])));
         Post::create([
             'title' => request('title'),
-            'body'=> request('body'),
-            'user_id'=> auth()->id(),
+            'body' => request('body'),
+            'user_id' => auth()->id(),
 
             //auto saved!
         ]);
+
+        session()->flash('message', 'Post Created!');
 
         return redirect('/');
 
@@ -102,6 +104,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         // GET /tasks/id/edit
+        return view('post.edit', compact('post'));
     }
 
     /**
@@ -114,6 +117,29 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         // PATCH /tasks/id
+
+        $this->validate(request(), [
+            'title' => 'required|max:10', // 최대 10글자
+            'body' => 'required'
+        ]);
+
+        $post->update($request->all());
+
+
+        // $post->title = $request->input('title');
+        // $post->body = $request->input('body');
+        // $post->save();
+
+
+        // $update = Post::find($post->id);
+
+        // Post::create([
+        //     'title' => request('title'),
+        //     'body'=> request('body'),
+        //     'user_id'=> auth()->id(),
+        // ]);
+
+        return redirect('/post');
     }
 
     /**
@@ -125,5 +151,10 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         // DELETE /tasks/id
+
+        $post->delete();
+        
+
+        return redirect('/post');
     }
 }

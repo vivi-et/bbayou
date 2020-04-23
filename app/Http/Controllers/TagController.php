@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Post;
-use App\Comment;
+use App\tag;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,27 +33,18 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Post $post)
+    public function store(Request $request)
     {
-
-        $this->validate(request(), ['body' => 'required|min:3']);
-        // $post->addComment(request('body'));
-
-        Comment::create([
-            'user_id' => auth()->id(),
-            'post_id' => $post->id,
-            'body' => request('body'),
-        ]);
-        return back();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(tag $tag)
     {
         //
     }
@@ -63,10 +52,10 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(tag $tag)
     {
         //
     }
@@ -75,10 +64,10 @@ class CommentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, tag $tag)
     {
         //
     }
@@ -86,13 +75,11 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(tag $tag)
     {
-        $comment->delete();
-        
-        return redirect('/post');
+        //
     }
 }

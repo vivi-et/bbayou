@@ -1,7 +1,17 @@
 @extends('layouts.master')
 
+@if($flash = session('message'))
+<div class="alert alert-success" role="alert">
+    {{ $flash }}
+</div>
+@endif
+
 
 @section('content')
+
+<a href="/post/create">
+    <button class="btn btn-primary">CREATE</button>
+</a>
 
 
 <main role="main">
