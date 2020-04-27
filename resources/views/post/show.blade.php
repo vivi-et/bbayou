@@ -23,6 +23,8 @@
             href="#">{{ $post->user->name }}</a></p>
 
 
+    <img src="/storage/cover_images/{{ $post->cover_image }}"
+
     <hr>
     {{$post->body}}
     <br>

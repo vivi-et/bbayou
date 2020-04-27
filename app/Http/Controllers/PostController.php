@@ -58,24 +58,14 @@ class PostController extends Controller
         // $post->save();
 
         $this->validate(request(), [
-            'title' => 'required|max:10', // 최대 10글자
+            'title' => 'required|max:20', // 최대 10글자
             'body' => 'required',
             'cover_image' => 'image|nullable|max:1999'
         ]);
 
-        //Post::create(request(['title','body']));
-        //auth()->user()->publish(new Post(request([title',body'])));
-        Post::create([
-            'title' => request('title'),
-            'body' => request('body'),
-            'user_id' => auth()->id(),
-
-            //auto saved!
-        ]);
 
         session()->flash('message', 'Post Created!');
 
-        return redirect('/');
 
         // server side validation (null 체크 등)
         // $this->validate(request(),[
@@ -88,21 +78,34 @@ class PostController extends Controller
 
             //Get Filename with extension
 
-            $filenameWithExt = $request->file('cover_image')->getClientOriginalImage();
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
 
             // Get just filename
-            $filename = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             // Get just extension
             $extension = $request->file('cover_image')->getClientOriginalExtension();
 
             //Filename to store
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
             //Upload Image
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
-            
         } else {
             $fileNameToStore = 'noimage.jpg';
         }
+
+
+        //Post::create(request(['title','body']));
+        //auth()->user()->publish(new Post(request([title',body'])));
+        Post::create([
+            'title' => request('title'),
+            'body' => request('body'),
+            'user_id' => auth()->id(),
+            'cover_image' => $fileNameToStore,
+
+            //auto saved!
+        ]);
+
+        return redirect('/');
     }
 
     /**
@@ -138,14 +141,45 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        if (auth()->user()->id !== $post->user_id) {
+            return redirect('/posts')->withErrors('error', 'Unauthorized Page');
+        }
         // PATCH /tasks/id
 
         $this->validate(request(), [
-            'title' => 'required|max:10', // 최대 10글자
+            'title' => 'required|max:20', // 최대 10글자
             'body' => 'required'
         ]);
 
+        //Handle file upload
+        if ($request->hasFile('cover_image')) {
+
+            //Get Filename with extension
+
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
+
+            //Filename to store
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+            //Upload Image
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+
+        }
+        
+        
+        
         $post->update($request->all());
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->cover_image = $fileNameToStore;
+        $post->save();
+
+        return redirect('/post');
+        // $post->update($request->all());
 
 
         // $post->title = $request->input('title');
@@ -161,7 +195,6 @@ class PostController extends Controller
         //     'user_id'=> auth()->id(),
         // ]);
 
-        return redirect('/post');
     }
 
     /**
@@ -177,6 +210,6 @@ class PostController extends Controller
         $post->delete();
 
 
-        return redirect('/post');
+        return redirect('/');
     }
 }

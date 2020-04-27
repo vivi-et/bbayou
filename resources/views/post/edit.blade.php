@@ -6,12 +6,12 @@
     Edit Post
 </h1>
 
-<form method="POST" action="/post/{{ $post->id }}">
-    {{ csrf_field() }}
-     @method('PATCH') 
-    <div class="form-group">
-        <label for="exampleInputEmail1">Title</label>
-        <textarea type="text" class="form-control" name="title">{{$post->title}}</textarea>
+<form method="POST" action="/post/{{ $post->id }}" enctype="multipart/form-data">
+    @csrf
+     @method('PUT') 
+    <div class=" form-group">
+    <label for="exampleInputEmail1">Title</label>
+    <textarea type="text" class="form-control" name="title">{{$post->title}}</textarea>
     </div>
 
     <div class="form-group">
@@ -21,7 +21,7 @@
 
     <div class="form-group">
         <label for="exampleInputFile">File input</label>
-        <input type="file" id="exampleInputFile">
+        <input type="file" id="exampleInputFile" name='cover_image'>
         <p class="help-block">Example block-level help text here.</p>
     </div>
 

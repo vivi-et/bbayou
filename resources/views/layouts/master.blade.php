@@ -93,6 +93,7 @@
     </header>
 
     <div class="container">
+        <br>
         @yield('content')
     </div>
     @include('layouts.footer')

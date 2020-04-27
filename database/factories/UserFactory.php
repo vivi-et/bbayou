@@ -35,7 +35,9 @@ $factory->define(User::class, function (Faker $faker) {
 $factory->define(App\Post::class, function (Faker $faker) {
     return [
         'title' => $faker->sentence(1),
-        'body' => $faker->sentence(5)
+        'body' => $faker->sentence(5),
+        'user_id'=>$faker->randomDigit(1,10)+1,
+        'cover_image'=> 'noimage.jpg'
 
     ];
 });

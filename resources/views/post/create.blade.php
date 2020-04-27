@@ -6,7 +6,7 @@
     Create a Post
 </h1>
 
-<form method="POST" action="/post" enctype="multipart/data">
+<form method="POST" action="/post" enctype="multipart/form-data">
     {{ csrf_field() }}
     <div class="form-group">
         <label for="exampleInputEmail1">Title</label>
