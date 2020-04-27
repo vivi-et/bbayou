@@ -59,7 +59,8 @@ class PostController extends Controller
 
         $this->validate(request(), [
             'title' => 'required|max:10', // 최대 10글자
-            'body' => 'required'
+            'body' => 'required',
+            'cover_image' => 'image|nullable|max:1999'
         ]);
 
         //Post::create(request(['title','body']));
@@ -81,6 +82,27 @@ class PostController extends Controller
         //     'title'=>'required|max:10', // 최대 10글자
         //     'body'=>'required'
         // ]);
+
+        //Handle file upload
+        if ($request->hasFile('cover_image')) {
+
+            //Get Filename with extension
+
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalImage();
+
+            // Get just filename
+            $filename = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
+
+            //Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            //Upload Image
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            
+        } else {
+            $fileNameToStore = 'noimage.jpg';
+        }
     }
 
     /**
@@ -153,7 +175,7 @@ class PostController extends Controller
         // DELETE /tasks/id
 
         $post->delete();
-        
+
 
         return redirect('/post');
     }

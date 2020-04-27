@@ -6,7 +6,7 @@
     Create a Post
 </h1>
 
-<form method="POST" action="/post">
+<form method="POST" action="/post" enctype="multipart/data">
     {{ csrf_field() }}
     <div class="form-group">
         <label for="exampleInputEmail1">Title</label>
@@ -20,7 +20,7 @@
 
     <div class="form-group">
         <label for="exampleInputFile">File input</label>
-        <input type="file" id="exampleInputFile">
+        <input type="file" id="exampleInputFile" name='cover_image'>
         <p class="help-block">Example block-level help text here.</p>
     </div>
 

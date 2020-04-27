@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Route;
 //         return view('welcome');
 //     });
 
+Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::post('/post/{post}/comment', 'CommentController@store');
-Route::resource('/post', 'PostController');
 
 // // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/post/create', 'PostController@create');
@@ -21,7 +21,7 @@ Route::resource('/post', 'PostController');
 // Route::get('/post/{post}/edit', 'PostController@edit');
 // Route::post('/post/{post}/edit', 'PostController@update');
 
-Auth::routes();
+Route::resource('/post', 'PostController');
 
 // Route::get('/register', 'RegisterController@create');
 // Route::post('/register', 'RegisterController@store');
