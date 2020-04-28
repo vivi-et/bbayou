@@ -16,10 +16,12 @@
 
     @if(Auth::check())
     <div class="ml-auto">
-      <strong style="color: white;">{{ Auth::user()->name}}</strong>
+      <strong style="color: white;">{{ Auth::user()->name}}님 안녕하세요!</strong>
+  
+
 
       <a href="/logout">
-        <strong style="color: white;">LOGOUT</strong>
+        <strong style="color: #FEE715FF; margin-left:30px">LOGOUT</strong>
       </a>
       {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

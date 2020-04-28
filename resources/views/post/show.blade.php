@@ -19,13 +19,15 @@
 <br>
 <div class="col-sm-8 blog-main">
     <h2 class="blog-post-title">{{$post->title}}</h2>
+    <br>
     <p class="blog-post-meta"> {{ $post -> created_at->toFormattedDateString() }} <a
             href="#">{{ $post->user->name }}</a></p>
+<br>
 
+    <img class="center" src="/storage/cover_images/{{ $post->cover_image }}">
 
-    <img src="/storage/cover_images/{{ $post->cover_image }}"
-
-    <hr>
+    <br>
+    <br>
     {{$post->body}}
     <br>
     <hr>
@@ -134,3 +136,12 @@ $(document).ready(function () {
     </script>
 
     @endsection
+
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            /* width: 50%; */
+        }
+    </style>
