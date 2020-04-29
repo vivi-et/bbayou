@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 
@@ -93,12 +94,26 @@ class PostController extends Controller
             $fileNameToStore = 'noimage.jpg';
         }
 
+        $test = 0;
+        if ($test = 1)
+            $fileNameToStore = 'abcd.png';
+        $a = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+        // $a = "tesseract /home/viviet/bbayou/public/storage/cover_images/ . $fileNameToStore . stdout -l kor";
 
         //Post::create(request(['title','body']));
         //auth()->user()->publish(new Post(request([title',body'])));
+
+        // $a = str_replace("\n", "\\n\n", $a);
+        // $a = str_replace("\t", "\\t\t", $a);
+
+        // $a = explode('', $a);
+
+
         Post::create([
             'title' => request('title'),
             'body' => request('body'),
+            'body' => request('title'),
+            // 'body' => $a,
             'user_id' => auth()->id(),
             'cover_image' => $fileNameToStore,
 
@@ -167,11 +182,10 @@ class PostController extends Controller
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
             //Upload Image
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
-
         }
-        
-        
-        
+
+
+
         $post->update($request->all());
         $post->title = $request->input('title');
         $post->body = $request->input('body');

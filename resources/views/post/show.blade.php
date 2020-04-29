@@ -22,13 +22,14 @@
     <br>
     <p class="blog-post-meta"> {{ $post -> created_at->toFormattedDateString() }} <a
             href="#">{{ $post->user->name }}</a></p>
-<br>
+    <br>
 
-    <img class="center" src="/storage/cover_images/{{ $post->cover_image }}">
+    <img style="max-width:100%;
+    max-height:100%;" class="center" src="/storage/cover_images/{{ $post->cover_image }}">
 
     <br>
     <br>
-    {{$post->body}}
+    {{ $post->body}}
     <br>
     <hr>
     <br>

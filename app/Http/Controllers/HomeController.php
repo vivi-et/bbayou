@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use SebastianBergmann\Environment\Console;
+use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class HomeController extends Controller
 {
@@ -27,6 +29,11 @@ class HomeController extends Controller
         // session('message');
 
         // return view('layouts.blog');
+
+
+
+
+
         $posts = Post::latest()->get()->take(6);
         return view('home', compact('posts'));
     }
