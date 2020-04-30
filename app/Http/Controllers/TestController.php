@@ -18,6 +18,13 @@ class TestController extends Controller
     {
         $string = '0""의1 오후 5:08 8 80%68「\n \n < ^×\n \n 스타벅스\n \n 아이스 카페모카 13||\n \n @ 08) 카카오페이로 추가결제\n \n 965632070036 =\n \n 유효기간 2019년 5월 29일\n \n 주문번호 563974109\n \n 교환처 스타벅스\n \n 선물수신일 2019년 2월 25일\n \n 쿠폰상태 사용완료\n \n 고객센터 :@상담하기: 2 문의하기 ： 도움말\n 교환권 취소/환불 안내\n \n \n';
 
+        $fileNameToStore = '1588022438127-8_1588132866.jpg';
+        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+
+
+        $string = str_replace("\n", "\\n\n", $string);
+        $string = str_replace("\t", "\\t\t", $string);
+
         // $arr = explode('\n', $string);
         // $arr = explode('유효기간', $string, 1);
         // $arr = explode('주문번호', $string);
@@ -39,7 +46,7 @@ class TestController extends Controller
         $cat[1] = '주문번호';
         $cat[2] = '교환처';
         $cat[3] = '선물수신일';
-        $cat[4] = '선물수신일';
+        $cat[4] = '쿠폰상태';
 
 
         // 'orderno' => '주문번호',
@@ -70,9 +77,9 @@ class TestController extends Controller
 
 
 
-        function getdata($input)
+        function strtodate($input)
         {
-            $toRemove = array("년 ", "월 ");
+            $toRemove = array("년 ", "월 ", ".");
             $input = str_replace($toRemove, '-', $input);
             $input = mb_substr($input, 0, -1);
             $input = date("y-m-d", strtotime($input));
@@ -80,10 +87,11 @@ class TestController extends Controller
         }
 
 
-        for($i = 0 ; $i <5; $i++){
+        for ($i = 0; $i < 5; $i++) {
             $catdata[$i] = get_string_between($string, $cat[$i], $nn);
         }
-        $catdata[0] = getdata($catdata[0]);
+        $key = array_search($cat[0],$cat);
+        $catdata[0] = strtodate($catdata[$key]);
 
         // foreach ($cat as $c) {
         //     $c = get_string_between($string, $c, $nn);

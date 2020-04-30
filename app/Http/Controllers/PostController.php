@@ -94,11 +94,11 @@ class PostController extends Controller
             $fileNameToStore = 'noimage.jpg';
         }
 
-        $test = 0;
-        if ($test = 1)
-            $fileNameToStore = 'abcd.png';
-        $a = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
-        // $a = "tesseract /home/viviet/bbayou/public/storage/cover_images/ . $fileNameToStore . stdout -l kor";
+        // $test = 0;
+        // if ($test = 1)
+        //     $fileNameToStore = 'abcd.png';
+        // $a = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+        // // $a = "tesseract /home/viviet/bbayou/public/storage/cover_images/ . $fileNameToStore . stdout -l kor";
 
         //Post::create(request(['title','body']));
         //auth()->user()->publish(new Post(request([title',body'])));
@@ -120,7 +120,7 @@ class PostController extends Controller
             //auto saved!
         ]);
 
-        return redirect('/');
+        return redirect('/post');
     }
 
     /**
