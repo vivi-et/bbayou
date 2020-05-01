@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('cover_image');
+            $table->bigInteger('hasGiftconOrderNO');
             $table->timestamps();
         });
         

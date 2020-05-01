@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Giftcon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
@@ -94,19 +96,122 @@ class PostController extends Controller
             $fileNameToStore = 'noimage.jpg';
         }
 
-        // $test = 0;
-        // if ($test = 1)
-        //     $fileNameToStore = 'abcd.png';
-        // $a = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
-        // // $a = "tesseract /home/viviet/bbayou/public/storage/cover_images/ . $fileNameToStore . stdout -l kor";
 
-        //Post::create(request(['title','body']));
-        //auth()->user()->publish(new Post(request([title',body'])));
+        //tesseract 실행
+        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
-        // $a = str_replace("\n", "\\n\n", $a);
-        // $a = str_replace("\t", "\\t\t", $a);
+        // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
+        $countEXCHANGE = substr_count($string, "교환");
+        if ($countEXCHANGE == 2) {
+            $findstr = "교환";
+            $pos = strpos($string, $findstr);
+            $string = substr_replace($string, '', $pos, strlen($findstr));
+        }
 
-        // $a = explode('', $a);
+        //문자열 $string 추가 가공
+        $string = str_replace("\n", "\\n\n", $string);
+        $string = str_replace("\t", "\\t\t", $string);
+        $string = preg_replace('/교......../', '교환처', $string);
+
+
+        // 뽑아낼 항목들 지정
+        $cat[0] = '유효기간';
+        $cat[1] = '주문번호';
+        $cat[2] = '교환처';
+        $cat[3] = '선물수신일';
+        $cat[4] = '쿠폰상태';
+
+        //특정 문자열(이경우 항목)을 분리하는 함수
+        function get_string_between($string, $start, $end)
+        {
+            $string = ' ' . $string;
+            $ini = strpos($string, $start);
+            if ($ini == 0) return '';
+            $ini += strlen($start);
+            $len = strpos($string, $end, $ini) - $ini;
+            return substr($string, $ini, $len);
+        }
+
+
+        // 년 월 도 string 날짜를 y m d date 형식으로 변경
+        function strtodate($input)
+        {
+            if (substr_count($input, "년")) {
+                $toRemove = array("년 ", "월 ", ".");
+                $input = str_replace($toRemove, '-', $input);
+                $input = mb_substr($input, 0, -1);
+            } else {
+                $input = str_replace('.', '-', $input);
+            }
+            $date = date_create_from_format('d/m/Y:H:i:s', $input);
+            return $input;
+        }
+
+        //항목(cat[]) 이후 이어지는 값을 찾아서 catdata[]에 저장
+        $nn = '\n';
+        for ($i = 0; $i < 5; $i++) {
+            $catdata[$i] = get_string_between($string, $cat[$i], $nn);
+        }
+
+        //catdata[0, 3], 유통기한
+        $key = array_search($cat[0], $cat);
+        $catdata[0] = strtodate($catdata[$key]);
+        $key = array_search($cat[3], $cat);
+        $catdata[3] = strtodate($catdata[$key]);
+        $catdata[3] = date("Y-m-d");
+
+
+
+
+        // catdata[2], 교환처
+        if (strpos($catdata[2], '6525'))
+            $catdata[2] = 'GS25';
+        elseif (strpos($catdata[2], '0'))
+            $catdata[2] = 'CU';
+        elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
+            $catdata[2] = 'BHC';
+        elseif (strpos($catdata[2], 7))
+            $catdata[2] = '7ELEVEN';
+        elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
+            $catdata[2] = '7ELEVEN/바이더웨이';
+
+        // catdata[2], 교환처
+        if (strpos($catdata[2], '6525'))
+            $catdata[2] = 'GS25';
+        elseif (strpos($catdata[2], '0'))
+            $catdata[2] = 'CU';
+        elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
+            $catdata[2] = 'BHC';
+        elseif (strpos($catdata[2], 7))
+            $catdata[2] = '7ELEVEN';
+        elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
+            $catdata[2] = '7ELEVEN/바이더웨이';
+        //빈 공백 쳐내기
+        for ($i = 0; $i < 5; $i++) {
+            $catdata[$i] = str_replace(' ', '', $catdata[$i]);
+        }
+
+        //기프티콘 사용 여부 확인
+        $used = false;
+        if ($catdata[4] == '사용완료') {
+            $used = true;
+        } elseif ($catdata[4] == '사용안함') {
+            $used = false;
+        }
+
+
+
+
+        //기프티콘 생성
+        Giftcon::create([
+            'expire_date' => '2020-07-13',
+            'orderno' => (int) $catdata[1],
+            'place' => $catdata[2],
+            'recieved_date' => $catdata[3],
+            'used' => $used,
+            'user_id' => auth()->id(),
+            'barcode' => $fileNameToStore,
+        ]);
 
 
         Post::create([
@@ -115,10 +220,13 @@ class PostController extends Controller
             'body' => request('title'),
             // 'body' => $a,
             'user_id' => auth()->id(),
+            'hasGiftconOrderNO' => (int) $catdata[1],
             'cover_image' => $fileNameToStore,
 
             //auto saved!
         ]);
+
+
 
         return redirect('/post');
     }
@@ -132,7 +240,24 @@ class PostController extends Controller
     public function show(Post $post)
     {
         //GET /tasks/id
-        return view('post.show', compact('post'));
+
+        // $orderno = Post::get('hasGiftconOrderNO');
+        $orderno = $post->hasGiftconOrderNO;
+
+        //giftcon을 view에 보낼경우 개별 데이터 추출시 timeout 에러, 추후 해결
+        //추후 코드 개선 요망, Eloquent::find() 로만 보내야 추출할수있음
+        // eg) $giftcon = Giftcon::where('orderno', '=', $orderno)->get(); 하면 view에서 개별 column 호출시 timeout
+        $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
+        $giftcon = Giftcon::find($giftconID);
+
+
+        // $package = [
+        //     'post' => $post,
+        //     'giftcon' => $giftcon,
+
+        // ];
+        return view('post.show')->with('post', $post)->with('giftcon', $giftcon);
+        // return view('post.show', compact('package'));
     }
 
     /**

@@ -38,7 +38,7 @@
     </div> --}}
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" id="submitbtn" class="btn btn-primary">Submit</button>
     </div>
 </form>
 
@@ -85,5 +85,29 @@
 
 
 });
+
+
+</script>
+
+<script type="text/javascript">
+$("form").submit(function () {
+    if ($(this).valid()) {
+        $(this).submit(function () {
+            return false;
+        });
+        return true;
+    }
+    else {
+        return false;
+    }
+});
+    // $(this).find("input[type='submit']").attr('disabled', 'disabled').val('submiting'); return true; });
+    
+//     $("body").on("submit", "form", function() {
+//     $(this).submit(function() {
+//         return false;
+//     });
+//     return true;
+// });
 </script>
 @endpush

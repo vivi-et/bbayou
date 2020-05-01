@@ -18,9 +18,11 @@ class CreateGiftconsTable extends Migration
             $table->date('expire_date');
             $table->integer('orderno');
             $table->string('place');
-            $table->date('recieved_date');
-            $table->boolean('used');
-            $table->boolean('used_on')->nullable;
+            $table->date('recieved_date')->nullable;
+            $table->boolean('used')->nullable;
+            $table->timestamp('used_on');
+            $table->bigInteger('user_id');
+            $table->string('barcode');
             $table->timestamps();
         });
     }
