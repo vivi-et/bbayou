@@ -100,6 +100,8 @@ class PostController extends Controller
         //tesseract 실행
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
+        if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
         $countEXCHANGE = substr_count($string, "교환");
         if ($countEXCHANGE == 2) {
@@ -166,24 +168,12 @@ class PostController extends Controller
         // catdata[2], 교환처
         if (strpos($catdata[2], '6525'))
             $catdata[2] = 'GS25';
+        elseif (strpos($catdata[2], '7'))
+            $catdata[2] = '7ELEVEN';
         elseif (strpos($catdata[2], '0'))
             $catdata[2] = 'CU';
         elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
             $catdata[2] = 'BHC';
-        elseif (strpos($catdata[2], 7))
-            $catdata[2] = '7ELEVEN';
-        elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
-            $catdata[2] = '7ELEVEN/바이더웨이';
-
-        // catdata[2], 교환처
-        if (strpos($catdata[2], '6525'))
-            $catdata[2] = 'GS25';
-        elseif (strpos($catdata[2], '0'))
-            $catdata[2] = 'CU';
-        elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
-            $catdata[2] = 'BHC';
-        elseif (strpos($catdata[2], 7))
-            $catdata[2] = '7ELEVEN';
         elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
             $catdata[2] = '7ELEVEN/바이더웨이';
         //빈 공백 쳐내기
@@ -204,13 +194,13 @@ class PostController extends Controller
 
         //기프티콘 생성
         Giftcon::create([
-            'expire_date' => '2020-07-13',
+            'expire_date' => $catdata[0],
             'orderno' => (int) $catdata[1],
             'place' => $catdata[2],
             'recieved_date' => $catdata[3],
             'used' => $used,
             'user_id' => auth()->id(),
-            'barcode' => $fileNameToStore,
+            'barcode' => $barcodeNo[0],
         ]);
 
 
@@ -249,6 +239,7 @@ class PostController extends Controller
         // eg) $giftcon = Giftcon::where('orderno', '=', $orderno)->get(); 하면 view에서 개별 column 호출시 timeout
         $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
         $giftcon = Giftcon::find($giftconID);
+
 
 
         // $package = [
@@ -346,8 +337,17 @@ class PostController extends Controller
     {
         // DELETE /tasks/id
 
+        //기프티콘 파일 삭제
+        unlink($post->cover_image);
+
+        //게시글 삭제
         $post->delete();
 
+        //연결된 기프티콘 항목도 삭제
+        $orderno = $post->hasGiftconOrderNO;
+        $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
+        $giftcon = Giftcon::find($giftconID);
+        $giftcon->delete();
 
         return redirect('/');
     }

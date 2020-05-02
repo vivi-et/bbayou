@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\r;
+use App\Post;
 use Com\Tecnick\Barcode\Barcode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -22,8 +23,27 @@ class TestController extends Controller
      */
     public function index()
     {
-        $fileNameToStore = '1588022438127-0_1588319806.jpg';
+        // 테스트 설정
+        $initOrderNo = 856686124;
+        $initPost = Post::where('hasGiftconOrderNO', $initOrderNo)->first()->id;
+        $getPostIDWithInit = Post::find($initPost);
+        $fileNameToStore = $getPostIDWithInit->cover_image;
+        $fileNameToStore = 'Screenshot_20200427-124526_KakaoTalk_1588416869.jpg';
+
+        // 파일 불러옴
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+
+
+        // barcodeNo 가공
+
+        // str_replace(' ','',$barcodeNo[0]);
+
+        // if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        // else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        // preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo);
+
+
+        // $barcodeNo[0] =  wordwrap($barcodeNo[0], 4, ' ', true);
 
 
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
@@ -101,15 +121,21 @@ class TestController extends Controller
         // catdata[2], 교환처
         if (strpos($catdata[2], '6525'))
             $catdata[2] = 'GS25';
+        elseif (strpos($catdata[2], '7'))
+            $catdata[2] = '7ELEVEN';
         elseif (strpos($catdata[2], '0'))
             $catdata[2] = 'CU';
         elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
             $catdata[2] = 'BHC';
-        elseif (strpos($catdata[2], 7))
-            $catdata[2] = '7ELEVEN';
         elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
             $catdata[2] = '7ELEVEN/바이더웨이';
 
+        //catdata[5], 바코드
+        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
+
+        $cat[5] = '바코드';
+        $catdata[5] = $barcodeNo[0];
         /*
         6525 : GS25
         CU : 0
@@ -120,23 +146,24 @@ class TestController extends Controller
 
         */
 
-        $orderno = 840818166;
         // $giftcon = Giftcon::find($orde)
         // $giftcon = DB::table('giftcons')->where('orderno',$orderno)->get('id');
 
-        $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
+        $giftconID = Giftcon::where('orderno', $initOrderNo)->first()->id;
         $giftcon = Giftcon::find($giftconID);
+
+
         //giftcon을 view에 보낼경우 개별 데이터 추출시 timeout 에러, 추후 해결
         //추후 코드 개선 요망, Eloquent::find() 로만 보내야 추출할수있음
         // $giftcon = Giftcon::where('orderno', '=', $orderno)->get();
 
-        $barcode_init = 112685366699;
+
         $barcode = new \Com\Tecnick\Barcode\Barcode();
         $bobj = $barcode->getBarcodeObj(
             'C128',                     // barcode type and additional comma-separated parameters
-            $barcode_init,          // data string to encode
-            -3,                             // bar width (use absolute or negative value as multiplication factor)
-            -100,                             // bar height (use absolute or negative value as multiplication factor)
+            $barcodeNo[0],          // data string to encode
+            -1,                             // bar width (use absolute or negative value as multiplication factor)
+            -90,                             // bar height (use absolute or negative value as multiplication factor)
             'black',                        // foreground color
             array(-1, -1, -1, -1)           // padding (use absolute or negative values as multiplication factors)
         )->setBackgroundColor('white'); // background color

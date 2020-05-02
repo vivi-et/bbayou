@@ -4,12 +4,11 @@
     <br>
     From OCR
     <br>
-    @for ($i = 0; $i < 5; $i++) 
+    @for ($i = 0; $i < 6; $i++) 
     @if(!empty($package['catdata'][$i])) 
     {{-- $package[{{$i}}] :  --}}
     {{$package['cat'][$i]}} :{{$package['catdata'][$i]}} 
     <br>
-
         @endif
         @endfor
         <br>
@@ -21,10 +20,10 @@
         <br>
         교환처 : {{$package['giftcon']->place}}
         <br>
+        바코드 : {{$package['giftcon']->barcode}}
 
 
         {!! $package['bobj']->getHtmlDiv() !!}
-        1126 8536 6699 HARDCODED!!
 
     <br>
 
