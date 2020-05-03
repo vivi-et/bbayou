@@ -24,6 +24,7 @@ Route::post('/post/{post}/comment', 'CommentController@store');
 // Route::post('/post/{post}/edit', 'PostController@update');
 
 Route::resource('/post', 'PostController');
+Route::resource('/giftcon', 'GiftconController');
 
 // Route::get('/register', 'RegisterController@create');
 // Route::post('/register', 'RegisterController@store');

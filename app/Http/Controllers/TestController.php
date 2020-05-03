@@ -29,12 +29,13 @@ class TestController extends Controller
         $getPostIDWithInit = Post::find($initPost);
         $fileNameToStore = $getPostIDWithInit->cover_image;
 
- 
-        $fileNameToStore = 'Screenshot_20200501-155731_KakaoTalk_1588414318.jpg';
+
+        $fileNameToStore = 'Screenshot_20200427-124526_KakaoTalk_1588416799.jpg';
 
         // 파일 불러옴
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
+     
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
         $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
 
@@ -49,6 +50,12 @@ class TestController extends Controller
 
         // $barcodeNo[0] =  wordwrap($barcodeNo[0], 4, ' ', true);
 
+        //일부 글 날려버리기
+        //하드코딩, 가능할경우 추후 개선
+        $toRemove = '모바일교환권';
+        if (substr_count($string, $toRemove))
+            $string = str_replace($toRemove, '', $string);
+
 
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
         $countEXCHANGE = substr_count($string, "교환");
@@ -61,8 +68,10 @@ class TestController extends Controller
         //문자열 $string 추가 가공
         $string = str_replace("\n", "\\n\n", $string);
         $string = str_replace("\t", "\\t\t", $string);
-        $string = preg_replace('/교......../', '교환처', $string);
 
+        //이게 왜있었지
+        //@(.*?)[\s], @ to space 까지
+        // $string = preg_replace('/교......../', '교환처', $string);
 
         // 뽑아낼 항목들 지정
         $cat[0] = '유효기간';
@@ -71,6 +80,7 @@ class TestController extends Controller
         $cat[3] = '선물수신일';
         $cat[4] = '쿠폰상태';
         $cat[5] = '바코드';
+
 
         //특정 문자열(이경우 항목)을 분리하는 함수
         function get_string_between($string, $start, $end)
@@ -100,11 +110,14 @@ class TestController extends Controller
         }
 
 
+
         //항목(cat[]) 이후 이어지는 값을 찾아서 catdata[]에 저장
         $nn = '\n';
         for ($i = 0; $i < 5; $i++) {
             $catdata[$i] = get_string_between($string, $cat[$i], $nn);
         }
+
+
 
         // $aa = 'false';
 
@@ -123,6 +136,7 @@ class TestController extends Controller
         $catdata[0] = strtodate($catdata[$key]);
 
 
+        $savedcatdata2 = $catdata[2];
         // catdata[2], 교환처
         if (strpos($catdata[2], '6525'))
             $catdata[2] = 'GS25';
@@ -134,9 +148,11 @@ class TestController extends Controller
             $catdata[2] = 'BHC';
         elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
             $catdata[2] = '7ELEVEN/바이더웨이';
+        else
+            $catdata[2] = $savedcatdata2;
 
         //catdata[5], 바코드
-        
+
         $catdata[5] = $barcodeNo[0];
         /*
         6525 : GS25

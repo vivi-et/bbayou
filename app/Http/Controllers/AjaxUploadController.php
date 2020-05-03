@@ -34,18 +34,24 @@ class AjaxUploadController extends Controller
         } else {
             $fileNameToStore = 'noimage.jpg';
             return response()->json([
-                'message'   => $validation->errors()->all(),
+                'message'   => '이미지가 없습니다',
                 'uploaded_image' => '$fileNameToStore',
             ]);
         }
 
 
-
-        //tesseract 실행
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
-        if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
-        else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        //일부 글 날려버리기
+        //하드코딩, 가능할경우 추후 개선
+        $toRemove = '모바일교환권';
+        if (substr_count($string, $toRemove))
+            $string = str_replace($toRemove, '', $string);
+
+        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
+        // if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        // else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
         $countEXCHANGE = substr_count($string, "교환");
         if ($countEXCHANGE == 2) {
@@ -57,7 +63,9 @@ class AjaxUploadController extends Controller
         //문자열 $string 추가 가공
         $string = str_replace("\n", "\\n\n", $string);
         $string = str_replace("\t", "\\t\t", $string);
-        $string = preg_replace('/교......../', '교환처', $string);
+        //이게 왜있었지
+        //@(.*?)[\s], @ to space 까지
+        // $string = preg_replace('/교......../', '교환처', $string);
 
 
         // 뽑아낼 항목들 지정
@@ -94,11 +102,14 @@ class AjaxUploadController extends Controller
             return $input;
         }
 
+        //catdata[] 입력
         //항목(cat[]) 이후 이어지는 값을 찾아서 catdata[]에 저장
         $nn = '\n';
         for ($i = 0; $i < 5; $i++) {
             $catdata[$i] = get_string_between($string, $cat[$i], $nn);
         }
+
+
 
         //catdata[0, 3], 유통기한
         $key = array_search($cat[0], $cat);
@@ -108,37 +119,45 @@ class AjaxUploadController extends Controller
         $catdata[3] = date("Y-m-d");
 
 
-
+        $savedcatdata2 = $catdata[2];
 
         // catdata[2], 교환처
+        // 하드코딩임, 가능할경우 개선
         if (strpos($catdata[2], '6525'))
             $catdata[2] = 'GS25';
         elseif (strpos($catdata[2], '7'))
             $catdata[2] = '7ELEVEN';
+        elseif (strpos($catdata[2], '립'))
+            $catdata[2] = '빕스';
         elseif (strpos($catdata[2], '0'))
             $catdata[2] = 'CU';
         elseif (strpos($catdata[2], '뻬') || strpos($catdata[2], '태'))
             $catdata[2] = 'BHC';
         elseif (strpos($catdata[2], '개') && strpos($catdata[2], '웨'))
             $catdata[2] = '7ELEVEN/바이더웨이';
+        else
+            $catdata[2] = $savedcatdata2;
+
         //빈 공백 쳐내기
         for ($i = 0; $i < 5; $i++) {
             $catdata[$i] = str_replace(' ', '', $catdata[$i]);
         }
 
+
         //catdata[4] 기프티콘 사용 여부 확인
         $used = false;
+        $usedstr = '미기재';
         if ($catdata[4] == '사용완료') {
             $used = true;
+            $usedstr = '사용완료';
         } elseif ($catdata[4] == '사용안함') {
             $used = false;
+            $usedstr = '사용안함';
         }
 
         //catdata[5], 바코드
-        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
-        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
-        $catdata[5] = $barcodeNo[0];
 
+        $catdata[5] = $barcodeNo[0];
 
         // return response()->json([
         //     'message' => '성공!',
@@ -157,7 +176,8 @@ class AjaxUploadController extends Controller
             'orderno' => $catdata[1],
             'place' => $catdata[2],
             'recieved_date' => $catdata[3],
-            'used' => $catdata[4],
+            'used' => $used,
+            'usedstr' => $usedstr,
             'barcode' => $catdata[5],
             'filepath' => $fileNameToStore,
         ]);

@@ -10,8 +10,8 @@
 
     </a>
 
-    <a href="/post" style="color: white">
-      <strong>POST</strong>
+    <a href="/giftcon" style="color: white">
+      <strong>GIFTCON</strong>
     </a>
 
     @if(Auth::check())

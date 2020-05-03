@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\r;
+use App\Post;
 use Illuminate\Http\Request;
 
 class GiftconController extends Controller
@@ -14,7 +15,9 @@ class GiftconController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::latest()->get();
+        //tasks
+        return view('giftcon.index', compact('posts'));
     }
 
     /**
@@ -22,9 +25,25 @@ class GiftconController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+
+
+        // Post::create([
+        //     'title' => request('title'),
+        //     'body' => request('body'),
+        //     'body' => request('title'),
+        //     // 'body' => $a,
+        //     'user_id' => auth()->id(),
+        //     'hasGiftconOrderNO' => (int) $catdata[1],
+        //     'cover_image' => $fileNameToStore,
+
+        //     //auto saved!
+        // ]);
+
+
+        return view('giftcon.create');
     }
 
     /**
@@ -35,7 +54,16 @@ class GiftconController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        Giftcon::create([
+            'expire_date' => request('expire_date'),
+            'orderno' => (int) request('orderno'),
+            'place' => request('place'),
+            'recieved_date' => request('recieved_date'),
+            'used' => request('used'),
+            'user_id' => auth()->id(),
+            'barcode' => request('barcode'),
+        ]);
     }
 
     /**
