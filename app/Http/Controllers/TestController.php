@@ -24,15 +24,19 @@ class TestController extends Controller
     public function index()
     {
         // 테스트 설정
-        $initOrderNo = 856686124;
+        $initOrderNo = 711113115;
         $initPost = Post::where('hasGiftconOrderNO', $initOrderNo)->first()->id;
         $getPostIDWithInit = Post::find($initPost);
         $fileNameToStore = $getPostIDWithInit->cover_image;
-        $fileNameToStore = 'Screenshot_20200427-124526_KakaoTalk_1588416869.jpg';
+
+ 
+        $fileNameToStore = 'Screenshot_20200501-155731_KakaoTalk_1588414318.jpg';
 
         // 파일 불러옴
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
+        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
 
         // barcodeNo 가공
 
@@ -66,6 +70,7 @@ class TestController extends Controller
         $cat[2] = '교환처';
         $cat[3] = '선물수신일';
         $cat[4] = '쿠폰상태';
+        $cat[5] = '바코드';
 
         //특정 문자열(이경우 항목)을 분리하는 함수
         function get_string_between($string, $start, $end)
@@ -131,10 +136,7 @@ class TestController extends Controller
             $catdata[2] = '7ELEVEN/바이더웨이';
 
         //catdata[5], 바코드
-        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
-        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
-
-        $cat[5] = '바코드';
+        
         $catdata[5] = $barcodeNo[0];
         /*
         6525 : GS25
@@ -156,7 +158,6 @@ class TestController extends Controller
         //giftcon을 view에 보낼경우 개별 데이터 추출시 timeout 에러, 추후 해결
         //추후 코드 개선 요망, Eloquent::find() 로만 보내야 추출할수있음
         // $giftcon = Giftcon::where('orderno', '=', $orderno)->get();
-
 
         $barcode = new \Com\Tecnick\Barcode\Barcode();
         $bobj = $barcode->getBarcodeObj(

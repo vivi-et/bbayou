@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Giftcon;
 use Illuminate\Http\Request;
+use Com\Tecnick\Barcode\Barcode;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 
@@ -41,6 +42,8 @@ class PostController extends Controller
         return view('post.create');
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -76,21 +79,20 @@ class PostController extends Controller
         //     'body'=>'required'
         // ]);
 
-        //Handle file upload
+        //파일 업로드
         if ($request->hasFile('cover_image')) {
 
-            //Get Filename with extension
-
+            //파일이름 & 확장자
             $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
 
-            // Get just filename
+            //파일이름만
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just extension
+            //확장자만
             $extension = $request->file('cover_image')->getClientOriginalExtension();
 
-            //Filename to store
+            //db에 저장할 파일이름
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-            //Upload Image
+            //이미지 업로드
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
         } else {
             $fileNameToStore = 'noimage.jpg';
@@ -99,9 +101,13 @@ class PostController extends Controller
 
         //tesseract 실행
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
-
-        if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
-        else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        
+        
+        
+        preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+        $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
+        // if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
+        // else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
         $countEXCHANGE = substr_count($string, "교환");
         if ($countEXCHANGE == 2) {
@@ -122,6 +128,7 @@ class PostController extends Controller
         $cat[2] = '교환처';
         $cat[3] = '선물수신일';
         $cat[4] = '쿠폰상태';
+        $cat[5] = '바코드';
 
         //특정 문자열(이경우 항목)을 분리하는 함수
         function get_string_between($string, $start, $end)
@@ -181,7 +188,7 @@ class PostController extends Controller
             $catdata[$i] = str_replace(' ', '', $catdata[$i]);
         }
 
-        //기프티콘 사용 여부 확인
+        //catdata[4] 기프티콘 사용 여부 확인
         $used = false;
         if ($catdata[4] == '사용완료') {
             $used = true;
@@ -189,6 +196,9 @@ class PostController extends Controller
             $used = false;
         }
 
+        //catdata[5], 바코드
+
+        $catdata[5] = $barcodeNo[0];
 
 
 
@@ -240,14 +250,21 @@ class PostController extends Controller
         $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
         $giftcon = Giftcon::find($giftconID);
 
+        //barcode 생성
+        $barcode = new \Com\Tecnick\Barcode\Barcode();
+        $bobj = $barcode->getBarcodeObj(
+            'C128',                     // barcode type and additional comma-separated parameters
+            $giftcon->barcode,          // data string to encode
+            -1,                             // bar width (use absolute or negative value as multiplication factor)
+            -90,                             // bar height (use absolute or negative value as multiplication factor)
+            'black',                        // foreground color
+            array(-1, -1, -1, -1)           // padding (use absolute or negative values as multiplication factors)
+        )->setBackgroundColor('white'); // background color
+
+        // output the barcode as HTML div (see other output formats in the documentation and examples)
 
 
-        // $package = [
-        //     'post' => $post,
-        //     'giftcon' => $giftcon,
-
-        // ];
-        return view('post.show')->with('post', $post)->with('giftcon', $giftcon);
+        return view('post.show')->with('post', $post)->with('giftcon', $giftcon)->with('bobj', $bobj);
         // return view('post.show', compact('package'));
     }
 
@@ -337,8 +354,12 @@ class PostController extends Controller
     {
         // DELETE /tasks/id
 
+        //삭제할 파일 이름 가져오기
+        $fileNameToStore = $post->cover_image;
+        $path = 'storage/cover_images/' . $fileNameToStore;
+
         //기프티콘 파일 삭제
-        unlink($post->cover_image);
+        unlink($path);
 
         //게시글 삭제
         $post->delete();
@@ -349,6 +370,6 @@ class PostController extends Controller
         $giftcon = Giftcon::find($giftconID);
         $giftcon->delete();
 
-        return redirect('/');
+        return redirect('/post');
     }
 }

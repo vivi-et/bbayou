@@ -11,6 +11,9 @@
     <br>
         @endif
         @endfor
+        바코드분리 : {{wordwrap($package['catdata'][5], 4, ' ', true)}}
+        <br>
+        <br>
         <br>
         From MYSQL
         <br>
@@ -20,7 +23,9 @@
         <br>
         교환처 : {{$package['giftcon']->place}}
         <br>
-        바코드 : {{$package['giftcon']->barcode}}
+        바코드 : {{ $package['giftcon']->barcode }}
+        <br>
+        바코드분리 : {{wordwrap($package['giftcon']->barcode, 4, ' ', true)}}
 
 
         {!! $package['bobj']->getHtmlDiv() !!}

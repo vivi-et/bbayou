@@ -40,17 +40,15 @@
         주문번호 : {{$giftcon->orderno}}
         <br>
         교환처 : {{$giftcon->place}}
-        <br>    
-        바코드 : {{$giftcon->barcode}}
+        <br>
+        바코드 : {{wordwrap($giftcon->barcode, 4, ' ', true)}}
+
         <br>
 
-
+        {!! $bobj->getHtmlDiv() !!}
 
     </div>
 
-
-
-    <br>
     <hr>
     <br>
 
