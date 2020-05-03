@@ -1,70 +1,172 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.master')
 
-<head>
-    <title>Webslesson Tutorial | Upload File without using Form Submit in Ajax PHP</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+@section('content')
 
-<body>
-    <br /><br />
-    <div class="container" style="width:700px;">
-        <h2 align="center">Upload File without using Form Submit in Ajax PHP</h2>
-        <br />
-        <label>Select Image</label>
-        <input type="file" name="file" id="file" />
-        <br />
-        <span id="uploaded_image"></span>
+
+<h1>
+    Create a Post
+</h1>
+
+
+<div class="row">
+    <div class="col-sm">
+        <form id="main_form" method="POST" action="/post" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="exampleInputEmail1">Title</label>
+                <input type="text" class="form-control" name="title">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">Body</label>
+                <textarea name="body" id="body" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+
+
+
+            <input type="file" id="cover_image" name='cover_image' style="display:none;">
+            <label for="cover_image" class="btn btn-primary">기프티콘 업로드</label>
+            <span id='mgs_ta'></span>
+            <br>
+            <label for="cover_image">(2mb 이내인 jpg, jpeg, png 파일만 가능합니다.)</label>
+            <div class="form-group">
+                <button type="submit" id="submitbtn" class="btn btn-primary">기프티콘 확인</button>
+            </div>
+        </form>
     </div>
-</body>
+    <div class="col-sm">
 
-</html>
+        <div style="display: inline-block;">
+            <img id="img_prv" style="max-height: 500px; max-width:300 px; " src="/storage/noimage.png"
+                class="img-thumbnail">
+        </div>
+        <div>
+            <br>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div id="expire_date">expire_date</div> <br>
+        <div id="orderno">orderno</div> <br>
+        <div id="place">place</div> <br>
+        <div id="recieved_date">recieved_date</div> <br>
+        <div id="used">used</div> <br>
+        <div id="barcode">barcode</div> <br>
+
+
+        </span>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+@include('layouts.error')
+
+
+@endsection
+
+@push('headertest')
+<meta name="csrf-token" content="{{ csrf_token() }}" />
+@endpush
+
+@push('script')
+<script type="text/javascript">
+    var x = document.getElementById("img_prv");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+    $('#cover_image').on('change', function(ev){
+    console.log("here inside");
+    var filedata=this.files[0];
+    var imgtype=filedata.type;
+    var match=['image/jpeg', 'image/jpg', 'image/png'];
+    if(!((imgtype==match[0])||(imgtype==match[1])||(imgtype==match[2]))){
+        $('#mgs_ta').html('<p style="color:red"> jpg, jpeg, png 파일만 업로드가 가능합니다. </p>')
+        x.style.display = "none";
+    }else{
+    var reader = new FileReader();
+    reader.onload=function(ev){
+        $('#img_prv').attr('src',ev.target.result)
+        var x = document.getElementById("img_prv");
+    x.style.display = "block";
+
+    
+    }
+    reader.readAsDataURL(this.files[0]);
+    }
+
+    
+
+});
+
+</script>
+
+{{-- 
+<script type="text/javascript">
+    $("form").submit(function () {
+    if ($(this).valid()) {
+        $(this).submit(function () {
+            return false;
+        });
+        return true;
+    }
+    else {
+        return false;
+    }
+});
+</script> --}}
+
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+</script>
 
 <script>
     $(document).ready(function(){
- $(document).on('change', '#file', function(){
-  var name = document.getElementById("file").files[0].name;
-  var form_data = new FormData();
-  var ext = name.split('.').pop().toLowerCase();
-  if(jQuery.inArray(ext, ['gif','png','jpg','jpeg']) == -1) 
-  {
-   alert("Invalid Image File");
-  }
-  var oFReader = new FileReader();
-  oFReader.readAsDataURL(document.getElementById("file").files[0]);
-  var f = document.getElementById("file").files[0];
-  var fsize = f.size||f.fileSize;
-  if(fsize > 2000000)
-  {
-   alert("Image File Size is very big");
-  }
-  else
-  {
-   form_data.append("file", document.getElementById('file').files[0]);
-   $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-   $.ajax({
-    url:"/post/action",
-    method:"POST",
-    data: form_data,
-    contentType: false,
-    cache: false,
-    processData: false,
-    beforeSend:function(){
-     $('#uploaded_image').html("<label class='text-success'>Image Uploading...</label>");
-    },   
-    success:function(data)
-    {
-     $('#uploaded_image').html(data);
-    }
-   });
-  }
- });
-});
+    
+     $('#main_form').on('submit', function(event){
+      event.preventDefault();
+      $.ajax({
+       url:"{{ route('ajaxupload.action') }}",
+       method:"POST",
+       data:new FormData(this),
+       dataType:'JSON',
+       contentType: false,
+       cache: false,
+       processData: false,
+       success:function(data)
+       {
+
+        console.log('ajax json recieved');
+                $('#expire_date').html(data.expire_date);
+                $('#orderno').html(data.orderno);
+                $('#place').html(data.place);
+                $('#recieved_date').html(data.recieved_date);
+                $('#used').html(data.used);
+                $('#barcode').html(data.barcode);
+       
+       alert(data.message);
+       }
+      })
+     });
+    
+    });
 </script>
+
+
+
+
+@endpush
