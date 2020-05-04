@@ -23,21 +23,64 @@ class TestController extends Controller
      */
     public function index()
     {
+
+        $callfromDB = 0;
         // 테스트 설정
-        $initOrderNo = 711113115;
-        $initPost = Post::where('hasGiftconOrderNO', $initOrderNo)->first()->id;
-        $getPostIDWithInit = Post::find($initPost);
-        $fileNameToStore = $getPostIDWithInit->cover_image;
+        // if ($callfromDB = 1) {
+        //     $initOrderNo = 516459089;
+        //     $initPost = Post::where('hasGiftconOrderNO', $initOrderNo)->first()->id;
+        //     $getPostIDWithInit = Post::find($initPost);
+        //     $fileNameToStore = $getPostIDWithInit->cover_image;
+        // }
 
+        //1588022438127-6_1588591104.jpg 안됨 해결요망
+        //1588022438127-6_1588591104.jpg 안됨 해결요망
+        //1588022438127-6_1588591104.jpg 안됨 해결요망
 
-        $fileNameToStore = 'Screenshot_20200427-124526_KakaoTalk_1588416799.jpg';
+        $fileNameToStore = '1588022438127-10_1588598745.jpg';
 
         // 파일 불러옴
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
-     
+
+        // 공백 포함 연속된 12~16개의 숫자를 저장 = 바코드번호
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+        $barcodeWithSpace = $barcodeNo[0];
+        $expStr = explode($barcodeNo[0], $string);
         $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
+        
+        
+
+        //연속된 9자리 숫자를 저장 = 주문번호
+        //범위로 찾을경우 바코드 번호랑 겹칠수도 있음
+        //추가 explode 를 통해 해결가능해보임
+        preg_match('/\b\d{9}\b/', $string, $ocrorderno);
+
+
+        //바코드 번호 이전 모든 문자를 삭제
+        $string = $barcodeNo[0] . $expStr[1];
+
+        //교환처가 없고 저 로 나올떄
+        //인식률 상향 필요
+        $hasPlace =  substr_count($expStr[1], '교환처');
+        if(!$hasPlace){
+       
+            $string = str_replace('저','교환처',$string);
+    }
+
+        //특정 오타 교정
+        // 하드코딩, 가능할경우 추후 개선필요
+        // 날짜형식으로 분홍,노랑 기프티콘 분류 가능한지?
+        // (노랑 기프티콘) = y년 m월 d일
+        // (분홍 기프티콘) = y.m.d
+        $findthis = "교헌제";
+        $countEXCHANGE = substr_count($string, $findthis);
+        if ($countEXCHANGE) {
+            $pos = strpos($string, $findthis);
+            $string = substr_replace($string, '교환처', $pos, strlen($findthis));
+        }
+
+
 
         // barcodeNo 가공
 
@@ -52,22 +95,15 @@ class TestController extends Controller
 
         //일부 글 날려버리기
         //하드코딩, 가능할경우 추후 개선
-        $toRemove = '모바일교환권';
-        if (substr_count($string, $toRemove))
-            $string = str_replace($toRemove, '', $string);
+
+
 
 
         // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
-        $countEXCHANGE = substr_count($string, "교환");
-        if ($countEXCHANGE == 2) {
-            $findstr = "교환";
-            $pos = strpos($string, $findstr);
-            $string = substr_replace($string, '', $pos, strlen($findstr));
-        }
-
         //문자열 $string 추가 가공
         $string = str_replace("\n", "\\n\n", $string);
         $string = str_replace("\t", "\\t\t", $string);
+
 
         //이게 왜있었지
         //@(.*?)[\s], @ to space 까지
@@ -93,6 +129,8 @@ class TestController extends Controller
             return substr($string, $ini, $len);
         }
 
+        
+
 
 
         // 년 월 도 string 날짜를 y m d date 형식으로 변경
@@ -110,12 +148,12 @@ class TestController extends Controller
         }
 
 
-
         //항목(cat[]) 이후 이어지는 값을 찾아서 catdata[]에 저장
         $nn = '\n';
         for ($i = 0; $i < 5; $i++) {
             $catdata[$i] = get_string_between($string, $cat[$i], $nn);
         }
+
 
 
 
@@ -132,8 +170,13 @@ class TestController extends Controller
         //각 항목 마지막 가공 (아직 하드코딩, 개선바람)
 
         //catdata[0], 유통기한
-        $key = array_search($cat[0], $cat);
-        $catdata[0] = strtodate($catdata[$key]);
+        // $key = array_search($cat[0], $cat);
+        $catdata[0] = strtodate($catdata[0]);
+
+        //catdata[1], 주문번호
+        //regex 9자리가 아닌경우
+        if (!empty($ocrorderno))
+            $catdata[1] = $ocrorderno[0];
 
 
         $savedcatdata2 = $catdata[2];
@@ -152,29 +195,24 @@ class TestController extends Controller
             $catdata[2] = $savedcatdata2;
 
         //catdata[5], 바코드
-
         $catdata[5] = $barcodeNo[0];
-        /*
-        6525 : GS25
-        CU : 0
-        7ELELVEN : 76ㄷ1ㄴ6ㅁ0641
-        BHC : 빼<   태ㅇ
 
-        7ELEVEN/바이더웨이 : 개/64/바이더웨이
+        //바코드 4자리 단위로 분리
+        $seperatedBarcode = wordwrap($barcodeNo[0], 4, ' ', true);
 
-        */
 
         // $giftcon = Giftcon::find($orde)
         // $giftcon = DB::table('giftcons')->where('orderno',$orderno)->get('id');
 
-        $giftconID = Giftcon::where('orderno', $initOrderNo)->first()->id;
-        $giftcon = Giftcon::find($giftconID);
+        // $giftconID = Giftcon::where('orderno', $initOrderNo)->first()->id;
+        // $giftcon = Giftcon::find($giftconID);
 
 
         //giftcon을 view에 보낼경우 개별 데이터 추출시 timeout 에러, 추후 해결
         //추후 코드 개선 요망, Eloquent::find() 로만 보내야 추출할수있음
         // $giftcon = Giftcon::where('orderno', '=', $orderno)->get();
 
+        //바코드 생성기
         $barcode = new \Com\Tecnick\Barcode\Barcode();
         $bobj = $barcode->getBarcodeObj(
             'C128',                     // barcode type and additional comma-separated parameters
@@ -190,8 +228,10 @@ class TestController extends Controller
         $package = [
             'cat' => $cat,
             'catdata' => $catdata,
-            'giftcon' => $giftcon,
+            // 'giftcon' => $giftcon,
             'bobj' => $bobj,
+            'path' => $fileNameToStore,
+            'sepCode' => $seperatedBarcode
         ];
 
         return view('test', compact('package'));

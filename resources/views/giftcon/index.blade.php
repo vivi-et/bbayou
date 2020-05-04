@@ -9,7 +9,7 @@
 
 @section('content')
 
-<a href="/post/create">
+<a href="/giftcon/create">
     <button class="btn btn-primary">CREATE</button>
 </a>
 
@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    @if(count($posts))
+    @if(count($giftcons))
     @include('layouts.card')
     @endif
 

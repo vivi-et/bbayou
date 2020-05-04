@@ -1,3 +1,7 @@
 {
-    "sync.gist": "e057e7899138a95b719d39774b1943b9ddcf7ce4"
+    "sync.gist": "e057e7899138a95b719d39774b1943b9ddcf7ce4",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

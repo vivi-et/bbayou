@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\r;
 use App\Post;
 use Illuminate\Http\Request;
+use App\Giftcon;
+use App\User;
 
 class GiftconController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +22,9 @@ class GiftconController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->get();
+        $giftcons = Giftcon::latest()->get();
         //tasks
-        return view('giftcon.index', compact('posts'));
+        return view('giftcon.index', compact('giftcons'));
     }
 
     /**
@@ -27,21 +34,6 @@ class GiftconController extends Controller
      */
     public function create(Request $request)
     {
-
-
-
-        // Post::create([
-        //     'title' => request('title'),
-        //     'body' => request('body'),
-        //     'body' => request('title'),
-        //     // 'body' => $a,
-        //     'user_id' => auth()->id(),
-        //     'hasGiftconOrderNO' => (int) $catdata[1],
-        //     'cover_image' => $fileNameToStore,
-
-        //     //auto saved!
-        // ]);
-
 
         return view('giftcon.create');
     }
@@ -53,9 +45,16 @@ class GiftconController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
+    
     {
-        
+    
+        $this->validate(request(), [
+            'title' => 'required|max:30'
+        ]);
+
+
         Giftcon::create([
+            'title'=> request('title'),
             'expire_date' => request('expire_date'),
             'orderno' => (int) request('orderno'),
             'place' => request('place'),
@@ -64,6 +63,12 @@ class GiftconController extends Controller
             'user_id' => auth()->id(),
             'barcode' => request('barcode'),
         ]);
+
+
+        
+        session()->flash('message', 'Giftcon Created!');
+
+        return view('giftcon.index');
     }
 
     /**

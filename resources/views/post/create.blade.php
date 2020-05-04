@@ -36,20 +36,66 @@
     </div>
 
     <div class="col-sm" style="text-align: center" id="result_col_sm">
-        유효기간
-        <div id="expire_date" class="form-group"></div> <br>
-        주문번호
-        <div id="orderno" class="form-group"></div> <br>
-        교환처
-        <div id="place" class="form-group"></div> <br>
-        선물수신일
-        <div id="recieved_date" class="form-group"></div> <br>
-        쿠폰상태
-        <div id="used" class="form-group"></div> <br>
-        바코드
-        <div id="barcode" class="form-group"></div> <br>
-        파일경로//추후삭제
-        <div id="filepath" class="form-group"></div> <br>
+
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <th>유효기간</th>
+                <th>
+                    <div id="expire_date" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>주문번호</th>
+                <th>
+                    <div id="orderno" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>교환처</th>
+                <th>
+                    <div id="place" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>선물수신일</th>
+                <th>
+                    <div id="recieved_date" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>쿠폰상태</th>
+                <th>
+                    <div id="used" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>바코드</th>
+                <th>
+                    <div id="barcode" class="form-group"></div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>파일경로//추후삭제</th>
+                <th>
+                    <div id="filepath" class="form-group"></div>
+                </th>
+            </tr>
+
+
+
+
+        </table>
+
 
         <div class="form-group">
             <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>

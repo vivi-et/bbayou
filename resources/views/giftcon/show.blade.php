@@ -19,18 +19,18 @@
 
 <br>
 <div class="col-sm-8 blog-main">
-    <h2 class="blog-post-title">{{$post->title}}</h2>
+    <h2 class="blog-post-title">{{$giftcon->title}}</h2>
     <br>
-    <p class="blog-post-meta"> {{ $post -> created_at->toFormattedDateString() }} <a
-            href="#">{{ $post->user->name }}</a></p>
+    <p class="blog-post-meta"> {{ $giftcon -> created_at->toFormattedDateString() }} <a
+            href="#">{{ $giftcon->user->name }}</a></p>
     <br>
 
     <img style="max-width:100%;
-    max-height:100%;" class="center" src="/storage/cover_images/{{ $post->cover_image }}">
+    max-height:100%;" class="center" src="/storage/cover_images/{{ $giftcon->cover_image }}">
 
     <br>
     <br>
-    {{ $post->body}}
+    {{ $giftcon->body}}
     <hr>
     <br>
 
@@ -55,13 +55,13 @@
 
 
     @if(!empty(auth()->user()))
-    @if(auth()->user()->id == $post->user_id)
+    @if(auth()->user()->id == $giftcon->user_id)
     <div class="btn-group" style="float:right;">
-        <a href="/post/{{$post->id}}/edit">
+        <a href="/post/{{$giftcon->id}}/edit">
             <button class="btn btn-primary">Edit</button>
         </a>
 
-        <form method="POST" action="/post/{{$post->id}}">
+        <form method="POST" action="/post/{{$giftcon->id}}">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-primary" style="margin-left:5px;">Delete</button>
@@ -77,7 +77,7 @@
     <hr>
     <div class="comments">
         <ul class="list-group">
-            @foreach ($post->comments as $comment)
+            @foreach ($giftcon->comments as $comment)
             <li class="list-group-item">
                 <strong>
                     {{ $comment->created_at->diffforhumans() }}
@@ -115,7 +115,7 @@
 
         <div>
 
-            <form method="POST" action="/post/{{ $post->id }}/comment">
+            <form method="POST" action="/post/{{ $giftcon->id }}/comment">
                 {{ csrf_field() }}
 
                 {{-- {{method_field('PATCH')}} --}}

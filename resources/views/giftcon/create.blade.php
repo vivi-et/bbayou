@@ -36,28 +36,37 @@
     </div>
 
     <div class="col-sm" style="text-align: center" id="result_col_sm">
-        유효기간
-        <div id="expire_date" class="form-group"></div> <br>
-        주문번호
-        <div id="orderno" class="form-group"></div> <br>
-        교환처
-        <div id="place" class="form-group"></div> <br>
-        선물수신일
-        <div id="recieved_date" class="form-group"></div> <br>
-        쿠폰상태
-        <div id="used" class="form-group"></div> <br>
-        바코드
-        <div id="barcode" class="form-group"></div> <br>
-        파일경로//추후삭제
-        <div id="filepath" class="form-group"></div> <br>
+        <form id="giftcon-form" action="/giftcon" method="POST">
 
-        <div class="form-group">
-            <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>
-        </div>
+            <table id="result-table" class="table">
+
+                <tr>
+                    <td>
+                        상품명
+                    </td>
+                    <td>
+                        <input id="title" name="title">
+                    </td>
+
+                </tr>
+
+            </table>
+
+            @csrf
+            {{-- <input id="title" name="title" hidden> --}}
+            <input id="expire_date" name="expire_date" hidden>
+            <input id="orderno" name="orderno" hidden>
+            <input id="place" name="place" hidden>
+            <input id="recieved_date" name="recieved_date" hidden>
+            <input id="used" name="used" hidden>
+            <input id="barcode" name="barcode" hidden>
+            <input id="filepath" name="filepath" hidden>
+            <div class="form-group">
+                <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>
         </form>
-
-
     </div>
+</div>
+
 
 </div>
 
@@ -67,7 +76,9 @@
 
 
 
+</div>
 
+</div>
 
 @include('layouts.error')
 
@@ -116,16 +127,13 @@
 });
 
 </script>
-{{-- 
+
 <style>
-    #submitbtn, #label_test,
-    #body {
-        border: 1px solid black;
-        padding: 2px 4px;
-        display: inline-block;
+    #result-table td {
+        width: 300px;
     }
 </style>
---}}
+
 
 {{-- JS 스타일 --}}
 <script>
@@ -178,21 +186,98 @@ submitbtn.style.visibility = "hidden";
        {
 
         console.log('ajax json recieved');
-                $('#expire_date').html(data.expire_date);
-                $('#orderno').html(data.orderno);
-                $('#place').html(data.place);
-                $('#recieved_date').html(data.recieved_date);
-                $('#used').html(data.usedstr);
-                $('#barcode').html(data.barcode);
-                $('#filepath').html(data.filepath);
-       alert(data.message);
-       finalsubmitbtn.style.display = "block";
-       }
-      })
-     });
+        
+
+        let  ajaxData = [
+            data.expire_date, 
+            data.orderno, 
+            data.place, 
+            data.recieved_date, 
+            data.usedstr,
+            data.sepbarcode, 
+            data.filepath,
+        ];
+
+        let ajaxCat = [
+            "expire_date",
+            "orderno",
+            "place",
+            "recieved_date",
+            "used",
+            "barcode",
+            "filepath",
+
+        ];
+
+        let ajaxText = [
+            "유효기한",
+            "주문번호",
+            "교환처",
+            "선물수신일",
+            "쿠폰상태",
+            "바코드",
+            "파일경로",
+        ];
+
     
+        let table = document.getElementById("result-table");
+        
+        
+        if(table.rows.length>2){
+        while(table.rows.length>1) table.deleteRow(1);
+    }
+        
+        let i = ajaxData.length;
+        while(i>=0){
+            
+            console.log(i);
+            if(ajaxData[i]){
+                
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = ajaxText[i];
+    cell2.innerHTML = ajaxData[i];
+        }
+        i--;
+        }
+
+
+
+        document.getElementById('expire_date').value = data.expire_date;
+        document.getElementById('orderno').value = data.orderno;
+        document.getElementById('place').value = data.place;
+        document.getElementById('recieved_date').value = data.recieved_date;
+        document.getElementById('used').value = data.used;
+        document.getElementById('barcode').value = data.barcode;
+        document.getElementById('filepath').value = data.filepath;
+        alert(data.message);
+        finalsubmitbtn.style.display = "block";
+    }
+})
+});
+
+// $('#expire_date').value(data.expire_date);
+// $('#orderno').value(data.orderno);
+// $('#place').value(data.place);
+// $('#recieved_date').value(data.recieved_date);
+// $('#used').value(data.usedstr);
+// $('#barcode').value(data.barcode);
+// $('#filepath').value(data.filepath);
     });
 </script>
+
+{{-- 상품명 값을 form에 넣기 --}}
+{{-- <script>
+    function getInputValue(){
+        
+            var inputVal = document.getElementById("title").value;
+            document.getElementById('title').value = inputVal
+            document.getElementById("myForm").submit();
+            document.getElementById("giftcon-form").submit();
+            alert("sent");
+        }
+</script> --}}
 
 
 

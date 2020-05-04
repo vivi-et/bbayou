@@ -39,25 +39,41 @@ class AjaxUploadController extends Controller
             ]);
         }
 
-
+        //OCR 실행, 텍스트 추출 
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
 
-        //일부 글 날려버리기
-        //하드코딩, 가능할경우 추후 개선
-        $toRemove = '모바일교환권';
-        if (substr_count($string, $toRemove))
-            $string = str_replace($toRemove, '', $string);
-
+        //공백 포함 연속된 12~16개의 숫자를 저장 = 바코드번호
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
+
+        //연속된 9자리 숫자를 저장 = 주문번호
+        preg_match('/\b\d{9}\b/', $string, $ocrorderno);
+
+        //바코드 번호 이전 모든 문자를 삭제
+        $expStr = explode($barcodeNo[0], $string);
+        //바코드 번호사이 공백지우기
         $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
-        // if (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
-        // else (preg_match('/\d\d\d\d \d\d\d\d \d\d\d\d/', $string, $barcodeNo));
-        // 기프티콘 제목에 교환권, 교환처 등이 있을경우 제거
-        $countEXCHANGE = substr_count($string, "교환");
-        if ($countEXCHANGE == 2) {
-            $findstr = "교환";
-            $pos = strpos($string, $findstr);
-            $string = substr_replace($string, '', $pos, strlen($findstr));
+        //expStr 1 offset 오류 상황재현 가능? // 해결됨
+        $string = $barcodeNo[0] . $expStr[1];
+
+        //교환처가 없고 저 로 나올떄
+        //하드코딩(Hardcoding) 가능할경우 개선
+        //인식률 상향 필요
+        $hasPlace =  substr_count($expStr[1], '교환처');
+        if(!$hasPlace){
+       
+            $string = str_replace('저','교환처',$string);
+    }
+
+        //특정 오타 교정
+        // 하드코딩, 가능할경우 추후 개선필요
+        // 날짜형식으로 분홍,노랑 기프티콘 분류 가능한지?
+        // (노랑 기프티콘) = y년 m월 d일
+        // (분홍 기프티콘) = y.m.d
+        $findthis = "교헌제";
+        $countEXCHANGE = substr_count($string, $findthis);
+        if ($countEXCHANGE) {
+            $pos = strpos($string, $findthis);
+            $string = substr_replace($string, '교환처', $pos, strlen($findthis));
         }
 
         //문자열 $string 추가 가공
@@ -98,7 +114,7 @@ class AjaxUploadController extends Controller
             } else {
                 $input = str_replace('.', '-', $input);
             }
-            $date = date_create_from_format('d/m/Y:H:i:s', $input);
+            // $date = date_create_from_format('d/m/Y:H:i:s', $input);
             return $input;
         }
 
@@ -111,17 +127,24 @@ class AjaxUploadController extends Controller
 
 
 
-        //catdata[0, 3], 유통기한
-        $key = array_search($cat[0], $cat);
-        $catdata[0] = strtodate($catdata[$key]);
-        $key = array_search($cat[3], $cat);
-        $catdata[3] = strtodate($catdata[$key]);
-        $catdata[3] = date("Y-m-d");
+        //catdata[0, 3], 유효기한, 받은날짜
+        $catdata[0] = strtodate($catdata[0]);
+        $catdata[3] = strtodate($catdata[3]);
 
+        if(!$catdata[3]){
+            $catdata[3] = null;
+        }
+        // $catdata[3] = date("Y-m-d");
 
-        $savedcatdata2 = $catdata[2];
+        //catdata[1], 주문번호
+        //regex 9자리가 아닌경우
+        if (!empty($ocrorderno))
+            $catdata[1] = $ocrorderno[0];
+
 
         // catdata[2], 교환처
+        $savedcatdata2 = $catdata[2];
+
         // 하드코딩임, 가능할경우 개선
         if (strpos($catdata[2], '6525'))
             $catdata[2] = 'GS25';
@@ -145,19 +168,21 @@ class AjaxUploadController extends Controller
 
 
         //catdata[4] 기프티콘 사용 여부 확인
-        $used = false;
+        $used = 2;
         $usedstr = '미기재';
         if ($catdata[4] == '사용완료') {
-            $used = true;
+            $used = 1;
             $usedstr = '사용완료';
         } elseif ($catdata[4] == '사용안함') {
-            $used = false;
+            $used = 0;
             $usedstr = '사용안함';
         }
 
         //catdata[5], 바코드
-
         $catdata[5] = $barcodeNo[0];
+
+        //바코드 4자리 단위로 분리
+        $seperatedBarcode = wordwrap($barcodeNo[0], 4, ' ', true);
 
         // return response()->json([
         //     'message' => '성공!',
@@ -180,6 +205,7 @@ class AjaxUploadController extends Controller
             'usedstr' => $usedstr,
             'barcode' => $catdata[5],
             'filepath' => $fileNameToStore,
+            'sepbarcode' => $seperatedBarcode
         ]);
     }
 }

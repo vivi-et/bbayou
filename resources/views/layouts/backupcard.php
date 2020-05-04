@@ -4,11 +4,11 @@
 
         <div class="row">
 
-            @foreach($giftcons as $giftcon)
+            @foreach($posts as $post)
 
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
-                    @if($giftcon->cover_image == "noimage.jpg")
+                    @if($post->cover_image == "noimage.jpg")
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
                         role="img" aria-label="Placeholder: Thumbnail">
@@ -19,12 +19,12 @@
                     @else
 
                     <img class="bd-placeholder-img card-img-top" width="100%" height="225"
-                        src="/storage/cover_images/{{ $giftcon->cover_image }}">
+                        src="/storage/cover_images/{{ $post->cover_image }}">
                     @endif
                     <div class="card-body">
                         <p class="card-text">
-                            <a href="/post/{{$giftcon->id}}">
-                                {{$giftcon->title}}
+                            <a href="/post/{{$post->id}}">
+                                {{$post->title}}
                             </a>
                         </p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -32,8 +32,8 @@
                                 <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                             </div>
-                            <small class="text-muted">{{ $giftcon->user->name }}</small>
-                            <small class="text-muted"> {{ $giftcon -> created_at->toFormattedDateString() }} </small>
+                            <small class="text-muted"> {{ $post -> user -> name }} </small>
+                            <small class="text-muted"> {{ $post -> created_at->toFormattedDateString() }} </small>
                         </div>
                     </div>
                 </div>
