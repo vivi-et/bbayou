@@ -21,8 +21,27 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function alloy()
+    {
+    }
+
+
+
     public function index()
     {
+        // 1587974964455-3_1588600661.png
+
+        $im = 'storage/cover_images/1588022438127-12_1588600289.jpg';
+        $im2 = imagecrop($im, ['x' => 40, 'y' => 39, 'width' => 722, 'height' => 660]);
+        if ($im2 !== FALSE) {
+            imagepng($im2, 'example-cropped.png');
+            imagedestroy($im2);
+        }
+        imagedestroy($im);
+
+
+
 
         $callfromDB = 0;
         // 테스트 설정
@@ -48,8 +67,8 @@ class TestController extends Controller
         $barcodeWithSpace = $barcodeNo[0];
         $expStr = explode($barcodeNo[0], $string);
         $barcodeNo[0] = preg_replace('/\D/', '', $barcodeNo[0]);
-        
-        
+
+
 
         //연속된 9자리 숫자를 저장 = 주문번호
         //범위로 찾을경우 바코드 번호랑 겹칠수도 있음
@@ -63,10 +82,10 @@ class TestController extends Controller
         //교환처가 없고 저 로 나올떄
         //인식률 상향 필요
         $hasPlace =  substr_count($expStr[1], '교환처');
-        if(!$hasPlace){
-       
-            $string = str_replace('저','교환처',$string);
-    }
+        if (!$hasPlace) {
+
+            $string = str_replace('저', '교환처', $string);
+        }
 
         //특정 오타 교정
         // 하드코딩, 가능할경우 추후 개선필요
@@ -129,7 +148,7 @@ class TestController extends Controller
             return substr($string, $ini, $len);
         }
 
-        
+
 
 
 
@@ -234,7 +253,8 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test', compact('package'));
+        return view('test2');
+        // return view('test', compact('package'));
     }
 
 

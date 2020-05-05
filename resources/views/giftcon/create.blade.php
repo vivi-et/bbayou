@@ -70,7 +70,46 @@
 
 </div>
 
+@push('modal')
 
+<div id=uploadedimageModal class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload and Crop Image</h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8 text-center">
+                        <div class="image_demo" style="width:350px; margin-top:30px;">
+
+                        </div>
+                        <div class="col-md-4" style="padding-top:30px;">
+                            <button class="btn btn-success crop_image"> Crop & Upload Image</button>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $.(document).ready(function(){
+                        $image_crop = $('#image_demo').coppie({
+                            enableExif
+
+                        });
+                });
+            </script>
+
+            @endpush
+
+        </div>
+    </div>
+
+
+</div>
 
 
 
@@ -78,7 +117,8 @@
 
 </div>
 
-</div>
+
+
 
 @include('layouts.error')
 
@@ -87,9 +127,19 @@
 
 @push('headertest')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<script src="/js/cropper.js"></script><!-- Cropper.js is required -->
+<link href="/css/cropper.css" rel="stylesheet">
+<script src="/js/cropper.js"></script>
 @endpush
 
 @push('script')
+{{-- cropper --}}
+<script>
+// $("#image").cropper();
+
+</script>
+
+{{-- file preview --}}
 <script type="text/javascript">
     var x = document.getElementById("img_prv");
   if (x.style.display === "none") {
@@ -128,10 +178,12 @@
 
 </script>
 
+{{-- css 스타일 --}}
 <style>
     #result-table td {
         width: 300px;
     }
+    .cropper-crop{}
 </style>
 
 
