@@ -23,7 +23,42 @@ class TestController extends Controller
      */
 
     public function index()
+    
     {
+
+        // $fileNameToStore = '1587974964455-1_1588710812.png';
+        // $source         = 'storage/temp_images/' . $fileNameToStore;
+        // $destination    = 'storage/temp_images/resized' . $fileNameToStore;
+        // $maxsize        = 1000;
+
+        // $size = getimagesize($source);
+        // $width_orig = $size[0];
+        // $height_orig = $size[1];
+        // unset($size);
+        // $height = 961;
+        // $width = 472;
+        // while ($height > $maxsize) {
+        //     $height = round($width * $height_orig / $width_orig);
+        //     $width = ($height > $maxsize) ? --$width : $width;
+        // }
+        // unset($width_orig, $height_orig, $maxsize);
+        // $images_orig    = imagecreatefromstring(file_get_contents($source));
+        // $photoX         = imagesx($images_orig);
+        // $photoY         = imagesy($images_orig);
+        // $images_fin     = imagecreatetruecolor($width, $height);
+        // imagesavealpha($images_fin, true);
+        // $trans_colour   = imagecolorallocatealpha($images_fin, 0, 0, 0, 127);
+        // imagefill($images_fin, 0, 0, $trans_colour);
+        // unset($trans_colour);
+        // ImageCopyResampled($images_fin, $images_orig, 0, 0, 0, 0, $width + 1, $height + 1, $photoX, $photoY);
+        // unset($photoX, $photoY, $width, $height);
+        // imagepng($images_fin, $destination);
+
+        // return $destination;
+        // unset($destination);
+        // ImageDestroy($images_orig);
+
+
         // 1588022438127-3_1588600236.jpg
 
 
@@ -51,8 +86,13 @@ class TestController extends Controller
 
         // return $a;
 
-       
+        // $originalImagePath = '1587974964455-0_1588709007.png';
 
+        // $filename = 'storage/temp_images/' . $originalImagePath;
+
+        // $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+        // dd($ext);
 
 
 

@@ -9,7 +9,6 @@
 
 <br>
 <hr>
-
 <div class="row">
     <div id="firstSm" class="col-sm" style="text-align: center">
         <form id="main_form" method="POST" action="/post" enctype="multipart/form-data">
@@ -33,6 +32,17 @@
                 <button type="submit" id="submitbtn" class="btn btn-primary" style="width:300px;">기프티콘 확인</button>
             </div>
         </form>
+
+        <button id="btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+            style="width:300px;">
+            Launch demo modal
+        </button>
+
+        <br>
+
+        {{-- asdfasdfa;fjasdl;fjaskdl;fjl --}}
+        <img src="/storage/temp_images/1587974964455-4_1588712682.png" id="cropped">
+
     </div>
 
     <div class="col-sm" style="text-align: center" id="result_col_sm">
@@ -68,77 +78,39 @@
 </div>
 
 
-</div>
-
-@push('modal')
-
-<div id=uploadedimageModal class="modal" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Upload and Crop Image</h4>
-
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-8 text-center">
-                        <div class="image_demo" style="width:350px; margin-top:30px;">
+                <img src="/storage/temp_images/1587974964455-4_1588712682.png" id="cropbox">
+                <!-- This is the image we're attaching Jcrop to -->
 
-                        </div>
-                        <div class="col-md-4" style="padding-top:30px;">
-                            <button class="btn btn-success crop_image"> Crop & Upload Image</button>
-                        </div>
-                        <br><br>
-                    </div>
-                </div>
+                <!-- This is the form that our event handler fills -->
+                <form onsubmit="return false;" class="coords">
+                    <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
+                    <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+                    <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+                    <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+                    <label>W <input type="text" size="4" id="w" name="w" /></label>
+                    <label>H <input type="text" size="4" id="h" name="h" /></label>
+                </form>
+
+
+
+
             </div>
-
-            <script>
-                $.(document).ready(function(){
-                        $image_crop = $('#image_demo').coppie({
-                            enableExif
-
-                        });
-                });
-            </script>
-
-            @endpush
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="modal-submit" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
-
-
-</div>
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-    Launch demo modal
-  </button>
-  
-
-<div id="myModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>Modal body text goes here.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save changes</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
 
 </div>
 
@@ -152,16 +124,53 @@
 
 @push('headertest')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
-<script src="/js/cropper.js"></script><!-- Cropper.js is required -->
-<link href="/css/cropper.css" rel="stylesheet">
-<script src="/js/cropper.js"></script>
+<script src="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/js/Jcrop.js"></script>
+<link rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/css/Jcrop.css" type="text/css">
 @endpush
 
 @push('script')
-{{-- cropper --}}
 <script>
-// $("#image").cropper();
+    var originalPath = '';
+</script>
 
+
+<script type="text/javascript">
+    $("#modal-submit").click(function(e) {
+        // e.preventDefault();
+
+    var x = document.getElementById('x1').value;
+    var y = document.getElementById('y1').value;
+    var width= document.getElementById('w').value;
+    var height = document.getElementById('h').value;
+    var originalImagePath = document.getElementById('filepath').value;
+
+    console.log(originalImagePath);
+    console.log('from modalguy');
+
+    $.ajax({
+        type: "POST",
+        url: "{{ route('ajaxupload.crop') }}",
+        dataType:'JSON',
+        data: { 'x' : x, 'y':y,'width':width,'height':height, 'originalImagePath':originalImagePath},
+        // contentType: false,
+        // cache: false,
+        // processData: false,
+
+        success: function(data) {
+            $('#myModal').modal('toggle');
+            
+            var crop = data.croppedImagePath;
+            document.getElementById("cropped").src = "/storage/giftcon_images/"+crop;
+            // var x = document.getElementById("img_prv");
+            // x.style.display = "block";
+
+            alert(data.ext);
+
+          
+            
+        }
+    });
+});
 </script>
 
 {{-- file preview --}}
@@ -208,7 +217,8 @@
     #result-table td {
         width: 300px;
     }
-    .cropper-crop{}
+
+    .cropper-crop {}
 </style>
 
 
@@ -273,7 +283,11 @@ submitbtn.style.visibility = "hidden";
             data.usedstr,
             data.sepbarcode, 
             data.filepath,
+
         ];
+
+        alert(data.filepath);
+getImage(data.filepath);
 
         let ajaxCat = [
             "expire_date",
@@ -318,9 +332,6 @@ submitbtn.style.visibility = "hidden";
         }
         i--;
         }
-
-
-
         document.getElementById('expire_date').value = data.expire_date;
         document.getElementById('orderno').value = data.orderno;
         document.getElementById('place').value = data.place;
@@ -342,6 +353,37 @@ submitbtn.style.visibility = "hidden";
 // $('#barcode').value(data.barcode);
 // $('#filepath').value(data.filepath);
     });
+</script>
+
+
+{{-- ModalJCrop 관련 스크립트 --}}
+<script type="text/javascript">
+    console.log('from modal JCrop');
+function getImage(path){
+            document.getElementById('cropbox').src = "/storage/temp_images/"+path;
+
+
+// 472, 961
+    
+                jQuery('#cropbox').Jcrop({
+                    onChange: showCoords,
+                    onSelect: showCoords
+                });
+    
+    
+            // Simple event handler, called from onChange and onSelect
+            // event handlers, as per the Jcrop invocation above
+            function showCoords(c)
+            {
+                jQuery('#x1').val(c.x);
+                jQuery('#y1').val(c.y);
+                jQuery('#x2').val(c.x2);
+                jQuery('#y2').val(c.y2);
+                jQuery('#w').val(c.w);
+                jQuery('#h').val(c.h);
+
+            };
+        };
 </script>
 
 {{-- 상품명 값을 form에 넣기 --}}

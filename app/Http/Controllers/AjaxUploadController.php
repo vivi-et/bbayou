@@ -8,6 +8,75 @@ use Validator;
 class AjaxUploadController extends Controller
 
 {
+    function crop(Request $request)
+    {
+
+        $xx = $request->x;
+        $yy = $request->y;
+        $new_width = $request->width;
+        $new_height = $request->height;
+        $originalImagePath = $request->originalImagePath;
+
+
+
+        $src = 'storage/temp_images/' . $originalImagePath;
+
+        $filename = $src;
+
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $percent = 0.5;
+
+        list($width, $height) = getimagesize($filename);
+
+        switch ($ext) {
+            case 'jpg':
+                $image = imagecreatefromjpeg($filename);
+                break;
+            case 'jpeg':
+                $image = imagecreatefromjpeg($filename);
+                break;
+            case 'png':
+                $image = imagecreatefrompng($filename);
+                break;
+        }
+
+
+        $image_p = imagecreatetruecolor($new_width, $new_height);
+
+        $a = imagecopyresampled($image_p, $image, 0, 0, $xx, $yy, $new_width, $new_height, $new_width, $new_height);
+        // Outputs the image
+        // header('Content-Type: image/jpeg');
+        // imagejpeg($image_p, null, 100);
+
+
+        $croppedImagePath = time() . '.' . $ext;
+        // imagejpeg($image_p, "storage/giftcon_images/" . $croppedImagePath);
+
+        switch ($ext) {
+            case 'jpg':
+                imagejpeg($image_p, "storage/giftcon_images/" . $croppedImagePath);
+                break;
+            case 'jpeg':
+                imagejpeg($image_p, "storage/giftcon_images/" . $croppedImagePath);
+                break;
+            case 'png':
+                imagejpeg($image_p, "storage/giftcon_images/" . $croppedImagePath);
+                break;
+        }
+
+
+
+
+        // $path = $image_p->storeAs('public/cover_images', $fileNameToStore);
+
+
+        return response()->json([
+            'message' => '성공!',
+            'croppedImagePath' => $croppedImagePath,
+            'ext' => $ext,
+
+        ]);
+    }
     function action(Request $request)
     {
         $validation = Validator::make($request->all(), [
@@ -59,10 +128,10 @@ class AjaxUploadController extends Controller
         //하드코딩(Hardcoding) 가능할경우 개선
         //인식률 상향 필요
         $hasPlace =  substr_count($expStr[1], '교환처');
-        if(!$hasPlace){
-       
-            $string = str_replace('저','교환처',$string);
-    }
+        if (!$hasPlace) {
+
+            $string = str_replace('저', '교환처', $string);
+        }
 
         //특정 오타 교정
         // 하드코딩, 가능할경우 추후 개선필요
@@ -131,7 +200,7 @@ class AjaxUploadController extends Controller
         $catdata[0] = strtodate($catdata[0]);
         $catdata[3] = strtodate($catdata[3]);
 
-        if(!$catdata[3]){
+        if (!$catdata[3]) {
             $catdata[3] = null;
         }
         // $catdata[3] = date("Y-m-d");
@@ -195,9 +264,50 @@ class AjaxUploadController extends Controller
         //     'filepath' => $fileNameToStore,
         // ]);
 
+        //이미지 분석후 사이즈 조절
+
+        // 472 by 961 pixels wh
+        $img = 'storage/temp_images/' . $fileNameToStore;
+
+        $source         = 'storage/temp_images/' . $fileNameToStore;
+        $destination    = 'storage/temp_images/re' . $fileNameToStore;
+        $maxsize        = 1000;
+
+        $size = getimagesize($source);
+        $width_orig = $size[0];
+        $height_orig = $size[1];
+        unset($size);
+        $height = 961;
+        $width = 472;
+        while ($height > $maxsize) {
+            $height = round($width * $height_orig / $width_orig);
+            $width = ($height > $maxsize) ? --$width : $width;
+        }
+        unset($width_orig, $height_orig, $maxsize);
+        $images_orig    = imagecreatefromstring(file_get_contents($source));
+        $photoX         = imagesx($images_orig);
+        $photoY         = imagesy($images_orig);
+        $images_fin     = imagecreatetruecolor($width, $height);
+        imagesavealpha($images_fin, true);
+        $trans_colour   = imagecolorallocatealpha($images_fin, 0, 0, 0, 127);
+        imagefill($images_fin, 0, 0, $trans_colour);
+        unset($trans_colour);
+        ImageCopyResampled($images_fin, $images_orig, 0, 0, 0, 0, $width + 1, $height + 1, $photoX, $photoY);
+        unset($photoX, $photoY, $width, $height);
+
+        if ($extension == 'png')
+            imagepng($images_fin, $destination);
+        else
+            imagejpeg($images_fin, $destination);
+
+        unset($destination);
+        // ImageDestroy($images_orig);
+        // ImageDestroy($images_fin);
+
+        $fileNameToStore = 're' . $fileNameToStore;
 
 
-        //
+        // resize_image('storage/temp_images/' . $fileNameToStore, 472, 961);
 
         return response()->json([
             'message' => '성공!',

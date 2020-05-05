@@ -18,7 +18,7 @@
                 <h1>Jcrop - Event Handlers</h1>
 
                 <!-- This is the image we're attaching Jcrop to -->
-                <img src="/storage/cover_images/1588022438127-7_1588600656.jpg" id="cropbox" />
+                <img src="/storage/temp_images/1587974964455-4_1588712682.png" id="cropbox" />
 
                 <!-- This is the form that our event handler fills -->
                 <form onsubmit="return false;" class="coords">

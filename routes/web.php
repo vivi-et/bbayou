@@ -13,7 +13,8 @@ Auth::routes();
 // Route::get('/{giftcon}', 'TestController@show')->name('test');
 Route::get('/', 'TestController@index')->name('test');
 // Route::get('/', 'HomeController@index')->name('home');
-Route::post('/post/action', 'AjaxUploadController@action')->name('ajaxupload.action');
+Route::post('/giftcon/action', 'AjaxUploadController@action')->name('ajaxupload.action');
+Route::post('/giftcon/crop', 'AjaxUploadController@crop')->name('ajaxupload.crop');
 Route::post('/post/{post}/comment', 'CommentController@store');
 
 // // Route::get('/home', 'HomeController@index')->name('home');
