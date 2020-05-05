@@ -30,7 +30,7 @@ class AjaxUploadController extends Controller
             //db에 저장할 파일이름
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
             //이미지 업로드
-            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            $path = $request->file('cover_image')->storeAs('public/temp_images', $fileNameToStore);
         } else {
             $fileNameToStore = 'noimage.jpg';
             return response()->json([
@@ -40,7 +40,7 @@ class AjaxUploadController extends Controller
         }
 
         //OCR 실행, 텍스트 추출 
-        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/temp_images/' . $fileNameToStore . ' stdout -l kor');
 
         //공백 포함 연속된 12~16개의 숫자를 저장 = 바코드번호
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
@@ -194,6 +194,10 @@ class AjaxUploadController extends Controller
         //     'barcode' => $catdata[5],
         //     'filepath' => $fileNameToStore,
         // ]);
+
+
+
+        //
 
         return response()->json([
             'message' => '성공!',

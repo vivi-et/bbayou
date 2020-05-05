@@ -53,6 +53,9 @@
 </body>
 
 <script type="text/javascript">
+
+console.log('asdfasdf');
+
     jQuery(document).ready(function(){
 
             jQuery('#cropbox').Jcrop({

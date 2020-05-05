@@ -22,23 +22,38 @@ class TestController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function alloy()
-    {
-    }
-
-
-
     public function index()
     {
-        // 1587974964455-3_1588600661.png
+        // 1588022438127-3_1588600236.jpg
 
-        $im = 'storage/cover_images/1588022438127-12_1588600289.jpg';
-        $im2 = imagecrop($im, ['x' => 40, 'y' => 39, 'width' => 722, 'height' => 660]);
-        if ($im2 !== FALSE) {
-            imagepng($im2, 'example-cropped.png');
-            imagedestroy($im2);
-        }
-        imagedestroy($im);
+
+        // $src = 'storage/cover_images/1588022438127-3_1588600236.jpg';
+
+        // $filename = $src;
+        // $percent = 0.5;
+        
+        // list($width, $height) = getimagesize($filename);
+        
+        // $new_width  = 730;
+        // $new_height = 665;
+        
+        // $image_p = imagecreatetruecolor($new_width, $new_height);
+        // $image = imagecreatefromjpeg($filename);
+        
+        // $a = imagecopyresampled($image_p, $image, 0, 0 , 31 , 36 , $new_width, $new_height, $new_width, $new_height);
+        // // Outputs the image
+        // header('Content-Type: image/jpeg');
+        // // imagejpeg($image_p, null, 100);
+        // $fileNameToStore = time() . '.' . 'jpg';
+        // imagejpeg($image_p, "storage/cover_images/".$fileNameToStore);
+        // // $path = $image_p->storeAs('public/cover_images', $fileNameToStore);
+
+
+        // return $a;
+
+       
+
+
 
 
 
@@ -253,7 +268,7 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test2');
+        return view('test4');
         // return view('test', compact('package'));
     }
 

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 //     });
 
 Auth::routes();
+
+
 // Route::get('/{giftcon}', 'TestController@show')->name('test');
 Route::get('/', 'TestController@index')->name('test');
 // Route::get('/', 'HomeController@index')->name('home');
