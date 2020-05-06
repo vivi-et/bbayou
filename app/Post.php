@@ -24,7 +24,6 @@ class Post extends Model
 
     public function addComment($body)
     {
-
         // $this->comments() = all this post's comments
         $this->comments()->create(compact('body'));
     }

@@ -111,11 +111,13 @@ class TestController extends Controller
         //1588022438127-6_1588591104.jpg 안됨 해결요망
         //1588022438127-6_1588591104.jpg 안됨 해결요망
 
-        $fileNameToStore = '1588022438127-10_1588598745.jpg';
+        $fileNameToStore = '1588022438127-7_1588741367.jpg';
+
 
         // 파일 불러옴
-        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/cover_images/' . $fileNameToStore . ' stdout -l kor');
+        $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/temp_images/' . $fileNameToStore . ' stdout -l kor');
 
+        return $string;
 
         // 공백 포함 연속된 12~16개의 숫자를 저장 = 바코드번호
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
@@ -308,7 +310,7 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test4');
+        return view('test');
         // return view('test', compact('package'));
     }
 

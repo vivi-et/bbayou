@@ -1,5 +1,6 @@
 @extends('layouts.master')
 
+
 @if($flash = session('message'))
 <div class="alert alert-success" role="alert">
     {{ $flash }}
@@ -29,8 +30,20 @@
     </section>
 
     @if(count($giftcons))
-    @include('layouts.card')
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            <div class="row">
+            @foreach($giftcons as $giftcon)
+            @include('layouts.card')
+            @endforeach
+
+            </div>
+        </div>
+    </div>
     @endif
+
+
 
 </main>
 

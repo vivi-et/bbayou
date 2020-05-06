@@ -23,6 +23,7 @@ class GiftconController extends Controller
     public function index()
     {
         $giftcons = Giftcon::latest()->get();
+
         //tasks
         return view('giftcon.index', compact('giftcons'));
     }
@@ -35,6 +36,7 @@ class GiftconController extends Controller
     public function create(Request $request)
     {
 
+
         return view('giftcon.create');
     }
 
@@ -45,30 +47,33 @@ class GiftconController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    
+
     {
-    
+
         $this->validate(request(), [
             'title' => 'required|max:30'
         ]);
 
 
         Giftcon::create([
-            'title'=> request('title'),
+            'title' => request('title'),
             'expire_date' => request('expire_date'),
             'orderno' => (int) request('orderno'),
             'place' => request('place'),
             'recieved_date' => request('recieved_date'),
             'used' => request('used'),
-            'user_id' => auth()->id(),
             'barcode' => request('barcode'),
+            'imagepath' => request('filepath'),
+            'user_id' => auth()->id(),
         ]);
 
 
-        
+
         session()->flash('message', 'Giftcon Created!');
 
-        return view('giftcon.index');
+
+        $giftcons = Giftcon::latest()->get();
+        return redirect('giftcon')->with('giftcons');
     }
 
     /**
@@ -77,9 +82,23 @@ class GiftconController extends Controller
      * @param  \App\r  $r
      * @return \Illuminate\Http\Response
      */
-    public function show(r $r)
+    public function show(Giftcon $giftcon)
     {
-        //
+        $status = $giftcon->used;
+
+        switch ($status) {
+            case 0;
+                $status = '사용안함';
+                break;
+            case 1;
+                $status = '사용함';
+                break;
+            case 2;
+                $status = '미기재';
+                break;
+        }
+
+        return view('giftcon.show')->with('giftcon', $giftcon)->with('status', $status);
     }
 
     /**

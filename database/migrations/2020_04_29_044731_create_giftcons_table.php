@@ -19,13 +19,14 @@ class CreateGiftconsTable extends Migration
             $table->date('expire_date');
             $table->integer('orderno');
             $table->string('place');
-            $table->date('recieved_date')->nullable;
+            $table->string('imagepath');
+            $table->date('recieved_date')->nullable()->default(null);
             //0 사용안함 1 사용함 2 미기재
-            $table->integer('used')->nullable;
-            $table->timestamp('used_on');
-            $table->bigInteger('user_id');
-            $table->bigInteger('user_name');
+            $table->integer('used');
             $table->string('barcode');
+            $table->timestamp('used_on')->nullable()->default(null);
+            $table->bigInteger('user_id');
+            // $table->bigInteger('user_name');
             $table->timestamps();
         });
     }

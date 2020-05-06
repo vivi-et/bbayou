@@ -1,10 +1,3 @@
-<div class="album py-5 bg-light">
-    <div class="container">
-
-
-        <div class="row">
-
-            @foreach($giftcons as $giftcon)
 
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
@@ -18,12 +11,14 @@
                     </svg>
                     @else
 
+                    {{ $giftcon->imagepath }}
+
                     <img class="bd-placeholder-img card-img-top" width="100%" height="225"
-                        src="/storage/cover_images/{{ $giftcon->cover_image }}">
+                        src="/storage/giftcon_images/{{ $giftcon->imagepath }}">
                     @endif
                     <div class="card-body">
                         <p class="card-text">
-                            <a href="/post/{{$giftcon->id}}">
+                            <a href="/giftcon/{{$giftcon->id}}">
                                 {{$giftcon->title}}
                             </a>
                         </p>
@@ -39,10 +34,6 @@
                 </div>
             </div>
 
-            @endforeach
 
 
 
-        </div>
-    </div>
-</div>

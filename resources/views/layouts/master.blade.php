@@ -31,7 +31,7 @@
     <meta name="theme-color" content="#563d7c">
 
     @stack('temp')
-    
+
 
     <style>
         .bd-placeholder-img {
@@ -98,13 +98,15 @@
 
 
     </header>
-
     <div class="container">
         <br>
         @yield('content')
     </div>
+
+   </div>
     @include('layouts.footer')
     @stack('script')
 </body>
 
 </html>
+

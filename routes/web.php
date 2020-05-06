@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GiftconTradePostController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,12 +12,13 @@ Auth::routes();
 
 
 // Route::get('/{giftcon}', 'TestController@show')->name('test');
-Route::get('/', 'TestController@index')->name('test');
-// Route::get('/', 'HomeController@index')->name('home');
+// Route::get('/', 'TestController@index')->name('test');
+Route::get('/', 'HomeController@index')->name('home');
 Route::post('/giftcon/action', 'AjaxUploadController@action')->name('ajaxupload.action');
 Route::post('/giftcon/crop', 'AjaxUploadController@crop')->name('ajaxupload.crop');
 Route::post('/post/{post}/comment', 'CommentController@store');
 
+Route::resource('/giftcon/trade', 'GiftconTradePostController');
 // // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/post/create', 'PostController@create');
 // Route::get('/post', 'PostController@index');
