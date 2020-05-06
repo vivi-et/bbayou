@@ -26,38 +26,78 @@
         </div>
     </section>
 
+    <div class="row">
+        @foreach ($user->giftcons->reverse() as $giftcon)
+        <div class="col-md-4">
+            <div class="slide-container">
+
+                <div class="wrapper" style="float: left">
+                    <div class="clash-card barbarian">
+                        <div class="clash-card__image clash-card__image--barbarian">
+                            <div style="background-image: url('/storage/giftcon_images/{{ $giftcon->imagepath }}'); width: 100%;
+                                    height: 100%;background-position: center center; background-repeat: no-repeat;"
+                                alt="barbarian">
+                            </div>
+                        </div>
+                        <div class="clash-card__level clash-card__level--barbarian"><a href="#">{{ $giftcon->user->name }}</a></div>
+                        <div class="clash-card__unit-name">{{ $giftcon->title }}</div>
+                        <div class="clash-card__unit-description">
 
 
 
-    @foreach ($user->giftcons->reverse() as $giftcon)
+                            번호 : {{$giftcon->id}}
+                            <br>
+                            유효기간 : {{$giftcon->expire_date}}
+                            <br>
+                            {{-- 주문번호 : {{$giftcon->orderno}}
+                            <br> --}}
+                            교환처 : {{$giftcon->place}}
+                            <br>
+                            {{-- 바코드 : {{wordwrap($giftcon->barcode, 4, ' ', true)}} --}}
+                            상태 : {{ $giftcon->used }}
+                            <br>
+                            <br>
+                            <p class="blog-post-meta"> 
+                                {{ $giftcon->created_at->diffforhumans()}} </p>
 
 
-    <div class="row" id="test" style="outline: 5px dotted green; overflow:hidden;">
+                        </div>
 
-        <div class="col-sm-4">
-            <a href="#">
-                <img class="img-fluid rounded mb-3 mb-md-0" src="/storage/giftcon_images/{{ $giftcon->imagepath }} alt="">
-            </a>
+                        <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
+                            <div class="one-third">
+                                <div class="stat">선물하기</div>
+                                <div class="stat-value">Present</div>
+                            </div>
+
+                            <div class="one-third">
+                                <div class="stat">사용하기</div>
+                                <div class="stat-value">Use</div>
+                            </div>
+
+                            <div class="one-third no-border">
+                                <div class="stat">거래하기</div>
+                                <div class="stat-value">Trade</div>
+                            </div>
+
+                        </div>
+
+
+                    </div><!-- end clash-card barbarian-->
+                </div><!-- end wrapper -->
+
+
+            </div> <!-- end container -->
         </div>
-        <div style="margin-right: 10px"></div>
-        <div class=" col-sm-10">
-                <h3>{{ $giftcon->title }}</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium veniam exercitationem
-                    expedita laborum at voluptate. Labore, voluptates totam at aut nemo deserunt rem magni
-                    pariatur quos perspiciatis atque eveniet unde.</p>
-                <a class="btn btn-primary" href="#">View Project</a>
-        </div>
 
-
-
-
+        @endforeach
     </div>
 
 
-    @endforeach
 
-    <div style="clear: both"></div>
 
+
+
+    <link href="{{ asset('css/card.css') }}" rel="stylesheet">
 
 
     {{-- @if(count($giftcons))
@@ -66,12 +106,8 @@
 
 </main>
 
-<style>
-    #test {
-        float: left;
-        width: 45%;
-    }
-</style>
+
+
 
 
 @endsection
@@ -86,19 +122,19 @@
 // <div class="col-sm">
 //     <h2 class="blog-post-title">{{$giftcon->title}} </h2>
 
-//     번호 : {{$giftcon->id}}
-//     <br> 
-//     유효기간 : {{$giftcon->expire_date}}
-//     <br>
-//     {{-- 주문번호 : {{$giftcon->orderno}}
-//     <br> --}}
-//     교환처 : {{$giftcon->place}}
-//     <br>
-//     {{-- 바코드 : {{wordwrap($giftcon->barcode, 4, ' ', true)}} --}}
-//     상태 : {{ $giftcon->used }}
-//     <br>
-//     <br>
-//     <p class="blog-post-meta"> <a href="#">{{ $giftcon->user->name }}</a>
-//         {{ $giftcon->created_at->diffforhumans()}} </p>
+    // 번호 : {{$giftcon->id}}
+    // <br> 
+    // 유효기간 : {{$giftcon->expire_date}}
+    // <br>
+    // {{-- 주문번호 : {{$giftcon->orderno}}
+    // <br> --}}
+    // 교환처 : {{$giftcon->place}}
+    // <br>
+    // {{-- 바코드 : {{wordwrap($giftcon->barcode, 4, ' ', true)}} --}}
+    // 상태 : {{ $giftcon->used }}
+    // <br>
+    // <br>
+    // <p class="blog-post-meta"> <a href="#">{{ $giftcon->user->name }}</a>
+    //     {{ $giftcon->created_at->diffforhumans()}} </p>
 // </div>
 </script>

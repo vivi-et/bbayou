@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Response;
 use App\Giftcon;
 use DateTime;
 use PDO;
+use Picqer\Barcode\BarcodeGeneratorHTML;
+use Picqer\Barcode\BarcodeGeneratorJPG;
 
 class TestController extends Controller
 {
@@ -117,7 +119,6 @@ class TestController extends Controller
         // 파일 불러옴
         $string = shell_exec('tesseract /home/viviet/bbayou/public/storage/temp_images/' . $fileNameToStore . ' stdout -l kor');
 
-        return $string;
 
         // 공백 포함 연속된 12~16개의 숫자를 저장 = 바코드번호
         preg_match('/(?:\d[ \-]*){12,16}/', $string, $barcodeNo);
@@ -301,6 +302,16 @@ class TestController extends Controller
 
         // output the barcode as HTML div (see other output formats in the documentation and examples)
 
+        // return $barcodeNo[0];
+        $generator = new BarcodeGeneratorJPG();
+        // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128);
+        
+        file_put_contents('storage/cover_images/'.now(), $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
+        
+        // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100);
+
+
+
         $package = [
             'cat' => $cat,
             'catdata' => $catdata,
@@ -310,7 +321,7 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test');
+        return view('test5')->with('code',$barcodeNo[0]);
         // return view('test', compact('package'));
     }
 

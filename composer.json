@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.1",
+        "picqer/php-barcode-generator": "^2.0",
         "tecnickcom/tc-lib-barcode": "^1.15",
         "thiagoalessio/tesseract_ocr": "^2.9"
     },
