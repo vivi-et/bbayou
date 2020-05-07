@@ -303,11 +303,13 @@ class TestController extends Controller
         // output the barcode as HTML div (see other output formats in the documentation and examples)
 
         // return $barcodeNo[0];
-        $generator = new BarcodeGeneratorJPG();
+        $generator = new BarcodeGeneratorHTML();
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128);
         
-        file_put_contents('storage/cover_images/'.now(), $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
+        // file_put_contents('storage/cover_images/'.now(), $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
         
+        // $a = base64_encode($generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
+
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100);
 
 
@@ -321,7 +323,7 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test5')->with('code',$barcodeNo[0]);
+        return view('test5')->with('code',$barcodeNo[0])->with('generator',$generator);
         // return view('test', compact('package'));
     }
 

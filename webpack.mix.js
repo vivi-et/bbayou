@@ -18,3 +18,4 @@ mix
 // mix.js("resources/js/app.js", "public/js").sourceMaps();
 
 mix.sass("resources/sass/card.scss", "public/css");
+mix.js("node_modules/rasterizehtml/dist/rasterizeHTML.allinone.js", "public/js");

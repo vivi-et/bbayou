@@ -13,16 +13,19 @@
 {{ $code }}
 
 
-이 이미지를 ajax로 받아서 쏴주거나
+
+{{-- 이 이미지를 ajax로 받아서 쏴주거나
 https://stackoverflow.com/questions/18545034/how-do-i-convert-my-entire-div-data-into-image-and-save-it-into-directory-withou/18545150
 
-를 사용해서 아무튼 주기!!
+를 사용해서 아무튼 주기!! --}}
 </div>
 
 <br>
 <br>
 <br>
 
+{{-- <img src="data:image/png;base64,{{ $a }}"> --}}
+{!! $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100) !!}
 
 </main>
 @endsection

@@ -3,5 +3,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "files.associations": { ".blade.php": "html", ".tpl": "html" },
+    
 }
