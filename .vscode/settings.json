@@ -4,6 +4,12 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "files.associations": { ".blade.php": "html", ".tpl": "html" },
+    "files.associations": {
+        ".blade.php": "html",
+        ".tpl": "html"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
     
 }

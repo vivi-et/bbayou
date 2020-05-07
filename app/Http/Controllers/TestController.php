@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Response;
 use App\Giftcon;
 use DateTime;
 use PDO;
-use Picqer\Barcode\BarcodeGeneratorHTML;
-use Picqer\Barcode\BarcodeGeneratorJPG;
+// use Picqer\Barcode\BarcodeGeneratorHTML;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class TestController extends Controller
 {
@@ -25,8 +25,9 @@ class TestController extends Controller
      */
 
     public function index()
-    
+
     {
+  
 
         // $fileNameToStore = '1587974964455-1_1588710812.png';
         // $source         = 'storage/temp_images/' . $fileNameToStore;
@@ -68,15 +69,15 @@ class TestController extends Controller
 
         // $filename = $src;
         // $percent = 0.5;
-        
+
         // list($width, $height) = getimagesize($filename);
-        
+
         // $new_width  = 730;
         // $new_height = 665;
-        
+
         // $image_p = imagecreatetruecolor($new_width, $new_height);
         // $image = imagecreatefromjpeg($filename);
-        
+
         // $a = imagecopyresampled($image_p, $image, 0, 0 , 31 , 36 , $new_width, $new_height, $new_width, $new_height);
         // // Outputs the image
         // header('Content-Type: image/jpeg');
@@ -303,11 +304,11 @@ class TestController extends Controller
         // output the barcode as HTML div (see other output formats in the documentation and examples)
 
         // return $barcodeNo[0];
-        $generator = new BarcodeGeneratorHTML();
+        $generator = new BarcodeGeneratorPNG();
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128);
-        
+
         // file_put_contents('storage/cover_images/'.now(), $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
-        
+
         // $a = base64_encode($generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100));
 
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128,3,100);
@@ -323,7 +324,16 @@ class TestController extends Controller
             'sepCode' => $seperatedBarcode
         ];
 
-        return view('test5')->with('code',$barcodeNo[0])->with('generator',$generator);
+
+
+            $a = '<img src="data:image/png;base64,{!! base64_encode($generator->getBarcode(\'';
+            $b = 123412341234;
+            $c = '\', $generator::TYPE_CODE_128,1,100)) !!}">';
+
+
+
+
+        return view('test5')->with('code', $barcodeNo[0])->with('generator', $generator);
         // return view('test', compact('package'));
     }
 

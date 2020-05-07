@@ -107,9 +107,13 @@ class GiftconController extends Controller
      * @param  \App\r  $r
      * @return \Illuminate\Http\Response
      */
-    public function edit(r $r)
+    public function edit(Giftcon $giftcon)
     {
+
         //
+
+
+
     }
 
     /**
@@ -119,9 +123,12 @@ class GiftconController extends Controller
      * @param  \App\r  $r
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, r $r)
+    public function update(Request $request, Giftcon $giftcon)
     {
-        //
+
+        return response()->json([
+            'barcode' => $giftcon->barcode,
+        ]);
     }
 
     /**
