@@ -120,9 +120,6 @@
 
 @endsection
 
-@push('headertest')
-<meta name="csrf-token" content="{{ csrf_token() }}" />
-@endpush
 
 @push('script')
 <script type="text/javascript">

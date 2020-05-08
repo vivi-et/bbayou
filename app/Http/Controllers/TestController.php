@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Response;
 use App\Giftcon;
 use DateTime;
 use PDO;
+use Auth;
+
 // use Picqer\Barcode\BarcodeGeneratorHTML;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -27,7 +29,8 @@ class TestController extends Controller
     public function index()
 
     {
-  
+        
+       return Auth::user()->giftcons;
 
         // $fileNameToStore = '1587974964455-1_1588710812.png';
         // $source         = 'storage/temp_images/' . $fileNameToStore;

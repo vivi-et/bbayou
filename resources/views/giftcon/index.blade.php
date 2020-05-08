@@ -1,11 +1,6 @@
 @extends('layouts.master')
 
 
-@if($flash = session('message'))
-<div class="alert alert-success" role="alert">
-    {{ $flash }}
-</div>
-@endif
 
 
 @section('content')
@@ -13,6 +8,11 @@
 <a href="/giftcon/create">
     <button class="btn btn-primary">CREATE</button>
 </a>
+
+<a href="/giftcon/trade">
+    <button class="btn btn-primary">TRADE</button>
+</a>
+
 
 
 <main role="main">

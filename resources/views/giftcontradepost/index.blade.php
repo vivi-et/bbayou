@@ -1,7 +1,12 @@
-@extends('layouts.master')
+@push('header')
+<link href="{{ asset('css/card.css') }}" rel="stylesheet" />
+@endpush
 
+
+@extends('layouts.master')
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js">
 </script>
+
 @if($flash = session('message'))
 <div class="alert alert-success" role="alert">
     {{ $flash }}
@@ -22,6 +27,7 @@
     </section>
 
     <div class="row">
+        {{-- barcode 번호 hidden 으로 숨겨짐! --}}
         @foreach ($user->giftcons->reverse() as $giftcon)
         <div class="col-md-4" style="text-align: center">
             <div class="slide-container">
@@ -35,7 +41,7 @@
                         <div class="clash-card__level clash-card__level--barbarian">
                             <a href="#">{{ $giftcon->user->name }}</a>
                         </div>
-                        <div class="clash-card__unit-name">{{ $giftcon->title }}</div>
+                        <div class="clash-card__unit-name" style="overflow: hidden; margin:0 20px;">{{ $giftcon->title }}</div>
                         <div class="clash-card__unit-description">
                             번호 : {{$giftcon->id}}
                             <br />
@@ -51,7 +57,9 @@
                             <br />
                             <div id="theBarcode{{ $giftcon->id }}"></div>
                             <br />
-                            {{ $giftcon->barcode }}
+                            <div>
+                                {{ $giftcon->barcode }}
+                            </div>
                             <p class="blog-post-meta">
                                 {{ $giftcon->created_at->diffforhumans()}}
                             </p>
@@ -81,14 +89,12 @@
             <!-- end container -->
         </div>
 
+
         @endforeach
     </div>
 
-    <link href="{{ asset('css/card.css') }}" rel="stylesheet" />
 
-    {{-- @if(count($giftcons))
-    @include('layouts.card')
-    @endif --}}
+
 </main>
 <script type="text/javascript">
     $.ajaxSetup({
@@ -168,7 +174,6 @@
         background: rgb(141, 87, 21);
         cursor: pointer;
     }
-
 </style>
 
 @endsection

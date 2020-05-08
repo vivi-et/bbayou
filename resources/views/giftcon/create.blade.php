@@ -64,7 +64,7 @@
             </table>
 
             @csrf
-            {{-- <input id="title" name="title" hidden> --}} 
+            {{-- <input id="title" name="title" hidden> --}}
             <input id="expire_date" name="expire_date" hidden>
             <input id="orderno" name="orderno" hidden>
             <input id="place" name="place" hidden>
@@ -81,7 +81,7 @@
                 <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>
         </form>
         <br>
-    
+
     </div>
 </div>
 
@@ -101,16 +101,16 @@
 
                 <!-- This is the form that our event handler fills -->
                 <div style="display: none;">
-                <form onsubmit="return false;" class="coords">
-                    @csrf
-                    <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
-                    <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
-                    <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
-                    <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
-                    <label>W <input type="text" size="4" id="w" name="w" /></label>
-                    <label>H <input type="text" size="4" id="h" name="h" /></label>
-                </form>
-            </div>
+                    <form onsubmit="return false;" class="coords">
+                        @csrf
+                        <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
+                        <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+                        <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+                        <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+                        <label>W <input type="text" size="4" id="w" name="w" /></label>
+                        <label>H <input type="text" size="4" id="h" name="h" /></label>
+                    </form>
+                </div>
 
 
 
@@ -135,7 +135,7 @@
 
 @endsection
 
-@push('headertest')
+@push('header')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <script src="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/js/Jcrop.js"></script>
 <link rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/css/Jcrop.css" type="text/css">
@@ -364,13 +364,7 @@
                 }
             })
         });
-        // $('#expire_date').value(data.expire_date);
-        // $('#orderno').value(data.orderno);
-        // $('#place').value(data.place);
-        // $('#recieved_date').value(data.recieved_date);
-        // $('#used').value(data.usedstr);
-        // $('#barcode').value(data.barcode);
-        // $('#filepath').value(data.filepath);
+
     });
 </script>
 
@@ -405,17 +399,7 @@
     };
 </script>
 
-{{-- 상품명 값을 form에 넣기 --}}
-{{-- <script>
-    function getInputValue(){
-        
-            var inputVal = document.getElementById("title").value;
-            document.getElementById('title').value = inputVal
-            document.getElementById("myForm").submit();
-            document.getElementById("giftcon-form").submit();
-            alert("sent");
-        }
-</script> --}}
+
 
 
 

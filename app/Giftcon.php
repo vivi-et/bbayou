@@ -9,6 +9,10 @@ class Giftcon extends Model
 {
     protected $guarded = [];
 
+    protected $hidden = [
+        'barcode',
+        'imagepath',
+    ];
 
     public function user()
     {

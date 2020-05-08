@@ -87,6 +87,7 @@ class GiftconController extends Controller
     {
         $status = $giftcon->used;
 
+
         switch ($status) {
             case 0;
                 $status = '사용안함';
@@ -113,8 +114,8 @@ class GiftconController extends Controller
 
         //
 
-
-
+        // $seperatedBarcode = wordwrap($barcodeNo[0], 4, ' ', true);
+ 
     }
 
     /**
@@ -123,7 +124,7 @@ class GiftconController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\r  $r
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function update(Request $request, Giftcon $giftcon)
     {
 
@@ -135,6 +136,7 @@ class GiftconController extends Controller
 
         return response()->json([
             'barcode' => $base64image,
+            'barcodeno' => $barcodeno,
         ]);
     }
 
