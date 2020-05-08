@@ -30,11 +30,10 @@ class GiftconTradePostController extends Controller
         // 바코드 생성기 개체
         // 결국 view에서 data를 처리하는데 맞는 설계인가?
         // ajax 없이 controller에서 foreach 마다 다르게 생성해줄수있는가
-        $generator = new BarcodeGeneratorPNG();
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128);
     
         //tasks
-        return view('giftcontradepost.index')->with('user', $user)->with('generator', $generator);
+        return view('giftcontradepost.index')->with('user', $user);
     }
 
     /**

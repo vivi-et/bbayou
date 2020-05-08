@@ -7,6 +7,7 @@ use App\Post;
 use Illuminate\Http\Request;
 use App\Giftcon;
 use App\User;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class GiftconController extends Controller
 {
@@ -126,8 +127,14 @@ class GiftconController extends Controller
     public function update(Request $request, Giftcon $giftcon)
     {
 
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeno = $giftcon->barcode;
+
+        $base64image = base64_encode($generator->getBarcode($barcodeno, $generator::TYPE_CODE_128,2,100));
+
+
         return response()->json([
-            'barcode' => $giftcon->barcode,
+            'barcode' => $base64image,
         ]);
     }
 

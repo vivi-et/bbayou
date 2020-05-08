@@ -101,7 +101,6 @@
 
 
 <script>
-    // theDiv.innerHTML += "<?php echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($giftcon->barcode, $generator::TYPE_CODE_128,2,80)) . '">';?>"
     function makeImage(x) {
       
 
@@ -122,26 +121,20 @@
             processData: false,
             success: function (data) {
 
-              let v = data.barcode;
+              let base64image = data.barcode;
 
-                alert(data.barcode);
+                // alert(data.barcode);
 
                 
 
 
                 let theDiv = document.getElementById('theBarcode' + x);
-                let first = '<img src="data:image/png;base64,{!! base64_encode($generator->getBarcode(\'';
-                console.log(first);
-                let last = '\', $generator::TYPE_CODE_128,1,100)) !!}">';
-                console.log(last);
-                let str = first+v+last;
-
+                let htmloutput = '<img src="data:image/png;base64,' +base64image+'">';
+        
                 
-                theDiv.innerHTML += str;
-                // theDiv.innerHTML += '<?php echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($giftcon->barcode, $generator::TYPE_CODE_128,2,80)).'" >';?>';
+                theDiv.innerHTML += htmloutput;
 
                 let thisGiftcon = document.getElementById('giftcon' + x);
-                // <?php echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($giftcon->barcode, $generator::TYPE_CODE_128,2,80)) . '">';?>
 
                 html2canvas([thisGiftcon], {
                     onrendered: function (canvas) {
