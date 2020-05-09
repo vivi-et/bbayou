@@ -27,7 +27,7 @@ class GiftconTradePostController extends Controller
     {
         $user = Auth::user();
 
-        
+        $giftcons = $user->giftcons->reverse();
 
         // 바코드 생성기 개체
         // 결국 view에서 data를 처리하는데 맞는 설계인가?
@@ -35,7 +35,7 @@ class GiftconTradePostController extends Controller
         // return $generator->getBarcode('946058883978', $generator::TYPE_CODE_128);
     
         //tasks
-        return view('giftcontradepost.index')->with('user', $user);
+        return view('giftcontradepost.index')->with('giftcons', $giftcons);
     }
 
     /**

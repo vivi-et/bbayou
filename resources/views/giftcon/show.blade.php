@@ -24,7 +24,6 @@
             </div>
             <div class="col-sm">
                 <h2 class="blog-post-title">{{$giftcon->title}} </h2>
-
                 유효기간 : {{$giftcon->expire_date}}
                 <br>
                 {{-- 주문번호 : {{$giftcon->orderno}}

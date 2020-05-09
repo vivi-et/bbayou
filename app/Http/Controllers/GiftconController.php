@@ -130,13 +130,16 @@ class GiftconController extends Controller
 
         $generator = new BarcodeGeneratorPNG();
         $barcodeno = $giftcon->barcode;
+        $downloadAs = $giftcon->title.'_'.$giftcon->id.'.jpg';
 
         $base64image = base64_encode($generator->getBarcode($barcodeno, $generator::TYPE_CODE_128,2,100));
+        $seperatedBarcode = wordwrap($giftcon->barcode, 4, ' ', true);
 
 
         return response()->json([
             'barcode' => $base64image,
-            'barcodeno' => $barcodeno,
+            'barcodeno' => $seperatedBarcode,
+            'downloadAs'=> $downloadAs,
         ]);
     }
 
