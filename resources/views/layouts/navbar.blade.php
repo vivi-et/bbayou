@@ -14,6 +14,27 @@
       <strong>GIFTCON</strong>
     </a>
 
+     <a href="/board/free" style="color: white; margin-left:10px;">
+      <strong>자유게시판</strong>
+    </a>
+
+    
+     <a href="/board/humor" style="color: white; margin-left:10px;">
+      <strong>유머게시판</strong>
+    </a>
+
+    
+     <a href="/board/game" style="color: white; margin-left:10px;">
+      <strong>게임게시판</strong>
+    </a>
+
+    
+ <a href="/board/sport" style="color: white; margin-left:10px;">
+      <strong>스포츠게시판</strong>
+    </a>
+
+    
+
     @if(Auth::check())
     <div class="ml-auto">
       <strong style="color: white;">{{ Auth::user()->name}}님 안녕하세요!</strong>

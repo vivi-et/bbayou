@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGiftconTradeCommentControllersTable extends Migration
+class CreateGiftconTradeComment extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGiftconTradeCommentControllersTable extends Migration
      */
     public function up()
     {
-        Schema::create('giftcon_trade_comment_controllers', function (Blueprint $table) {
+        Schema::create('giftcon_trade_comment', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('giftcon_id');
             $table->boolean('traded');
@@ -28,6 +28,6 @@ class CreateGiftconTradeCommentControllersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('giftcon_trade_comment_controllers');
+        Schema::dropIfExists('giftcon_trade_comment');
     }
 }

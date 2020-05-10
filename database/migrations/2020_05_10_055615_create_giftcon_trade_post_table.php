@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGiftconTradePostControllersTable extends Migration
+class CreateGiftconTradePostTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGiftconTradePostControllersTable extends Migration
      */
     public function up()
     {
-        Schema::create('giftcon_trade_post_controllers', function (Blueprint $table) {
+        Schema::create('giftcon_trade_post', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('giftcon_id');
             $table->boolean('traded');
@@ -21,13 +21,13 @@ class CreateGiftconTradePostControllersTable extends Migration
         });
     }
 
-    /**
+    /** 
      * Reverse the migrations.
      *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('giftcon_trade_post_controllers');
+        Schema::dropIfExists('giftcon_trade_post');
     }
 }

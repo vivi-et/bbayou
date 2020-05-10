@@ -19,7 +19,10 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('cover_image');
-            $table->bigInteger('hasGiftconOrderNO');
+            $table->bigInteger('board_id');
+            $table->integer('views')->default(0);
+            $table->integer('ups')->default(0);
+            $table->integer('report')->default(0);
             $table->timestamps();
         });
         

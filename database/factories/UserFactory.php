@@ -34,13 +34,15 @@ $factory->define(User::class, function (Faker $faker) {
 
 $factory->define(App\Post::class, function (Faker $faker) {
     return [
+        'user_id'=>$faker->randomDigit(1,10)+1,
         'title' => $faker->sentence(1),
         'body' => $faker->sentence(5),
-        'user_id'=>$faker->randomDigit(1,10)+1,
-        'cover_image'=> 'noimage.jpg'
+        'cover_image'=> 'noimage.jpg',
+        'board_id' => $faker->randomDigit(1,5),
 
     ];
 });
+
 
 $factory->define(App\Comment::class, function (Faker $faker) {
     $count = Post::all()->count();

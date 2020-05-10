@@ -148,11 +148,11 @@
     $("#modal-submit").click(function(e) {
         // e.preventDefault();
 
-        var x = document.getElementById('x1').value;
-        var y = document.getElementById('y1').value;
-        var width = document.getElementById('w').value;
-        var height = document.getElementById('h').value;
-        var originalImagePath = document.getElementById('filepath').value;
+        let x = document.getElementById('x1').value;
+        let y = document.getElementById('y1').value;
+        let width = document.getElementById('w').value;
+        let height = document.getElementById('h').value;
+        let originalImagePath = document.getElementById('filepath').value;
 
         console.log(originalImagePath);
         console.log('from modalguy');
@@ -175,8 +175,8 @@
             success: function(data) {
                 $('#myModal').modal('toggle');
 
-                var crop = data.croppedImagePath;
-                var croppedWarpper = document.getElementById("croppedWarpper");
+                let crop = data.croppedImagePath;
+                let croppedWarpper = document.getElementById("croppedWarpper");
                 croppedWarpper.style.display = "block";
                 document.getElementById("cropped").src = "/storage/giftcon_images/" + crop;
                 document.getElementById("filepath").value = crop;
@@ -185,7 +185,8 @@
 
                 // alert(data.ext);
 
-
+            let finalsubmitbtn = document.getElementById("finalsubmitbtn");
+            finalsubmitbtn.style.display = "block";
 
             }
         });
@@ -194,7 +195,7 @@
 
 {{-- file preview --}}
 <script type="text/javascript">
-    var x = document.getElementById("img_prv");
+    let x = document.getElementById("img_prv");
     if (x.style.display === "none") {
         x.style.display = "block";
 
@@ -204,17 +205,17 @@
     $('#cover_image').on('change', function(ev) {
 
         console.log("here inside");
-        var filedata = this.files[0];
-        var imgtype = filedata.type;
-        var match = ['image/jpeg', 'image/jpg', 'image/png'];
+        let filedata = this.files[0];
+        let imgtype = filedata.type;
+        let match = ['image/jpeg', 'image/jpg', 'image/png'];
         if (!((imgtype == match[0]) || (imgtype == match[1]) || (imgtype == match[2]))) {
             $('#mgs_ta').html('<p style="color:red"> jpg, jpeg, png 파일만 업로드가 가능합니다. </p>')
             x.style.display = "none";
         } else {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = function(ev) {
                 $('#img_prv').attr('src', ev.target.result)
-                var x = document.getElementById("img_prv");
+                let x = document.getElementById("img_prv");
                 x.style.display = "block";
 
 
@@ -222,7 +223,7 @@
             reader.readAsDataURL(this.files[0]);
         }
 
-        var submitbtn = document.getElementById("submitbtn");
+        let submitbtn = document.getElementById("submitbtn");
         submitbtn.disabled = false;
         submitbtn.style.visibility = "visible";
 
@@ -244,6 +245,8 @@
 
 {{-- JS 스타일 --}}
 <script>
+    let finalsubmitbtn = document.getElementById("finalsubmitbtn");
+    finalsubmitbtn.style.display = "none";
     // finalsubmitbtn 크기 관련
     $(document).ready(function() {
         $("#finalsubmitbtn").css({
@@ -252,7 +255,7 @@
     });
 
     // submitbtn 보이기
-    var submitbtn = document.getElementById("submitbtn");
+    let submitbtn = document.getElementById("submitbtn");
     submitbtn.disabled = true;
     submitbtn.style.visibility = "hidden";
 </script>
@@ -270,8 +273,8 @@
 <script>
     $(document).ready(function() {
 
-        var finalsubmitbtn = document.getElementById("result_col_sm");
-        var modalButtonWrapper = document.getElementById("modalButtonWrapper");
+        let finalsubmitbtn = document.getElementById("result_col_sm");
+        let modalButtonWrapper = document.getElementById("modalButtonWrapper");
         if (finalsubmitbtn.style.display === "none") {
             finalsubmitbtn.style.display = "block";
         } else {
@@ -343,9 +346,9 @@
                         console.log(i);
                         if (ajaxData[i]) {
 
-                            var row = table.insertRow(1);
-                            var cell1 = row.insertCell(0);
-                            var cell2 = row.insertCell(1);
+                            let row = table.insertRow(1);
+                            let cell1 = row.insertCell(0);
+                            let cell2 = row.insertCell(1);
                             cell1.innerHTML = ajaxText[i];
                             cell2.innerHTML = ajaxData[i];
                         }
