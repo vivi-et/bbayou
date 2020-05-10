@@ -30,7 +30,7 @@
 
     <br>
     <br>
-    {{ $post->body}}
+    {!! $post->body !!}
     <hr>
     <br>
 
@@ -58,7 +58,6 @@
     @endif
     @endif
     <br style="clear:both;">
-
 
 
     <hr>

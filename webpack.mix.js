@@ -19,3 +19,5 @@ mix
 
 mix.sass("resources/sass/card.scss", "public/css");
 mix.js("node_modules/rasterizehtml/dist/rasterizeHTML.allinone.js", "public/js");
+mix.js("node_modules/summernote/dist/summernote.js", "public/js");
+mix.css("node_modules/summernote/dist/summernote.css", "public/css");

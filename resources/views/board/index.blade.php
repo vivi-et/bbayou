@@ -38,13 +38,8 @@
     </tbody>
 </table>
 
-
-
-
-
-
-
-
-
 {{ $posts->links() }}
+<a href="/post/create/{{ $board }}">
+<button class="btn btn-primary">CREATE</button>
+</a>
 @endsection

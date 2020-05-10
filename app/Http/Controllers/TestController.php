@@ -30,7 +30,8 @@ class TestController extends Controller
 
     {
         
-       return Auth::user()->giftcons;
+       return public_path();
+       dd(public_path());
 
         // $fileNameToStore = '1587974964455-1_1588710812.png';
         // $source         = 'storage/temp_images/' . $fileNameToStore;

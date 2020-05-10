@@ -18,7 +18,7 @@ class CreatePostsTable extends Migration
             $table->bigInteger('user_id');
             $table->string('title');
             $table->text('body');
-            $table->string('cover_image');
+            $table->string('cover_image')->default('noimage.jpg');
             $table->bigInteger('board_id');
             $table->integer('views')->default(0);
             $table->integer('ups')->default(0);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Giftcon;
+use App\Board;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -36,10 +37,27 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(string $board)
     {
-        // tasks/create
-        return view('post.create');
+        switch ($board) {
+            case 'free':
+                $boardname = '자유게시판';
+                break;
+            case 'humor':
+                $boardname = '유머게시판';
+                break;
+            case 'game':
+                $boardname = '게임게시판';
+                break;
+            case 'sport':
+                $boardname = '스포츠게시판';
+                break;
+            default:
+                $boardname = 'error';
+                break;
+        }
+
+        return view('post.create')->with('board', $board)->with('boardname', $boardname);
     }
 
 
@@ -52,32 +70,64 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request = request();
-        $detail = $request->description;
-        libxml_use_internal_errors(true);
-        $dom = new \domdocument();
-        $dom->loadHtml($detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $board = $request->board;
+        $boardno = Board::where('board_name', $board)->first()->value('id');
+
+        $this->validate($request, [
+
+            'title' => 'required',
+            'body' => 'required',
+
+        ]);
+
+        $body = $request->input('body');
+
+        $dom = new \DomDocument();
+
+        $dom->loadHtml($body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
         $images = $dom->getElementsByTagName('img');
-        
-        foreach ($images as $count => $image) {
-           $src = $image->getAttribute('src');
-           if (preg_match('/data:image/', $src)) {
-               preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
-               $mimeType = $groups['mime'];
-               $path = 'public/cover_images/' . uniqid('', true) . '.' . $mimeType;
-               Storage::disk('s3')->put($path, file_get_contents($src));
-               $image->removeAttribute('src');
-               $image->setAttribute('src', Storage::disk('s3')->url($path));
-           }
+
+        foreach ($images as $k => $img) {
+
+            $data = $img->getAttribute('src');
+
+            list($type, $data) = explode(';', $data);
+
+            list(, $data)      = explode(',', $data);
+
+            $data = base64_decode($data);
+
+            $image_name = "/upload/" . $board .time() . $k . '.png';
+
+            $path = public_path() . $image_name;
+
+            file_put_contents($path, $data);
+
+            $img->removeAttribute('src');
+
+            $img->setAttribute('src', $image_name);
         }
-             $detail = $dom->savehtml();
-             Summernote::create([
-               'title' => $request->title,
-               'body' => $request->body
-             ]);
+
+        $body = $dom->saveHTML();
 
 
-        return redirect('/post');
+
+
+        $board = $request->board;
+        $boardno = Board::where('board_name', $board)->first()->value('id');
+
+
+        Post::create([
+            'title' => $request->title,
+            'body' => $body,
+            'user_id' => auth()->id(),
+            'board_id' => $boardno,
+        ]);
+
+
+        return redirect('/board/' . $board);
     }
 
     /**
@@ -88,18 +138,18 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-      
-        $blogkey = 'blog_'. $post->id;
+
+        $blogkey = 'blog_' . $post->id;
 
         //조회수 1증가
-        if(!Session::has($blogkey)){
+        if (!Session::has($blogkey)) {
             $post->increment('views');
-            Session::put($blogkey,1);
+            Session::put($blogkey, 1);
         }
 
 
 
-       
+
         return view('post.show')->with('post', $post);
         // return view('post.show', compact('package'));
     }
