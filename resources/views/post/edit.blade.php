@@ -1,38 +1,33 @@
 @extends('layouts.master')
+@push('header')
 
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
+<script src="/js/summernote-ko-KR.js"></script>
+@endpush
 @section('content')
 
 <h1>
     Edit Post
 </h1>
 
+
+
+
 <form method="POST" action="/post/{{ $post->id }}" enctype="multipart/form-data">
     @csrf
      @method('PUT') 
     <div class=" form-group">
-    <label for="exampleInputEmail1">Title</label>
-    <textarea type="text" class="form-control" name="title">{{$post->title}}</textarea>
+    <input input name="title" id="title" type="text" class="form-control" value="{{$post->title}}" required>
     </div>
 
     <div class="form-group">
-        <label for="exampleInputPassword1">Body</label>
-        <textarea name="body" id="body" cols="30" rows="10" class="form-control">{{$post->body}}</textarea>
+        <textarea name="body" id="body" class="summernote" required>{{$post->body}}</textarea>
     </div>
 
-    <div class="form-group">
-        <label for="exampleInputFile">File input</label>
-        <input type="file" id="exampleInputFile" name='cover_image'>
-        <p class="help-block">Example block-level help text here.</p>
-    </div>
-
-    {{-- <div class="checkbox">
-        <label>
-            <input type="checkbox"> Check me out
-        </label>
-    </div> --}}
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" style="float: right;" class="btn btn-primary">Submit</button>
     </div>
 </form>
 
@@ -40,3 +35,22 @@
 
 
 @endsection
+
+
+
+@push('script')
+<script type="text/javascript">
+    $(document).ready(function() {
+           $('.summernote').summernote({
+            lang: 'ko-KR', // default: 'en-US'
+            height: 600,
+            dialogsInBody: true,
+            callbacks:{
+                onInit:function(){
+                $('body > .note-popover').hide();
+                }
+             },
+         });
+      });
+</script>
+@endpush

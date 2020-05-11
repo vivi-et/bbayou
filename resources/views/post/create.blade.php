@@ -1,25 +1,13 @@
 @extends('layouts.master')
 @push('header')
 
+<link href="/css/summernote.css" rel="stylesheet">
+<script src="/js/summernote.js"></script>
+<script src="/js/lang/summernote-ko-KR.min.js"></script>
+
+
 @endpush
 @section('content')
-
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-           $('.summernote').summernote({
-            height: 600,
-            dialogsInBody: true,
-            callbacks:{
-                onInit:function(){
-                $('body > .note-popover').hide();
-                }
-             },
-         });
-      });
-</script>
-
 
 {{ $boardname }}
 <hr>
@@ -46,8 +34,21 @@
 
 @endsection
 
+@push('script')
+<script type="text/javascript">
+    $(document).ready(function() {
+           $('.summernote').summernote({
+            lang: "ko-KR",
+            height: 600,
+            dialogsInBody: true,
+            callbacks:{
+                onInit:function(){
+                $('body > .note-popover').hide();
+                }
+             },
+         });
+      });
+</script>
+@endpush
 
 
-
-
-</form>

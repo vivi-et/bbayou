@@ -19,14 +19,13 @@
 
 <br>
 <div class="col-sm-8 blog-main">
-    <h2 class="blog-post-title">{{$post->title}}</h2>
+    <h2 class="blog-post-title" style="word-wrap: break-word;">{{$post->title}}</h2>
     <br>
     <p class="blog-post-meta"> {{ $post -> created_at->toFormattedDateString() }} <a
             href="#">{{ $post->user->name }}</a></p>
     <br>
 
-    <img style="max-width:100%;
-    max-height:100%;" class="center" src="/storage/cover_images/{{ $post->cover_image }}">
+
 
     <br>
     <br>
@@ -117,32 +116,46 @@
         </div>
     </div>
 
-    <script>
-        function divClicked() {
-    var divHtml = $(this).prev('div').html();
-    var editableText = $("<textarea class='editablediv'/>");
-    editableText.val(divHtml);
-    $(this).prev('div').replaceWith(editableText);
-    editableText.focus();
-    // setup the blur event for this new textarea
-    editableText.blur(editableTextBlurred);
+  
+    @endsection
+
+@push('script')
+<script>
+    function divClicked() {
+var divHtml = $(this).prev('div').html();
+var editableText = $("<textarea class='editablediv'/>");
+editableText.val(divHtml);
+$(this).prev('div').replaceWith(editableText);
+editableText.focus();
+// setup the blur event for this new textarea
+editableText.blur(editableTextBlurred);
 }
 
 function editableTextBlurred() {
-    var html = $(this).val();
-    var viewableText = $("<div>");
-    viewableText.html(html);
-    $(this).replaceWith(viewableText);
-    // setup the click event for this new div
-    viewableText.click(divClicked);
+var html = $(this).val();
+var viewableText = $("<div>");
+viewableText.html(html);
+$(this).replaceWith(viewableText);
+// setup the click event for this new div
+viewableText.click(divClicked);
 }
 
 $(document).ready(function () {
-    $(".btn").click(divClicked);
+$(".btn").click(divClicked);
 });
-    </script>
+</script>
 
-    @endsection
+<script>
+$(document).ready(function(){
+    $("img").addClass("img-responsive");
+    $("img").css("max-width", "50%");
+});
+</script>
+
+    
+@endpush
+
+    
 
     <style>
         .center {

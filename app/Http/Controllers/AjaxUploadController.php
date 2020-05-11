@@ -8,6 +8,24 @@ use Validator;
 class AjaxUploadController extends Controller
 
 {
+
+    public function saveImage(Request $request)
+    {
+        if ($_FILES['file']['name']) {
+            if (!$_FILES['file']['error']) {
+                $name = md5(rand(100, 200));
+                $ext = explode('.', $_FILES['file']['name']);
+                $filename = $name . '.' . $ext[1];
+                $destination = '/upload/' . $filename; //change this directory
+                $location = $_FILES["file"]["tmp_name"];
+                move_uploaded_file($location, $destination);
+                echo '사용자의 이미지 저장위치 url' . $filename; //change this URL
+            } else {
+                echo $message = 'Ooops!  Your upload triggered the following error:  ' . $_FILES['file']['error'];
+            }
+        }
+    }
+
     function crop(Request $request)
     {
 

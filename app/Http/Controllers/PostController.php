@@ -76,16 +76,17 @@ class PostController extends Controller
 
         $this->validate($request, [
 
-            'title' => 'required',
+            'title' => 'required|max:40',
             'body' => 'required',
 
         ]);
 
         $body = $request->input('body');
 
+        
         $dom = new \DomDocument();
 
-        $dom->loadHtml($body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHtml('<?xml encoding="utf-8">'.$body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $images = $dom->getElementsByTagName('img');
 
@@ -99,7 +100,7 @@ class PostController extends Controller
 
             $data = base64_decode($data);
 
-            $image_name = "/upload/" . $board .time() . $k . '.png';
+            $image_name = "/upload/" . $board . time() . $k . '.png';
 
             $path = public_path() . $image_name;
 
@@ -109,11 +110,8 @@ class PostController extends Controller
 
             $img->setAttribute('src', $image_name);
         }
-
         $body = $dom->saveHTML();
-
-
-
+        
 
         $board = $request->board;
         $boardno = Board::where('board_name', $board)->first()->value('id');
@@ -180,38 +178,61 @@ class PostController extends Controller
         }
         // PATCH /tasks/id
 
-        $this->validate(request(), [
-            'title' => 'required|max:20', // 최대 10글자
-            'body' => 'required'
+        $boardno = $post->board_id;
+        $board = Board::find($boardno)->value('board_name');
+
+
+
+        $this->validate($request, [
+
+            'title' => 'required|max:40',
+            'body' => 'required',
+
         ]);
+        // 수정시 이미지 그대로 두면팅김 나중에 할것
+        $body = $request->body;
 
-        //Handle file upload
-        if ($request->hasFile('cover_image')) {
+        $dom = new \DomDocument();
 
-            //Get Filename with extension
+        $dom->loadHtml($body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+        $images = $dom->getElementsByTagName('img');
 
-            // Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just extension
-            $extension = $request->file('cover_image')->getClientOriginalExtension();
 
-            //Filename to store
-            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-            //Upload Image
-            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+        foreach ($images as $k => $img) {
+
+            $data = $img->getAttribute('src');
+
+
+
+            list($type, $data) = explode(';', $data);
+            list(, $data)      = explode(',', $data);
+
+            $data = base64_decode($data);
+
+            $image_name = "/upload/" . $board . time() . $k . '.png';
+
+            $path = public_path() . $image_name;
+
+            file_put_contents($path, $data);
+
+            $img->removeAttribute('src');
+
+            $img->setAttribute('src', $image_name);
         }
 
+        $body = $dom->saveHTML();
 
 
-        $post->update($request->all());
-        $post->title = $request->input('title');
-        $post->body = $request->input('body');
-        $post->cover_image = $fileNameToStore;
+
+
+
+        // $post->update($request->all());
+        $post->title = $request->title;
+        $post->body = $body;
         $post->save();
 
-        return redirect('/post');
+        return redirect('/board/' . $board);
         // $post->update($request->all());
 
 
@@ -241,21 +262,26 @@ class PostController extends Controller
         // DELETE /tasks/id
 
         //삭제할 파일 이름 가져오기
-        $fileNameToStore = $post->cover_image;
-        $path = 'storage/cover_images/' . $fileNameToStore;
+        $boardno = $post->board_id;
+        $board = Board::find($boardno)->value('board_name');
 
+        // $images = $dom->getElementsByTagName('img');
+
+        // foreach ($images as $k => $img) {
+
+        //     $data = $img->getAttribute('src');
+
+        //     unlink($path);
+
+        // 추후 explode 써서 링크된 이미지 삭제하기
         //기프티콘 파일 삭제
-        unlink($path);
 
         //게시글 삭제
         $post->delete();
 
         //연결된 기프티콘 항목도 삭제
-        $orderno = $post->hasGiftconOrderNO;
-        $giftconID = Giftcon::where('orderno', $orderno)->first()->id;
-        $giftcon = Giftcon::find($giftconID);
-        $giftcon->delete();
 
-        return redirect('/post');
+
+        return redirect('/board/' . $board);
     }
 }
