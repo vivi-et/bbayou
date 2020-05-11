@@ -1,13 +1,19 @@
 @push('header')
-    <link href="{{ asset('css/card.css') }}" rel="stylesheet" />
-    @endpush
-    <div class="row">
-        {{-- barcode 번호 hidden 으로 숨겨짐! --}}
-        @foreach ($giftcons as $giftcon)
-        <div class="col-md-4" style="text-align: center">
-            <div class="slide-container">
-                <div class="wrapper" style="float: left; margin-left:5%">
+<link href="{{ asset('css/card.css') }}" rel="stylesheet" />
+@endpush
+<div class="row">
+    {{-- barcode 번호 hidden 으로 숨겨짐! --}}
+    @foreach ($giftcons as $giftcon)
+    <div class="col-md-4" style="text-align: center">
+        <div class="slide-container">
+            <div class="wrapper" style="float: left; margin-left:5%">
+
+
+                @if( $giftcon->used === 1)
+                <div class="clash-card barbarian" style="background-color: grey" id="giftcon{{ $giftcon->id }}">
+                    @else
                     <div class="clash-card barbarian" id="giftcon{{ $giftcon->id }}">
+                        @endif
                         <div class="clash-card__image clash-card__image--barbarian">
                             <div style="  border-top-left-radius: 14px; border-top-right-radius: 14px;background-image: url('/storage/giftcon_images/{{ $giftcon->imagepath }}'); width: 100%;
                                     height: 100%;background-position: center center; background-repeat: no-repeat;"
@@ -17,7 +23,7 @@
                             <a href="#">{{ $giftcon->user->name }}</a>
                         </div>
                         <div class="clash-card__unit-name" style="overflow: hidden; margin:0 20px; font-size:22px;">
-                            {{ $giftcon->title }}</div>
+                            <a href="/giftcon/{{ $giftcon->id }}"> {{ $giftcon->title }}</a></div>
                         <div class="clash-card__unit-description">
                             번호 : {{$giftcon->id}}
                             <br />
@@ -28,7 +34,22 @@
                             --}} 교환처 : {{$giftcon->place}}
                             <br />
                             {{-- 바코드 : {{wordwrap($giftcon->barcode, 4, ' ', true)}} --}}
-                            상태 : {{ $giftcon->used }}
+                            상태 :
+                            @switch($giftcon->used)
+                            @case(0)
+                            사용안함
+                            @break
+                            @case(1)
+                            사용완료
+                            @break
+                            @case(2)
+                            미기재
+                            @break
+                            @default
+
+                            @endswitch
+
+
                             <br />
                             <br />
                             <div id="theBarcode{{ $giftcon->id }}"></div>
@@ -50,8 +71,15 @@
                                 <div class="stat-value">Use</div>
                             </div>
 
-                            <div class="one-third no-border">
-                                <div class="stat">거래하기</div>
+                            <div class="one-third no-border" id="trade{{ $giftcon->id }}"
+                                onClick="javascript:document.forms[0].submit();">
+                                <form action="/giftcon/trade" method="POST" hidden>
+                                    @csrf
+                                    <input type="text" name="giftcon" value="{{ $giftcon->id }}" hidden>
+                                </form>
+                                <div class="stat">
+                                    거래하기
+                                </div>
                                 <div class="stat-value">Trade</div>
                             </div>
                         </div>
@@ -66,3 +94,7 @@
 
         @endforeach
     </div>
+
+    @push('script')
+    
+    @endpush

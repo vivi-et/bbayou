@@ -41,22 +41,22 @@
         </div>
         <br>
         <br>
+        @if(!empty(auth()->user()))
+        @if(auth()->user()->id == $giftcon->user_id)
+        <div class="btn-group" style="float:right;">
+            <form method="POST" action="/post/{{$giftcon->id}}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-primary" style="margin-left:5px;">Delete</button>
+            </form>
+        </div>
+        @endif
+        @endif
+        <br style="clear:both;">
         <br>
-        <br>
-
-
-
-        <br>
-
-        <br>
-
-        <img style="max-width:100%;
-    max-height:100%;" class="center" src="/storage/giftcon_images/{{ $giftcon->imagepath }}">
-
-        <br>
-        <br>
-
         <hr>
+        <br>
+
         <br>
 
         <div>
@@ -73,23 +73,7 @@
 
 
 
-        @if(!empty(auth()->user()))
-        @if(auth()->user()->id == $giftcon->user_id)
-        <div class="btn-group" style="float:right;">
-            <a href="/post/{{$giftcon->id}}/edit">
-                <button class="btn btn-primary">Edit</button>
-            </a>
 
-            <form method="POST" action="/post/{{$giftcon->id}}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-primary" style="margin-left:5px;">Delete</button>
-
-            </form>
-        </div>
-        @endif
-        @endif
-        <br style="clear:both;">
 
 
 

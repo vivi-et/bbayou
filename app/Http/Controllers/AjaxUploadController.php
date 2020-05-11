@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use App\Giftcon;
+use App\GiftconTradePost;
+use Illuminate\Support\Facades\Auth;
 
 class AjaxUploadController extends Controller
 
 {
+
+    public function makeTrade(Giftcon $giftcon)
+    {
+        return $giftcon;
+    }
+
 
     public function saveImage(Request $request)
     {

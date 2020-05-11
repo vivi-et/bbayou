@@ -5,7 +5,6 @@
 
 
 <main role="main">
-
     <section class="jumbotron text-center">
         <div class="container">
             <h1>BBAYOU</h1>
@@ -18,7 +17,7 @@
         </div>
     </section>
 
-    @if(count($posts))
+    @if(count($giftcons))
     @include('layouts.card')
     @endif
 

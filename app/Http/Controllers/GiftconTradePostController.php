@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use App\cr;
+use App\GiftconTradePost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Giftcon;
-use Picqer\Barcode\BarcodeGeneratorPNG;
+use Illuminate\Support\Facades\Auth;
 
 class GiftconTradePostController extends Controller
 {
@@ -46,9 +45,6 @@ class GiftconTradePostController extends Controller
     public function create()
     {
 
-
-
-
         return view('giftcontradepost.create');
     }
 
@@ -60,7 +56,45 @@ class GiftconTradePostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $giftcon = Giftcon::find($request)->first();
+        $day = Carbon::now()->day;
+        $month = Carbon::now()->month;
+
+
+
+        // 같은날, 같은 사용자가, 중복된 기프티콘을 거래할려는지 확인
+        // $whereClause = ['user_id' => Auth::user()->id, 'giftcon_id' => $giftcon->id];
+        $results = GiftconTradePost::where('giftcon_id','=', $giftcon->id)
+        ->whereDay('created_at', '=', $day)
+        ->whereMonth('created_at', '=', $month)
+        ->get();
+
+        if(count($results)){
+            return redirect()->back()->withErrors('error', '이미 등록하신 기프티콘입니다');
+        }
+        else{
+            GiftconTradePost::create([
+                'giftcon_id' => $giftcon->id,
+                'user_id' => Auth::user()->id,
+            ]);
+
+            session()->flash('message', '기프티콘이 거래게시판에 등록되었습니다!');
+
+
+            // $giftcons = GiftconTradePost::select('giftcon_trade_posts.*')
+            // ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+            // ->get();
+
+            return redirect()->back();
+        }
+
+
+        
+        GiftconTradePost::create([
+            'giftcon_id' => $giftcon->id,
+        ]);
+
     }
 
     /**

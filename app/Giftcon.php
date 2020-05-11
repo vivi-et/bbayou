@@ -18,4 +18,15 @@ class Giftcon extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function GiftconTradePost()
+    {
+        return $this->belongsToMany(GiftconTradePost::class);
+    }
+
+    
+
+
+
+    
 }

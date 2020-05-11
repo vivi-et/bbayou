@@ -33,6 +33,10 @@
       <strong>스포츠게시판</strong>
     </a>
 
+     <a href="/giftcon/mygiftcons" style="color: #FEE715FF; margin-left:10px;">
+      <strong>내 기프티콘</strong>
+    </a>
+
     
 
     @if(Auth::check())

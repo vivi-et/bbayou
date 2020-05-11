@@ -43,6 +43,7 @@ class BoardController extends Controller
             ->paginate(5);
 
 
+
         return  view('board.index')->with('posts', $posts)->with('boardname',$boardname)->with('board',$board);
     }
 

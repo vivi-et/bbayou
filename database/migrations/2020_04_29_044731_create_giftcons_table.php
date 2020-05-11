@@ -23,6 +23,7 @@ class CreateGiftconsTable extends Migration
             $table->date('recieved_date')->nullable()->default(null);
             //0 사용안함 1 사용함 2 미기재
             $table->integer('used');
+            $table->boolean('on_trade')->default(0);
             $table->string('barcode');
             $table->timestamp('used_on')->nullable()->default(null);
             $table->bigInteger('user_id');

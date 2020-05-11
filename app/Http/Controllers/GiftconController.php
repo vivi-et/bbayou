@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\r;
 use App\Post;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\GiftconTradePost;
 use App\Giftcon;
 use App\User;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -23,10 +25,28 @@ class GiftconController extends Controller
      */
     public function index()
     {
-        $giftcons = Giftcon::latest()->get();
+
+
+
+        $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
+            ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+            ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
+            ->get();
+
+
+
+        // $giftcons = Giftcon::latest()->get();
 
         //tasks
         return view('giftcon.index', compact('giftcons'));
+    }
+
+    public function mygiftcons()
+    {
+
+        $giftcons = Auth::user()->giftcons->reverse();
+
+        return view('giftcon.mygiftcons')->with('giftcons', $giftcons);
     }
 
     /**
@@ -115,7 +135,7 @@ class GiftconController extends Controller
         //
 
         // $seperatedBarcode = wordwrap($barcodeNo[0], 4, ' ', true);
- 
+
     }
 
     /**
@@ -124,22 +144,26 @@ class GiftconController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\r  $r
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function update(Request $request, Giftcon $giftcon)
     {
+        //기프티콘 사용처리할것
 
         $generator = new BarcodeGeneratorPNG();
         $barcodeno = $giftcon->barcode;
-        $downloadAs = $giftcon->title.'_'.$giftcon->id.'.jpg';
+        $downloadAs = $giftcon->title . '_' . $giftcon->id . '.jpg';
 
-        $base64image = base64_encode($generator->getBarcode($barcodeno, $generator::TYPE_CODE_128,2,100));
+        $base64image = base64_encode($generator->getBarcode($barcodeno, $generator::TYPE_CODE_128, 2, 100));
         $seperatedBarcode = wordwrap($giftcon->barcode, 4, ' ', true);
+
+        $giftcon->used = 1;
+        $giftcon->save();
 
 
         return response()->json([
             'barcode' => $base64image,
             'barcodeno' => $seperatedBarcode,
-            'downloadAs'=> $downloadAs,
+            'downloadAs' => $downloadAs,
         ]);
     }
 

@@ -28,7 +28,7 @@ class PostController extends Controller
 
         $posts = Post::latest()->get();
         //tasks
-        return view('post.freeboard', compact('posts'));
+        return view('board.index', compact('posts'));
     }
 
 

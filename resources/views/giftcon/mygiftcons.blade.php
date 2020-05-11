@@ -4,29 +4,23 @@
 
 
 @section('content')
-<a href="/giftcon/create">
-    <button class="btn btn-primary">CREATE</button>
-</a>
 
-<a href="/giftcon/trade">
-    <button class="btn btn-primary">TRADE</button>
-</a>
-<br>
+내 기프티콘들
 
 <main role="main">
     <section class="jumbotron text-center">
         <div class="container">
-            <h2>기프티콘</h2>
-            <p class="lead text-muted">다른 사람들이랑 거래해보세요</p>
+            <h2>내 기프티콘들</h2>
+
             <p>
-                <a href="#" class="btn btn-primary my-2">Main call to action</a>
+                <a href="/giftcon/create" class="btn btn-primary my-2">기프티콘 추가하기</a>
                 <a href="#" class="btn btn-secondary my-2">Secondary action</a>
             </p>
         </div>
     </section>
 
-    @if(count($giftcons))
-    @include('layouts.coccard')
+@if (count($giftcons))
+@include('layouts.coccard')
 @endif
 
 
