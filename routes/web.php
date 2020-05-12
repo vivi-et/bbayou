@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GiftconTradePostController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -19,13 +20,14 @@ Route::post('/ajax/saveImage', 'AjaxUploadController@saveImage')->name('ajax.sav
 Route::post('/ajax/makeTrade', 'AjaxUploadController@makeTrade')->name('ajax.makeTrade');
 Route::post('/giftcon/action', 'AjaxUploadController@action')->name('ajaxupload.action');
 Route::post('/giftcon/crop', 'AjaxUploadController@crop')->name('ajaxupload.crop');
-Route::post('/post/{post}/comment', 'CommentController@store');
+Route::post('/comment/make/{post}', 'CommentController@store');
 
 Route::get('/board/{board}', 'BoardController@index');
-
-Route::resource('/giftcon/trade', 'GiftconTradePostController');
 Route::get('/post/create/{board}', 'PostController@create');
 
+
+Route::resource('/giftcon/trade', 'GiftconTradePostController');
+Route::resource('/comment', 'CommentController');
 Route::resource('/post', 'PostController');
 Route::resource('/giftcon', 'GiftconController');
 

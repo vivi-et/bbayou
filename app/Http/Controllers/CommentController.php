@@ -78,9 +78,25 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comment $comment)
     {
-        //
+        if (auth()->user()->id !== $comment->user_id) {
+            return redirect('/posts')->withErrors('error', 'Unauthorized Page');
+        }
+        // PATCH /tasks/id
+
+
+
+
+        $this->validate($request, [
+
+            'body' => 'required|max:255',
+        ]);
+
+        $comment->body = $request->body;
+        $comment->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -91,8 +107,10 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+
+
         $comment->delete();
-        
-        return redirect('/post');
+
+        return redirect()->back();
     }
 }

@@ -61,36 +61,38 @@
 
     <hr>
     <div class="comments">
-        <ul class="list-group">
-            @foreach ($post->comments as $comment)
-            <li class="list-group-item">
-                <strong>
-                    {{ $comment->created_at->diffforhumans() }}
-                </strong>
-                <br>
-                <div class="editdiv" style="width:100px;">{{ $comment->body }}</div>
-                <button class="btn">Edit</button>
+        @foreach ($post->comments as $comment)
+        <li class="list-group-item">
+            @if(auth()->user()->id == $comment->user_id)
+            <strong style="float: left;">{{ $comment->user->name }}</strong>
+            <div style="float: left; margin-left:10px;">{{ $comment->created_at->diffforhumans() }}</div>
+            <div style="clear: both;"></div>
+            <form id="editform" action="/comment/{{ $comment->id }}" method="POST" style="display: none;">
+                @csrf
+                @method('PATCH')
+                <input name="body" style="width: 500px; height:100px; margin-top:5px;" value="{{ $comment->body }}">
+                <button type="submit" class="btn">수정하기</button>
+            </form>
+            <div id="editdiv" style="width:100px; margin-top:5px; display:block">{{ $comment->body }}</div>
+            <div class="buttons" style="float: right">
+                <button id="toggleEditFormbtn" onclick="toggleEditForm()" class="btn">수정</button>
+
+                <form action="/comment/{{ $comment->id }}" method="post" style="float: right">
+                    <input type="text" value="{{ $comment->id }}" hidden>
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" id="commentdeletebtn" class="btn">삭제</button>
+                </form>
+            </div>
+            @endif
+            <div style="clear: both;"></div>
+
+        </li>
+        @endforeach
     </div>
 
 
-    </li>
-    @if(auth()->user()->id == $comment->user_id)
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <button class="btn">Edit</button>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-    </div>
-    @endif
-    <br style="clear:both;">
-    @endforeach
-    </ul>
 
     <br>
 
@@ -100,13 +102,12 @@
 
         <div>
 
-            <form method="POST" action="/post/{{ $post->id }}/comment">
-                {{ csrf_field() }}
-
-                {{-- {{method_field('PATCH')}} --}}
+            <form method="POST" action="/comment/make/{{ $post->id }}">
+                @csrf
+                @method('POST')
 
                 <div class="form-group">
-                    <textarea 3name="body" placeholder="Comment" class="form-control" required></textarea>
+                    <textarea name="body" placeholder="Comment" class="form-control" required></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -116,46 +117,39 @@
         </div>
     </div>
 
-  
+{{-- 추후 게시판 테이블 넣을것 --}}
+
+
+
     @endsection
 
-@push('script')
-<script>
-    function divClicked() {
-var divHtml = $(this).prev('div').html();
-var editableText = $("<textarea class='editablediv'/>");
-editableText.val(divHtml);
-$(this).prev('div').replaceWith(editableText);
-editableText.focus();
-// setup the blur event for this new textarea
-editableText.blur(editableTextBlurred);
+    @push('script')
+
+    <script>
+        function toggleEditForm() {
+  var editform = document.getElementById("editform");
+  var editdiv = document.getElementById("editdiv");
+  if (editform.style.display === "none") {
+    editform.style.display = "block";
+    editdiv.style.display = "none";
+  } else {
+    editform.style.display = "none";
+    editdiv.style.display = "block";
+  }
+
+
+
+
+
+
 }
+    </script>
 
-function editableTextBlurred() {
-var html = $(this).val();
-var viewableText = $("<div>");
-viewableText.html(html);
-$(this).replaceWith(viewableText);
-// setup the click event for this new div
-viewableText.click(divClicked);
-}
 
-$(document).ready(function () {
-$(".btn").click(divClicked);
-});
-</script>
 
-<script>
-$(document).ready(function(){
-    $("img").addClass("img-responsive");
-    $("img").css("max-width", "50%");
-});
-</script>
+    @endpush
 
-    
-@endpush
 
-    
 
     <style>
         .center {
