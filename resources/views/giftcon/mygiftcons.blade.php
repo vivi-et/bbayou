@@ -19,9 +19,9 @@
         </div>
     </section>
 
-@if (count($giftcons))
-@include('layouts.coccard')
-@endif
+    @if (count($giftcons))
+    @include('layouts.coccard')
+    @endif
 
 
 

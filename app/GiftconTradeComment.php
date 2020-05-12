@@ -9,13 +9,22 @@ class GiftconTradeComment extends Model
     protected $guarded = [];
 
     //
-    public function tradePost()
-    {
-        return $this->hasMany(GiftconTradePost::class);
-    }
 
-    public function gitcons()
+
+    public function giftcons()
     {
         return $this->hasMany(Giftcon::class);
+    }
+
+    public function user()
+    //$comment->post->user
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function post()
+    //$comment->post->user
+    {
+        return $this->belongsTo(GiftconTradePost::class);
     }
 }

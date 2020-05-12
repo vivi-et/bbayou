@@ -12,6 +12,18 @@ class AjaxUploadController extends Controller
 
 {
 
+    public function checkGiftcons()
+    {
+       
+
+        $giftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
+
+        return response()->json([
+            'giftcons' => $giftcons,
+        ]);
+    }
+
+
     public function makeTrade(Giftcon $giftcon)
     {
         return $giftcon;

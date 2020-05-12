@@ -26,10 +26,12 @@ class GiftconTradePostController extends Controller
     {
         $user = Auth::user();
 
-        $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
+        $giftcons = GiftconTradePost::select('giftcons.*', 'users.name' ,'giftcon_trade_posts.*' )
         ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
         ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
         ->get();
+
+
 
         // 바코드 생성기 개체
         // 결국 view에서 data를 처리하는데 맞는 설계인가?
@@ -109,7 +111,7 @@ class GiftconTradePostController extends Controller
     public function show(GiftconTradePost $trade)
     {
 
-        
+        $myGiftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
 
         $giftcon = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
         ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
@@ -132,7 +134,7 @@ class GiftconTradePostController extends Controller
                 break;
         }
 
-        return view('giftcontradepost.show')->with('giftcon',$giftcon)->with('status',$status);
+        return view('giftcontradepost.show')->with('giftcon',$giftcon)->with('status',$status)->with('myGiftcons', $myGiftcons)->with('trade',$trade);
     }
 
     /**

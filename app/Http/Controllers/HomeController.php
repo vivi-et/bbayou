@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use Illuminate\Support\Facades\Auth;
 use App\GiftconTradePost;
 use App\Giftcon;
 use SebastianBergmann\Environment\Console;
@@ -28,6 +29,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // $giftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
+
+        // return $giftcons;
+
+
 
         $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
         ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')

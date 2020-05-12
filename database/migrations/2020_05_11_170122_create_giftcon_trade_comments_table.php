@@ -15,9 +15,14 @@ class CreateGiftconTradeCommentsTable extends Migration
     {
         Schema::create('giftcon_trade_comments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('giftcon_id');
+            $table->bigInteger('giftcon_id1');
+            $table->bigInteger('giftcon_id2')->nullable;
+            $table->bigInteger('giftcon_id3')->nullable;
+            $table->bigInteger('giftcon_id4')->nullable;
+            $table->bigInteger('giftcon_id5')->nullable;
+            $table->bigInteger('post_id');
             $table->bigInteger('user_id');
-            $table->boolean('traded');
+            $table->boolean('traded')->default(0);
             $table->timestamps();
         });
     }

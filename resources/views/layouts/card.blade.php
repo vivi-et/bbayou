@@ -26,7 +26,7 @@
                 @endif
                 <div class="card-body">
                     <p class="card-text">
-                        <a href="/giftcon/trade/{{ $giftcon->id }}">
+                        <a href="/giftcon/trade/{{$giftcon->id}}">
                             {{$giftcon->title}}
                         </a>
                         <br>

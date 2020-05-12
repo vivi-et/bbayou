@@ -1,7 +1,8 @@
 @extends('layouts.master')
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js">
 </script>
-
+ 
+this is giftcon index
 
 @section('content')
 <a href="/giftcon/create">

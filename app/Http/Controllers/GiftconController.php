@@ -28,10 +28,12 @@ class GiftconController extends Controller
 
 
 
-        $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
-            ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
-            ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
-            ->get();
+        $user = Auth::user();
+
+        $giftcons = GiftconTradePost::select('giftcons.*', 'users.name' ,'giftcon_trade_posts.*' )
+        ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+        ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
+        ->get();
 
 
 
