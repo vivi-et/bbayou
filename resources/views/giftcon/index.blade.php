@@ -26,7 +26,7 @@
     </section>
 
     @if(count($giftcons))
-    @include('layouts.coccard')
+    @include('layouts.card')
 @endif
 
 

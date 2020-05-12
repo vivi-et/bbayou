@@ -7,13 +7,11 @@
     <div class="col-md-4" style="text-align: center">
         <div class="slide-container">
             <div class="wrapper" style="float: left; margin-left:5%">
-
-
-                @if( $giftcon->used === 1)
+                {{-- @if( $giftcon->used === 1)
                 <div class="clash-card barbarian" style="background-color: grey" id="giftcon{{ $giftcon->id }}">
-                    @else
+                    @else --}}
                     <div class="clash-card barbarian" id="giftcon{{ $giftcon->id }}">
-                        @endif
+                        {{-- @endif --}}
                         <div class="clash-card__image clash-card__image--barbarian">
                             <div style="  border-top-left-radius: 14px; border-top-right-radius: 14px;background-image: url('/storage/giftcon_images/{{ $giftcon->imagepath }}'); width: 100%;
                                     height: 100%;background-position: center center; background-repeat: no-repeat;"
@@ -59,7 +57,16 @@
                                 {{ $giftcon->created_at->diffforhumans()}}
                             </p>
                         </div>
-
+                        
+                        @if($giftcon->used)
+                        <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
+                            사용완료
+                        </div>
+                        @elseif($giftcon->on_trade ==1)
+                        <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
+                            거래중입니다
+                        </div>
+                        @else
                         <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
                             <div class="one-third">
                                 <div class="stat">선물하기</div>
@@ -83,6 +90,12 @@
                                 <div class="stat-value">Trade</div>
                             </div>
                         </div>
+                            @endif
+
+
+
+
+                            
                     </div>
                     <!-- end clash-card barbarian-->
                 </div>

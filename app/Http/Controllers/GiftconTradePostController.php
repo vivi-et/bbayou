@@ -26,7 +26,10 @@ class GiftconTradePostController extends Controller
     {
         $user = Auth::user();
 
-        $giftcons = $user->giftcons->reverse();
+        $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
+        ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+        ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
+        ->get();
 
         // 바코드 생성기 개체
         // 결국 view에서 data를 처리하는데 맞는 설계인가?
@@ -103,9 +106,33 @@ class GiftconTradePostController extends Controller
      * @param  \App\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show(GiftconTradePost $trade)
     {
-        //
+
+        
+
+        $giftcon = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
+        ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+        ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
+        ->where('giftcon_trade_posts.id','=', $trade->id)
+        ->first();
+
+        $status = $giftcon->used;
+
+
+        switch ($status) {
+            case 0;
+                $status = '사용안함';
+                break;
+            case 1;
+                $status = '사용함';
+                break;
+            case 2;
+                $status = '미기재';
+                break;
+        }
+
+        return view('giftcontradepost.show')->with('giftcon',$giftcon)->with('status',$status);
     }
 
     /**

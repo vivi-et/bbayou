@@ -11,7 +11,7 @@
 
 <br>
 <div class="col-sm-8 blog-main">
-    @if($giftcon->used = 1)
+    @if($giftcon->used == 1)
     <div class="row" style=" padding:20px 0px; outline: 3px solid grey; opacity:0.5; background-color: grey">
 
         @else
