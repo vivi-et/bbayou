@@ -6,7 +6,6 @@
     .editablediv {
         width: 600px;
     }
-
 </style>
 
 
@@ -68,86 +67,119 @@
         {{-- 댓글식 제안 --}}
 
         {{-- {{ $trade->comments }} --}}
-        {{ $trade->comments->first() }}
 
-        <br>
+        {{-- comments --}}
+        {{-- comments --}}
+        {{-- comments --}}
 
-        {{-- 모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달 --}}
-        <div id="myModal" class="modal fade bd-example-modal-xl" role="dialog">
-            <div class="modal-dialog modal-xl">
 
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">교환할 기프티콘을 선택해주세요 (최대 5개)</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        @foreach ($commentGiftconsArrays as $commentGiftconsArray)
+        <tr>
+            <br>
+            <div>
+                <div class="row">
+                @foreach ($commentGiftconsArray as $commentGiftcons)
+
+                    <div class="col-sm">
+                        <img style="width: 80px; height:80px;"
+                            src="/storage/giftcon_images/{{ $commentGiftcons->imagepath }}">
                     </div>
-                    <div class="modal-body" id="div_modalBody">
-
-                        @if(count($myGiftcons))
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">상품</th>
-                                    <th scope="col">만료일</th>
-                                    <th scope="col">장소</th>
-                                    <th scope="col">등록일</th>
-                                    <th scope="col">사용</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach ($myGiftcons as $myGiftcon)
-                                <tr>
-                                    <th scope="row">{{ $myGiftcon->id }}</th>
-                                    <td>{{ $myGiftcon->title }}</td>
-                                    <td>{{ $myGiftcon->expire_date }}</td>
-                                    <td>{{ $myGiftcon->place }}</td>
-                                    <td>{{ $myGiftcon->created_at->diffforhumans()}}</td>
-                                    <td><input type="checkbox" id="vehicle3" name="vehicle3"
-                                            value="{{ $myGiftcon->id }}"></td>
-                                </tr>
-
-                                @endforeach
-
-                            </tbody>
-                        </table>
-                        @endif
-
-
+                    <div class="col-sm">
+                        <td> {{ $commentGiftcons->title }} </td>
+                        <br>
+                        <td> {{  $commentGiftcons->expire_date  }} </td>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <button type="button" onclick="submitOffer({{ $giftcon->id }}, {{ $trade->id }})" class="btn btn-primary">확인</button>
-                    </div>
+                    <br>
+                    @endforeach
                 </div>
+                <br>
+            </tr>
+            <br>
+            {{ $commentGiftcons->user->name }}
+            <hr>
+            <br>
+        @endforeach
 
+    </div>
+    <br>
+
+    {{-- 모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달 --}}
+    <div id="myModal" class="modal fade bd-example-modal-xl" role="dialog">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">교환할 기프티콘을 선택해주세요 (최대 5개)</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="div_modalBody">
+
+                    @if(count($myGiftcons))
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">상품</th>
+                                <th scope="col">만료일</th>
+                                <th scope="col">장소</th>
+                                <th scope="col">등록일</th>
+                                <th scope="col">사용</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($myGiftcons as $myGiftcon)
+                            <tr>
+                                <th scope="row">{{ $myGiftcon->id }}</th>
+                                <td>{{ $myGiftcon->title }}</td>
+                                <td>{{ $myGiftcon->expire_date }}</td>
+                                <td>{{ $myGiftcon->place }}</td>
+                                <td>{{ $myGiftcon->created_at->diffforhumans()}}</td>
+                                <td><input type="checkbox" id="vehicle3" name="vehicle3" value="{{ $myGiftcon->id }}">
+                                </td>
+                            </tr>
+
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                    @endif
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                    <button type="button" onclick="submitOffer({{ $giftcon->id }}, {{ $thispost->id }})"
+                        class="btn btn-primary">확인</button>
+                </div>
             </div>
+
         </div>
+    </div>
 
 
-        @include('layouts.error')
+    @include('layouts.error')
 
 
-        @endsection
+    @endsection
 
-        @push('script')
+    @push('script')
 
 
 
-        <script type="text/javascript">
-            $.ajaxSetup({
+    <script type="text/javascript">
+        $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 
-        </script>
+    </script>
 
-        {{-- 교환할 기프티콘들을 체크하고 최종 확인 --}}
-        <script>
-            function submitOffer(iWantThisGiftcon, TradePostId) {
+    {{-- 교환할 기프티콘들을 체크하고 최종 확인 --}}
+    <script>
+        function submitOffer(iWantThisGiftcon, TradePostId) {
                 var checkout = Array();
                 $("input:checkbox[type=checkbox]:checked").each(function () {
                     checkout.push($(this).val());
@@ -183,27 +215,27 @@
                 }
             }
 
-        </script>
+    </script>
 
 
-        <script>
-            // When the user clicks on <div>, open the popup
+    <script>
+        // When the user clicks on <div>, open the popup
             function myFunction() {
                 var popup = document.getElementById("myPopup");
                 popup.classList.toggle("show");
             }
 
-        </script>
+    </script>
 
-        <script>
-            function checkGiftcons() {
+    <script>
+        function checkGiftcons() {
                 $('#myModal').modal('toggle');
 
 
             };
 
-        </script>
+    </script>
 
 
 
-        @endpush
+    @endpush

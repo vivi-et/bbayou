@@ -19,10 +19,20 @@ class Giftcon extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function GiftconTradePost()
+
+    public function GiftconTradeComments()
+    {
+        return $this->belongsTo(GiftconTradeComment::class);
+    }
+
+
+    
+    public function GiftconTradePosts()
     {
         return $this->belongsToMany(GiftconTradePost::class);
     }
+
+
 
     
 

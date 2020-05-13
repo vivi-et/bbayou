@@ -20,7 +20,7 @@ class CreateGiftconTradeCommentsTable extends Migration
             $table->bigInteger('giftcon_id3')->nullable;
             $table->bigInteger('giftcon_id4')->nullable;
             $table->bigInteger('giftcon_id5')->nullable;
-            $table->bigInteger('post_id');
+            $table->bigInteger('giftcon_trade_post_id');
             $table->bigInteger('user_id');
             $table->boolean('traded')->default(0);
             $table->timestamps();

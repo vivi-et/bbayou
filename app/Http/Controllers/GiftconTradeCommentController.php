@@ -71,7 +71,7 @@ class GiftconTradeCommentController extends Controller
             'giftcon_id4' => $for[3],
             'giftcon_id5' => $for[4],
             'user_id'=> Auth::user()->id,
-            'post_id'=> $request->post_id,
+            'giftcon_trade_post_id'=> $request->post_id,
             'traded'=> 0,
             // 'created_at' => now(),
             // 'updated_at' => now(),
