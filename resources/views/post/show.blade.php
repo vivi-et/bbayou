@@ -44,14 +44,13 @@
     @if(auth()->user()->id == $post->user_id)
     <div class="btn-group" style="float:right;">
         <a href="/post/{{$post->id}}/edit">
-            <button class="btn btn-primary">Edit</button>
+            <button class="btn btn-primary">수정</button>
         </a>
 
         <form method="POST" action="/post/{{$post->id}}">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-primary" style="margin-left:5px;">Delete</button>
-
+            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" class="btn btn-danger" style="margin-left:5px;">삭제</button>
         </form>
     </div>
     @endif

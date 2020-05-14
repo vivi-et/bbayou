@@ -122,41 +122,22 @@ class GiftconTradePostController extends Controller
             ->first();
 
 
-        // $comments = $thispost->comments;
+       
 
 
 
-        // for ($i = 0; $i < count($comments); $i++) {
-        //     for ($j = 0; $j < 5; $j++) {
-        //         $idx = 'giftcon_id' . ($j + 1);
-        //         $commentGiftconsArrays[$i][$j] = $comments[$i]->$idx;
-        //         if ($commentGiftconsArrays[$i][$j] === 0)
-        //             unset($commentGiftconsArrays[$i][$j]);
-        //     }
-        // }
+        $arraycomments = GiftconTradeComment::with('giftcons')
+        ->where('giftcon_trade_post_id', '=' ,$thispost->id)->get();
 
 
-        // for ($i = 0; $i < count($comments); $i++) {
-        //     for ($j = 0; $j < 5; $j++) {
-        //         $idx = 'giftcon_id' . ($j + 1);
-        //         $commentGiftconsArrays[$i][$j] = Giftcon::find($comments[$i]->$idx);
-        //         if (empty($commentGiftconsArrays[$i][$j]))
-        //             unset($commentGiftconsArrays[$i][$j]);
-        //     }
-        // }
-        
-
-
-        // return max(array_map('count', $commentGiftconsArrays));
+        // dd($comment);
 
 
 
+        // $comment = GiftconTradeComment::find(11)->with('giftcons')->first();
 
-        // return $commentGiftconsArrays[0][0]->user;
+        // dd($comment);
 
-        // return $commentGiftconsArrays[];
-
-        // return $commentGiftconsArrays;
 
         $status = $giftcon->used;
 
@@ -172,12 +153,28 @@ class GiftconTradePostController extends Controller
                 break;
         }
 
-        return view('giftcontradepost.show')
-        ->with('giftcon', $giftcon)
-        ->with('status', $status)
-        ->with('myGiftcons', $myGiftcons)
-        ->with('thispost', $thispost);
-        // ->with('comments',$comments);
+  
+        if (count($thispost->comments) > 0) {
+            // $thispostscomments = $thispost->comments;
+
+            // for ($i = 0; $i < count($thispostscomments); $i++) {
+            //     $arraycomments[$i] = $thispostscomments->with('giftcons')->find($i + 1);
+            // }
+
+            return view('giftcontradepost.show')
+                ->with('giftcon', $giftcon)
+                ->with('status', $status)
+                ->with('myGiftcons', $myGiftcons)
+                ->with('thispost', $thispost)
+                ->with('arraycomments', $arraycomments);
+        } else {
+
+            return view('giftcontradepost.show')
+                ->with('giftcon', $giftcon)
+                ->with('status', $status)
+                ->with('myGiftcons', $myGiftcons)
+                ->with('thispost', $thispost);
+        }
     }
 
     /**

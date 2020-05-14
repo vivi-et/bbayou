@@ -17,7 +17,6 @@ class GiftconGiftconTradeComment extends Migration
             $table->id();
             $table->bigInteger('giftcon_id');
             $table->bigInteger('giftcon_trade_comment_id');
-            $table->primary(['giftcon_id', 'giftcon_trade_comment_id']);
             $table->timestamps();
         });
     }

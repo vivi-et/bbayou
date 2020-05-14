@@ -49,7 +49,7 @@ class GiftconTradeCommentController extends Controller
         ]);
 
 
-        $comment->giftcons()->sync($for);
+        $comment->giftcons()->attach($for);
 
         
        
@@ -112,8 +112,15 @@ class GiftconTradeCommentController extends Controller
      * @param  \App\GiftconTradeComment  $giftconTradeComment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GiftconTradeComment $giftconTradeComment)
+    public function destroy(GiftconTradeComment $tradecomment)
     {
-        //
+
+        $hasTheseGiftcons = $tradecomment->giftcons;
+        $tradecomment->giftcons()->attach($hasTheseGiftcons); // pivot 삭제
+        $tradecomment->delete(); // comment 삭제
+
+
+        // $giftconTradeComment->giftcons()->attach($for);
+       return redirect()->back();
     }
 }
