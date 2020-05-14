@@ -22,7 +22,7 @@ class Giftcon extends Model
 
     public function GiftconTradeComments()
     {
-        return $this->belongsTo(GiftconTradeComment::class);
+        return $this->belongsToMany(GiftconTradeComment::class, 'giftcon_giftcon_trade_comment', 'giftcon_id', 'giftcon_trade_comment_id')->withTimestamps();
     }
 
 
@@ -31,6 +31,8 @@ class Giftcon extends Model
     {
         return $this->belongsToMany(GiftconTradePost::class);
     }
+
+
 
 
 

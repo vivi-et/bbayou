@@ -6,6 +6,7 @@ use App\GiftconTradeComment;
 use Illuminate\Support\Facades\Auth;
 use App\Giftcon;
 use App\GiftconTradePost;
+use App\giftcon_comment;
 use Illuminate\Http\Request;
 
 class GiftconTradeCommentController extends Controller
@@ -38,45 +39,33 @@ class GiftconTradeCommentController extends Controller
      */
     public function store(Request $request)
     {
+        $getThis = $request->this;  //이걸 팝니다 Post
+        $for = $request->for;       //이걸로 삽니다 Comment
+
+        $comment = GiftconTradeComment::create([
+            'user_id' => Auth::user()->id,
+            'giftcon_trade_post_id' => $request->post_id,
+            'traded' => 0,
+        ]);
+
+
+        $comment->giftcons()->sync($for);
 
         
+       
         // 해야할것
         // GiftconTradeComment 생성
         // 주인 Giftcon 의 on trade 처리
         // 코멘트로 제시된 Giftcon 들의 on trade 처리
-        $getThis = $request->this;
-        $for = $request->for;
 
 
-        for($i = 0; $i < 5; $i++){
-            if(empty($for[$i]))
-            $for[$i] = 0;
-        }
+        // for ($i = 0; $i < count($for); $i++) {
+        //     giftcon_comment::create([
+        //         'giftcon_id' => $for[$i],
+        //         'giftcon_trade_comment_id' => $comment->id,
 
-
-
-        // $getThisGiftcon = Giftcon::find($getThis);
-        // $getThisGiftcon->on_trade = 1;
-        // $getThisGiftcon->save();
-
-
-        // $forGiftcon = Giftcon::find($for);
-        // $forGiftcon->on_trade = 1;
-        // $forGiftcon->save();
-
-        GiftconTradeComment::create([
-            'giftcon_id1' => $for[0],
-            'giftcon_id2' => $for[1],
-            'giftcon_id3' => $for[2],
-            'giftcon_id4' => $for[3],
-            'giftcon_id5' => $for[4],
-            'user_id'=> Auth::user()->id,
-            'giftcon_trade_post_id'=> $request->post_id,
-            'traded'=> 0,
-            // 'created_at' => now(),
-            // 'updated_at' => now(),
-
-        ]);
+        //     ]);
+        // }
 
         return response()->json([
             'message' => 'success',

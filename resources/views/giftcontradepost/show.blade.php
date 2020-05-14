@@ -70,35 +70,11 @@
 
         {{-- comments --}}
         {{-- comments --}}
+
         {{-- comments --}}
 
 
-        @foreach ($commentGiftconsArrays as $commentGiftconsArray)
-        <tr>
-            <br>
-            <div>
-                <div class="row">
-                @foreach ($commentGiftconsArray as $commentGiftcons)
-
-                    <div class="col-sm">
-                        <img style="width: 80px; height:80px;"
-                            src="/storage/giftcon_images/{{ $commentGiftcons->imagepath }}">
-                    </div>
-                    <div class="col-sm">
-                        <td> {{ $commentGiftcons->title }} </td>
-                        <br>
-                        <td> {{  $commentGiftcons->expire_date  }} </td>
-                    </div>
-                    <br>
-                    @endforeach
-                </div>
-                <br>
-            </tr>
-            <br>
-            {{ $commentGiftcons->user->name }}
-            <hr>
-            <br>
-        @endforeach
+        
 
     </div>
     <br>
@@ -185,7 +161,7 @@
                     checkout.push($(this).val());
                 });
 
-                if (checkout.length > 4) {
+                if (checkout.length > 5) {
                     alert('최대 5개까지만 교환가능합니다')
                 } else {
 

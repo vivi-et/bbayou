@@ -54,6 +54,12 @@ class User extends Authenticatable
     }
 
     
+          public function giftcontradecomment()
+    {
+        return $this->hasMany(GiftconTradeComment::class);
+    }
+
+    
     
 
     public function publish(Post $post)

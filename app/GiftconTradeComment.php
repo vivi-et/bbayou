@@ -13,7 +13,7 @@ class GiftconTradeComment extends Model
 
     public function giftcons()
     {
-        return $this->hasMany(Giftcon::class);
+        return $this->belongsToMany(Giftcon::class,'giftcon_giftcon_trade_comment', 'giftcon_id', 'giftcon_trade_comment_id');
     }
 
     public function user()

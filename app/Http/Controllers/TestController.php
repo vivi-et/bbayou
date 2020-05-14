@@ -12,6 +12,10 @@ use App\Giftcon;
 use DateTime;
 use PDO;
 use Auth;
+use App\GiftconTradeComment;
+use App\GiftconTradePost;
+use App\giftcon_comment;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 // use Picqer\Barcode\BarcodeGeneratorHTML;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -29,7 +33,32 @@ class TestController extends Controller
     public function index()
 
     {
+
+        // $comment = GiftconTradeComment::find(11)->with('giftcons')->first();
+
+
+        // dd($comment);
+
+
+
+
+        // $comment = GiftconTradeComment::create([
+        //     'user_id' => Auth::user()->id,
+        //     'giftcon_trade_post_id' => 1,
+        //     'traded' => 0,
+        // ]);
         
+        // $for = [1,2,3];
+
+        // for ($i = 0; $i < count($for); $i++) {
+        //     giftcon_comment::create([
+        //         'giftcon_id' => $for[$i],
+        //         'giftcontradecomment_id' => $comment->id,
+
+        //     ]);
+        // }
+
+
 
        return public_path();
        dd(public_path());

@@ -122,7 +122,7 @@ class GiftconTradePostController extends Controller
             ->first();
 
 
-        $comments = $thispost->comments;
+        // $comments = $thispost->comments;
 
 
 
@@ -136,16 +136,16 @@ class GiftconTradePostController extends Controller
         // }
 
 
-        for ($i = 0; $i < count($comments); $i++) {
-            for ($j = 0; $j < 5; $j++) {
-                $idx = 'giftcon_id' . ($j + 1);
-                $commentGiftconsArrays[$i][$j] = Giftcon::find($comments[$i]->$idx);
-                if (empty($commentGiftconsArrays[$i][$j]))
-                    unset($commentGiftconsArrays[$i][$j]);
-            }
-        }
+        // for ($i = 0; $i < count($comments); $i++) {
+        //     for ($j = 0; $j < 5; $j++) {
+        //         $idx = 'giftcon_id' . ($j + 1);
+        //         $commentGiftconsArrays[$i][$j] = Giftcon::find($comments[$i]->$idx);
+        //         if (empty($commentGiftconsArrays[$i][$j]))
+        //             unset($commentGiftconsArrays[$i][$j]);
+        //     }
+        // }
         
-        return $commentGiftconsArrays;
+
 
         // return max(array_map('count', $commentGiftconsArrays));
 
@@ -176,9 +176,8 @@ class GiftconTradePostController extends Controller
         ->with('giftcon', $giftcon)
         ->with('status', $status)
         ->with('myGiftcons', $myGiftcons)
-        ->with('thispost', $thispost)
-        ->with('commentGiftconsArrays', $commentGiftconsArrays)
-        ->with('comments',$comments);
+        ->with('thispost', $thispost);
+        // ->with('comments',$comments);
     }
 
     /**
