@@ -8,7 +8,7 @@
     }
 </style>
 
-
+{{-- 본문(거래) --}}
 <br>
 <div class="col-sm-8 blog-main">
     @if($giftcon->used == 1)
@@ -64,21 +64,8 @@
         <br>
         <hr>
         <br>
-        {{-- 댓글식 제안 --}}
 
-        {{-- {{ $trade->comments }} --}}
-
-        {{-- comments --}}
-
-        {{-- @if($arraycomments)
-        @foreach($arraycomments as $arraycomment)
-        @foreach($arraycomment->giftcons as $giftcon)
-        {{ $giftcon->title }}
-
-        @endforeach
-        @endforeach
-        @endif --}}
-
+        {{-- 댓글(거래 제안) --}}
         @foreach($arraycomments as $comment)
         {{ $comment->user->name }},
         {{ $comment->created_at->diffforhumans() }}
