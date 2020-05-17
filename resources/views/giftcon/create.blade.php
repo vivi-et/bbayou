@@ -47,7 +47,7 @@
     </div>
 
     <div class="col-sm" style="text-align: center" id="result_col_sm">
-        <form id="giftcon-form" action="/giftcon" method="POST">
+        <form id="giftcon-form" action="/giftcon" method="POST" onkeydown="return event.key != 'Enter';">
 
             <table id="result-table" class="table">
 
@@ -78,7 +78,7 @@
             </div>
             <br>
             <div class="form-group">
-                <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>
+                <button type="submit" id="finalsubmitbtn" class="btn btn-primary" >기프티콘 등록</button>
         </form>
         <br>
 
@@ -154,8 +154,6 @@
         let height = document.getElementById('h').value;
         let originalImagePath = document.getElementById('filepath').value;
 
-        console.log(originalImagePath);
-        console.log('from modalguy');
 
         $.ajax({
             type: "POST",
@@ -204,7 +202,6 @@
     }
     $('#cover_image').on('change', function(ev) {
 
-        console.log("here inside");
         let filedata = this.files[0];
         let imgtype = filedata.type;
         let match = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -293,7 +290,6 @@
                 processData: false,
                 success: function(data) {
 
-                    console.log('ajax json recieved');
 
 
                     let ajaxData = [
@@ -303,7 +299,6 @@
                         data.recieved_date,
                         data.usedstr,
                         data.sepbarcode,
-                        data.filepath,
 
                     ];
 
@@ -328,7 +323,6 @@
                         "선물수신일",
                         "쿠폰상태",
                         "바코드",
-                        "파일명//추후삭제",
                     ];
 
 
@@ -343,7 +337,6 @@
                     let i = ajaxData.length;
                     while (i >= 0) {
 
-                        console.log(i);
                         if (ajaxData[i]) {
 
                             let row = table.insertRow(1);
@@ -374,7 +367,6 @@
 
 {{-- ModalJCrop 관련 스크립트 --}}
 <script type="text/javascript">
-    console.log('from modal JCrop');
 
     function getImage(path) {
         document.getElementById('cropbox').src = "/storage/temp_images/" + path;

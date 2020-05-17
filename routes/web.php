@@ -28,6 +28,7 @@ Route::get('/post/create/{board}', 'PostController@create');
 // Route::get('/giftcon/trade/{$trade}', 'GiftconTradePostController@show');
 Route::resource('/giftcon/trade', 'GiftconTradePostController');
 Route::resource('/giftcon/tradecomment', 'GiftconTradeCommentController');
+// Route::resource('/giftcon/tradecommentaccept', 'GiftconTradeCommentController@accept');
 Route::resource('/comment', 'CommentController');
 Route::resource('/post', 'PostController');
 Route::resource('/giftcon', 'GiftconController');
