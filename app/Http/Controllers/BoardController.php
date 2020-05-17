@@ -17,34 +17,37 @@ class BoardController extends Controller
     public function index(string $board)
     {
 
+    
+        $posts = Post::select('posts.*')
+        ->Join('boards', 'boards.id', '=', 'posts.board_id')
+        ->where('board_name', $board)
+        ->orderby('id','desc')
+        ->paginate(20);
+
+
         switch ($board) {
             case 'free':
-                $boardname = '자유게시판';
+                $board = Board::find(1);
                 break;
             case 'humor':
-                $boardname = '유머게시판';
+                $board = Board::find(2);
                 break;
-
             case 'game':
-                $boardname = '게임게시판';
+                $board = Board::find(3);
                 break;
             case 'sport':
-                $boardname = '스포츠게시판';
+                $board = Board::find(4);
                 break;
             default:
-                $boardname = 'error';
+                $board = 'error';
                 break;
         }
 
-        $posts = Post::select('posts.*')
-            ->Join('boards', 'boards.id', '=', 'posts.board_id')
-            ->where('board_name', $board)
-            ->orderby('id','desc')
-            ->paginate(5);
+
+  
 
 
-
-        return  view('board.index')->with('posts', $posts)->with('boardname',$boardname)->with('board',$board);
+        return  view('board.index')->with('posts', $posts)->with('board',$board);
     }
 
     /**

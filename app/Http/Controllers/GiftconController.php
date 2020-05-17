@@ -95,8 +95,10 @@ class GiftconController extends Controller
         session()->flash('message', 'Giftcon Created!');
 
 
-        $giftcons = Giftcon::latest()->get();
-        return redirect('giftcon')->with('giftcons');
+        $giftcons = Auth::user()->giftcons->reverse();
+
+    
+        return redirect()->action('GiftconController@mygiftcons');
     }
 
     /**

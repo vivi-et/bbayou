@@ -6,6 +6,7 @@
     .editablediv {
         width: 600px;
     }
+
 </style>
 
 
@@ -64,71 +65,63 @@
 
             <br>
 
-            {{-- {!! $bobj->getHtmlDiv() !!} --}}
+            <hr>
+            <br>
 
-        </div>
-
-        <hr>
-        <br>
+            <hr>
 
 
 
+            </li>
+            </ul>
 
+            <br>
 
-
-
-        <hr>
-
-
-
-        </li>
-        </ul>
-
-        <br>
-
-        {{-- add a comment --}}
-
-        <div>
+            {{-- add a comment --}}
 
             <div>
 
+                <div>
 
-                @include('layouts.error')
+
+                    @include('layouts.error')
+                </div>
             </div>
-        </div>
 
-        <script>
-            function divClicked() {
-    var divHtml = $(this).prev('div').html();
-    var editableText = $("<textarea class='editablediv'/>");
-    editableText.val(divHtml);
-    $(this).prev('div').replaceWith(editableText);
-    editableText.focus();
-    // setup the blur event for this new textarea
-    editableText.blur(editableTextBlurred);
-}
+            <script>
+                function divClicked() {
+                    var divHtml = $(this).prev('div').html();
+                    var editableText = $("<textarea class='editablediv'/>");
+                    editableText.val(divHtml);
+                    $(this).prev('div').replaceWith(editableText);
+                    editableText.focus();
+                    // setup the blur event for this new textarea
+                    editableText.blur(editableTextBlurred);
+                }
 
-function editableTextBlurred() {
-    var html = $(this).val();
-    var viewableText = $("<div>");
-    viewableText.html(html);
-    $(this).replaceWith(viewableText);
-    // setup the click event for this new div
-    viewableText.click(divClicked);
-}
+                function editableTextBlurred() {
+                    var html = $(this).val();
+                    var viewableText = $("<div>");
+                    viewableText.html(html);
+                    $(this).replaceWith(viewableText);
+                    // setup the click event for this new div
+                    viewableText.click(divClicked);
+                }
 
-$(document).ready(function () {
-    $(".btn").click(divClicked);
-});
-        </script>
+                $(document).ready(function () {
+                    $(".btn").click(divClicked);
+                });
 
-        @endsection
+            </script>
 
-        <style>
-            .center {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                /* width: 50%; */
-            }
-        </style>
+            @endsection
+
+            <style>
+                .center {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    /* width: 50%; */
+                }
+
+            </style>

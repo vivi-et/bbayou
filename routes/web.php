@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GiftconTradePostController;
+use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,8 +14,9 @@ Auth::routes();
 
 
 // Route::get('/{giftcon}', 'TestController@show')->name('test');
-Route::get('/', 'TestController@index')->name('test');
-// Route::get('/', 'HomeController@index')->name('home');
+Route::get('/mypage/trades', 'MyPageController@mytrades' );
+Route::get('/test', 'TestController@index')->name('test');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/giftcon/mygiftcons', 'GiftconController@mygiftcons');
 Route::post('/ajax/saveImage', 'AjaxUploadController@saveImage')->name('ajax.saveImage');
 Route::post('/ajax/makeTrade', 'AjaxUploadController@makeTrade')->name('ajax.makeTrade');

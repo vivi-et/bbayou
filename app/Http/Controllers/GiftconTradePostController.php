@@ -77,14 +77,13 @@ class GiftconTradePostController extends Controller
             ->whereMonth('created_at', '=', $month)
             ->get();
 
-        if (count($results)) {
-            return redirect()->back()->withErrors('error', '이미 등록하신 기프티콘입니다');
-        } else {
             GiftconTradePost::create([
                 'giftcon_id' => $giftcon->id,
                 'user_id' => Auth::user()->id,
             ]);
 
+            $giftcon->on_trade = 1;
+            $giftcon->save();
             session()->flash('message', '기프티콘이 거래게시판에 등록되었습니다!');
 
 
@@ -93,13 +92,13 @@ class GiftconTradePostController extends Controller
             // ->get();
 
             return redirect()->back();
-        }
+        
 
 
 
-        GiftconTradePost::create([
-            'giftcon_id' => $giftcon->id,
-        ]);
+        // GiftconTradePost::create([
+        //     'giftcon_id' => $giftcon->id,
+        // ]);
     }
 
     /**
@@ -113,8 +112,8 @@ class GiftconTradePostController extends Controller
 
         $thispost = $trade;
         if (Auth::check())
-            $myGiftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
-            else
+            $myGiftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->where('used','!=',1);
+        else
             $myGiftcons = 0;
 
         $giftcon = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
@@ -203,8 +202,35 @@ class GiftconTradePostController extends Controller
      * @param  \App\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function destroy(cr $cr)
+    public function destroy(GiftconTradePost $trade)
     {
-        //
+        $thispost = $trade; // 편의상 변수명 변경
+        $thispostCommentGiftcons = GiftconTradeComment::with('giftcons')    //삭제된 게시글의 댓글들 처리
+            ->where('giftcon_trade_post_id', '=', $thispost->id)            //이 게시글에 달린 댓글들 불러오기
+            ->get();
+
+        // 채택된 댓글 외 나머지 댓글들 거래중 상태 해제 및 댓글 삭제
+        foreach ($thispostCommentGiftcons as $thispostCommentGiftcon) {     //이 게시글의 각 댓글들
+
+            foreach ($thispostCommentGiftcon->giftcons as $eachGiftcon) {   //그 댓글들속의 기프티콘들
+                $eachGiftcon->on_trade = 0;                                 //거래상태 해제
+                $eachGiftcon->save();                                       //저장
+            }
+            $thispostCommentGiftcon->giftcons()->detach($thispostCommentGiftcon->giftcons); //pivot table에서 삭제
+            $thispostCommentGiftcon->delete();                                              //댓글 삭제
+        }
+
+        
+        $thispostGiftcon = Giftcon::find($thispost->giftcon_id);  //이 게시글의 기프티콘 거래중 상태 해제      
+        $thispostGiftcon->on_trade = 0;     
+        $thispostGiftcon->save();
+
+
+        $thispostGiftcon->delete();     //게시글 삭제
+
+
+        return redirect()->back();
+
+
     }
 }

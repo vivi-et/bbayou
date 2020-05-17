@@ -2,27 +2,17 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js">
 </script>
  
-this is giftcon index
-
 @section('content')
-<a href="/giftcon/create">
-    <button class="btn btn-primary">CREATE</button>
-</a>
-
-<a href="/giftcon/trade">
-    <button class="btn btn-primary">TRADE</button>
-</a>
-<br>
 
 <main role="main">
     <section class="jumbotron text-center">
         <div class="container">
             <h2>기프티콘</h2>
             <p class="lead text-muted">다른 사람들이랑 거래해보세요</p>
-            <p>
+            {{-- <p>
                 <a href="#" class="btn btn-primary my-2">Main call to action</a>
                 <a href="#" class="btn btn-secondary my-2">Secondary action</a>
-            </p>
+            </p> --}}
         </div>
     </section>
 

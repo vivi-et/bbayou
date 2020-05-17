@@ -44,7 +44,7 @@
         @if(auth()->user())
         @if(auth()->user()->id == $giftcon->user_id && $thispost->traded === 0)
         <div class="btn-group" style="float:right;">
-            <form method="POST" action="/post/{{$giftcon->id}}">
+            <form method="POST" action="/giftcon/trade/{{$thispost->id}}">
                 @csrf
                 @method('DELETE')
                 <button onclick="return confirm('정말 삭제하시겠습니까?')" type="submit" class="btn btn-danger"

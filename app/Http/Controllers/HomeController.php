@@ -7,6 +7,7 @@ use App\Post;
 use Illuminate\Support\Facades\Auth;
 use App\GiftconTradePost;
 use App\Giftcon;
+use App\Board;
 use SebastianBergmann\Environment\Console;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 
@@ -34,6 +35,16 @@ class HomeController extends Controller
         // return $giftcons;
 
 
+        $boards = Board::get();
+
+
+
+
+
+
+
+
+
 
         $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
         ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
@@ -42,6 +53,6 @@ class HomeController extends Controller
 
 
         $posts = Post::latest()->get()->take(6);
-        return view('home')->with('giftcons', $giftcons);
+        return view('home')->with('giftcons', $giftcons)->with('boards',$boards);
     }
 }

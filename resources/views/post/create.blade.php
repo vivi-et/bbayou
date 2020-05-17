@@ -8,8 +8,9 @@
 
 @endpush
 @section('content')
-
-{{ $boardname }}
+<h3>
+{{ $board->board_korname }}
+</h3>
 <hr>
 <br>
 
@@ -24,7 +25,7 @@
         <textarea name="body" id="body" class="summernote" required></textarea>
     </div>
 
-    <input type="hidden" id="board" name="board" value={{ $board }}>
+    <input type="hidden" id="board" name="board" value={{ $board->id }}>
     <div class="form-group">
         <button type="submit" id="submitbtn" class="btn btn-primary">Submit</button>
     </div>

@@ -29,7 +29,7 @@ class Giftcon extends Model
     
     public function GiftconTradePosts()
     {
-        return $this->belongsToMany(GiftconTradePost::class);
+        return $this->belongsTo(GiftconTradePost::class);
     }
 
 

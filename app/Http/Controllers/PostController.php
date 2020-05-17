@@ -41,23 +41,23 @@ class PostController extends Controller
     {
         switch ($board) {
             case 'free':
-                $boardname = '자유게시판';
+                $board = Board::find(1);
                 break;
             case 'humor':
-                $boardname = '유머게시판';
+                $board = Board::find(2);
                 break;
             case 'game':
-                $boardname = '게임게시판';
+                $board = Board::find(3);
                 break;
             case 'sport':
-                $boardname = '스포츠게시판';
+                $board = Board::find(4);
                 break;
             default:
-                $boardname = 'error';
+                $board = 'error';
                 break;
         }
 
-        return view('post.create')->with('board', $board)->with('boardname', $boardname);
+        return view('post.create')->with('board', $board);
     }
 
 
@@ -70,9 +70,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+       $board = Board::find($request->board);
 
-        $board = $request->board;
-        $boardno = Board::where('board_name', $board)->first()->value('id');
+
+        $boardno = $board->id;
+
 
         $this->validate($request, [
 
@@ -83,10 +85,10 @@ class PostController extends Controller
 
         $body = $request->input('body');
 
-        
+
         $dom = new \DomDocument();
 
-        $dom->loadHtml('<?xml encoding="utf-8">'.$body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHtml('<?xml encoding="utf-8">' . $body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $images = $dom->getElementsByTagName('img');
 
@@ -111,10 +113,8 @@ class PostController extends Controller
             $img->setAttribute('src', $image_name);
         }
         $body = $dom->saveHTML();
-        
 
-        $board = $request->board;
-        $boardno = Board::where('board_name', $board)->first()->value('id');
+
 
 
         Post::create([
@@ -125,7 +125,7 @@ class PostController extends Controller
         ]);
 
 
-        return redirect('/board/' . $board);
+        return redirect('/board/' . $board->board_name);
     }
 
     /**

@@ -5,7 +5,7 @@
 
         @if($giftcon->traded)
 
-        <div class="card mb-4 shadow-sm" style="background-color: gray">
+        <div class="card mb-4 shadow-sm" style="background-color:silver; opacity:0.5;">
             @else
             <div class="card mb-4 shadow-sm">
                 @endif
@@ -31,7 +31,7 @@
                         </a>
                         <br>
                         <div style="margin-top: 5px; float: right;">
-                            {{  $giftcon->place }}, {{ $giftcon->expire_date }}
+                            {{  $giftcon->place }}, {{ $giftcon->expire_date }} 까지
                         </div>
                         <div style="clear: both;"></div>
                     </p>

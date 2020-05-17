@@ -36,59 +36,7 @@
 </script>
 
 
-<script>
-    function makeImage(x) {
-      
 
-        $.ajax({
-            type: "PUT",
-            url: "/giftcon/" + x,
-            cache: false,
-            dataType: 'JSON',
-            contentType: false,
-            cache: false,
-            processData: false,
-            data: {
-                'text1': '1',
-                'text2': '2',
-                'text3': '3',
-            },
-            processData: false,
-            success: function (data) {
-            let base64image = data.barcode;
-            let ajaxbarcodeno = data.barcodeno;
-            let downloadAs = data.downloadAs;
-
-            // alert(data.barcode);
-            let theDiv = document.getElementById('theBarcode' + x);
-            let theBarcodeno = document.getElementById('theBarcodeno' + x);
-            let htmloutput = '<img src="data:image/png;base64,' +base64image+'">';
-    
-                
-                theDiv.innerHTML += htmloutput;
-                theBarcodeno.innerHTML +=  ajaxbarcodeno;
-
-                let thisGiftcon = document.getElementById('giftcon' + x);
-
-                html2canvas([thisGiftcon], {
-                    onrendered: function (canvas) {
-                        var data = canvas.toDataURL('image/jpeg');
-
-
-                        var link = document.createElement('a');
-                        link.download = downloadAs;
-                        link.href = data;
-                        link.click();
-
-                    }
-
-                });
-            }
-        });
-
-    };
-
-</script>
 <style>
     .one-third:hover,
     .one-third:focus {

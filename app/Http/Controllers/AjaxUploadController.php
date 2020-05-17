@@ -163,6 +163,17 @@ class AjaxUploadController extends Controller
         //expStr 1 offset 오류 상황재현 가능? // 해결됨
         $string = $barcodeNo[0] . $expStr[1];
 
+
+        $checkifExists = Giftcon::where('barcode', '=', $barcodeNo[0])->first(); // 바코드번호 중복 검사
+
+        if($checkifExists){
+            return response()->json([
+                'status' => 1,
+                'message'=> '이미 존재하는 기프티콘입니다',
+            ]);
+
+        }
+
         //교환처가 없고 저 로 나올떄
         //하드코딩(Hardcoding) 가능할경우 개선
         //인식률 상향 필요
@@ -349,6 +360,7 @@ class AjaxUploadController extends Controller
         // resize_image('storage/temp_images/' . $fileNameToStore, 472, 961);
 
         return response()->json([
+            'status' => 0,
             'message' => '성공!',
             'expire_date' => $catdata[0],
             'orderno' => $catdata[1],

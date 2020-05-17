@@ -37,20 +37,25 @@
       <strong>내 기프티콘</strong>
     </a>
 
-    
+
 
     @if(Auth::check())
     <div class="ml-auto">
-      <strong style="color: white;">{{ Auth::user()->name}}님 안녕하세요!</strong>
+      <div class="dropdown">
+        <button class="btn"> <a href="#"> <strong>{{ Auth::user()->name}}님 안녕하세요!</strong>  </a></button>
+        <div class="dropdown-content">
+          <a href="/mypage/trades">기프티콘 거래현황</a>
+          <a href="#">내 글들</a>
+          <a href="#">설정</a>
+        </div>
+      </div>
   
 
 
       <a href="/logout">
         <strong style="color: #FEE715FF; margin-left:30px">LOGOUT</strong>
       </a>
-      {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button> --}}
+
     </div>
     @else
     <div class="ml-auto">
@@ -64,3 +69,55 @@
     @endif
   </div>
 </div>
+
+@push('style')
+
+<style>
+  /* Dropdown Button */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.btn a{
+  color: white;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>
+    
+@endpush

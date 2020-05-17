@@ -2,7 +2,9 @@
 
 @section('content')
 
-{{ $boardname }}
+<br>
+
+<H3> {{ $board->board_korname }}</H3>
 <br>
 <br>
 
@@ -39,7 +41,7 @@
 </table>
 
 {{ $posts->links() }}
-<a href="/post/create/{{ $board }}">
+<a href="/post/create/{{ $board->board_name }}">
 <button class="btn btn-primary">CREATE</button>
 </a>
 @endsection

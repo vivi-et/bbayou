@@ -31,4 +31,13 @@ class Post extends Model
     {
         return $this->belongsTo(Tag::class);
     }
+
+
+     public function board()
+    {
+        return $this->belongsTo(Board::class);
+    }
+
+
+    
 }

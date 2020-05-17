@@ -30,35 +30,37 @@
     <br>
     <br>
     {!! $post->body !!}
-    <hr>
-    <br>
+ 
 
 
-
-    <hr>
-    <br>
 
 
 
     @if(!empty(auth()->user()))
     @if(auth()->user()->id == $post->user_id)
-    <div class="btn-group" style="float:right;">
-        <a href="/post/{{$post->id}}/edit">
-            <button class="btn btn-primary">수정</button>
-        </a>
+    <hr>
+    <br>
+    <hr>
+    <br>
+    <div>
+        <div class="btn-group" style="float:right;">
+            <a href="/post/{{$post->id}}/edit">
+                <button class="btn btn-primary">수정</button>
+            </a>
 
-        <form method="POST" action="/post/{{$post->id}}">
-            @csrf
-            @method('DELETE')
-            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" class="btn btn-danger" style="margin-left:5px;">삭제</button>
-        </form>
+            <form method="POST" action="/post/{{$post->id}}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger"
+                    style="margin-left:5px;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            </form>
+        </div>
     </div>
     @endif
-    @endif
     <br style="clear:both;">
-
-
     <hr>
+    @endif
+
     <div class="comments">
         @foreach ($post->comments as $comment)
         <li class="list-group-item">
@@ -69,18 +71,21 @@
             <form id="editform" action="/comment/{{ $comment->id }}" method="POST" style="display: none;">
                 @csrf
                 @method('PATCH')
-                <input name="body" style="width: 500px; height:100px; margin-top:5px;" value="{{ $comment->body }}">
-                <button type="submit" class="btn">수정하기</button>
+                <input name="body" style="width: 100%; height:100px; margin-top:5px;" value="{{ $comment->body }}">
+                <button type="submit" class="btn" id="commenteditsubmitbtn" style="float: right">수정하기</button>
+                <button  type="button" class="btn" onclick="toggleEditForm()" id="commenteditcancelbtn" style="float: right">취소</button>
+                <div style="clear: both;"></div>
             </form>
             <div id="editdiv" style="width:100px; margin-top:5px; display:block">{{ $comment->body }}</div>
-            <div class="buttons" style="float: right">
+            <div id="commentbuttons" class="buttons" style="float: right">
                 <button id="toggleEditFormbtn" onclick="toggleEditForm()" class="btn">수정</button>
 
                 <form action="/comment/{{ $comment->id }}" method="post" style="float: right">
                     <input type="text" value="{{ $comment->id }}" hidden>
                     @csrf
                     @method('DELETE')
-                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" id="commentdeletebtn" class="btn">삭제</button>
+                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')" id="commentdeletebtn"
+                        class="btn">X</button>
                 </form>
             </div>
             @endif
@@ -89,8 +94,6 @@
         </li>
         @endforeach
     </div>
-
-
 
 
     <br>
@@ -116,7 +119,7 @@
         </div>
     </div>
 
-{{-- 추후 게시판 테이블 넣을것 --}}
+    {{-- 추후 게시판 테이블 넣을것 --}}
 
 
 
@@ -126,14 +129,17 @@
 
     <script>
         function toggleEditForm() {
-  var editform = document.getElementById("editform");
-  var editdiv = document.getElementById("editdiv");
+  let editform = document.getElementById("editform");
+  let editdiv = document.getElementById("editdiv");
+  let commentbuttons = document.getElementById("commentbuttons");
   if (editform.style.display === "none") {
     editform.style.display = "block";
     editdiv.style.display = "none";
+    commentbuttons.style.display = "none";
   } else {
     editform.style.display = "none";
     editdiv.style.display = "block";
+    commentbuttons.style.display = "block";
   }
 
 
@@ -144,12 +150,29 @@
 }
     </script>
 
+<style>
+    #commentdeletebtn:hover{
+        background-color: red;
+    }
+    #toggleEditFormbtn:hover{
+        background-color: khaki;
+
+    }    
+    #commenteditsubmitbtn:hover{
+        background-color: khaki;
+
+    }    
+    #commenteditcancelbtn:hover{
+        background-color: red;
+
+    }
+</style>
 
 
     @endpush
 
 
-
+{{-- 
     <style>
         .center {
             display: block;
@@ -157,4 +180,4 @@
             margin-right: auto;
             /* width: 50%; */
         }
-    </style>
+    </style> --}}

@@ -11,7 +11,7 @@ class GiftconTradePost extends Model
     //
     public function giftcon()
     {
-        return $this->hasOne(Giftcon::class);
+        return $this->hasMany(Giftcon::class);
     }
 
     public function user()

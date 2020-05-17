@@ -120,6 +120,7 @@
 
     </div>
     @stack('script')
+    @stack('style')
     @include('layouts.footer')
 </body>
 

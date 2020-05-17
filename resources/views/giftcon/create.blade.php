@@ -78,7 +78,7 @@
             </div>
             <br>
             <div class="form-group">
-                <button type="submit" id="finalsubmitbtn" class="btn btn-primary" >기프티콘 등록</button>
+                <button type="submit" id="finalsubmitbtn" class="btn btn-primary">기프티콘 등록</button>
         </form>
         <br>
 
@@ -145,7 +145,7 @@
 
 {{-- 모달 이미지 편집후 확인버튼 누를시 --}}
 <script type="text/javascript">
-    $("#modal-submit").click(function(e) {
+    $("#modal-submit").click(function (e) {
         // e.preventDefault();
 
         let x = document.getElementById('x1').value;
@@ -170,7 +170,7 @@
             // cache: false,
             // processData: false,
 
-            success: function(data) {
+            success: function (data) {
                 $('#myModal').modal('toggle');
 
                 let crop = data.croppedImagePath;
@@ -183,12 +183,13 @@
 
                 // alert(data.ext);
 
-            let finalsubmitbtn = document.getElementById("finalsubmitbtn");
-            finalsubmitbtn.style.display = "block";
+                let finalsubmitbtn = document.getElementById("finalsubmitbtn");
+                finalsubmitbtn.style.display = "block";
 
             }
         });
     });
+
 </script>
 
 {{-- file preview --}}
@@ -200,7 +201,7 @@
     } else {
         x.style.display = "none";
     }
-    $('#cover_image').on('change', function(ev) {
+    $('#cover_image').on('change', function (ev) {
 
         let filedata = this.files[0];
         let imgtype = filedata.type;
@@ -210,7 +211,7 @@
             x.style.display = "none";
         } else {
             let reader = new FileReader();
-            reader.onload = function(ev) {
+            reader.onload = function (ev) {
                 $('#img_prv').attr('src', ev.target.result)
                 let x = document.getElementById("img_prv");
                 x.style.display = "block";
@@ -228,6 +229,7 @@
 
 
     });
+
 </script>
 
 {{-- css 스타일 --}}
@@ -237,6 +239,7 @@
     }
 
     .cropper-crop {}
+
 </style>
 
 
@@ -245,7 +248,7 @@
     let finalsubmitbtn = document.getElementById("finalsubmitbtn");
     finalsubmitbtn.style.display = "none";
     // finalsubmitbtn 크기 관련
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#finalsubmitbtn").css({
             'width': ($("#result_col_sm").width() + 'px')
         });
@@ -255,6 +258,7 @@
     let submitbtn = document.getElementById("submitbtn");
     submitbtn.disabled = true;
     submitbtn.style.visibility = "hidden";
+
 </script>
 
 {{-- AJAX용 CSRF 토큰 --}}
@@ -264,11 +268,12 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
 </script>
 
 {{-- 기프티콘 확인 관련 JS/AJAX --}}
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         let finalsubmitbtn = document.getElementById("result_col_sm");
         let modalButtonWrapper = document.getElementById("modalButtonWrapper");
@@ -278,7 +283,7 @@
             finalsubmitbtn.style.display = "none";
         }
 
-        $('#main_form').on('submit', function(event) {
+        $('#main_form').on('submit', function (event) {
             event.preventDefault();
             $.ajax({
                 url: "{{ route('ajaxupload.action') }}",
@@ -288,86 +293,94 @@
                 contentType: false,
                 cache: false,
                 processData: false,
-                success: function(data) {
+                success: function (data) {
+
+
+                    if (data.status == 0) {
+
+                        let ajaxData = [
+                            data.expire_date,
+                            data.orderno,
+                            data.place,
+                            data.recieved_date,
+                            data.usedstr,
+                            data.sepbarcode,
+
+                        ];
+
+                        // alert(data.filepath);
+                        getImage(data.filepath);
+
+                        let ajaxCat = [
+                            "expire_date",
+                            "orderno",
+                            "place",
+                            "recieved_date",
+                            "used",
+                            "barcode",
+                            "filepath",
+
+                        ];
+
+                        let ajaxText = [
+                            "유효기한",
+                            "주문번호",
+                            "교환처",
+                            "선물수신일",
+                            "쿠폰상태",
+                            "바코드",
+                        ];
+
+
+                        let table = document.getElementById("result-table");
 
 
 
-                    let ajaxData = [
-                        data.expire_date,
-                        data.orderno,
-                        data.place,
-                        data.recieved_date,
-                        data.usedstr,
-                        data.sepbarcode,
-
-                    ];
-
-                    // alert(data.filepath);
-                    getImage(data.filepath);
-
-                    let ajaxCat = [
-                        "expire_date",
-                        "orderno",
-                        "place",
-                        "recieved_date",
-                        "used",
-                        "barcode",
-                        "filepath",
-
-                    ];
-
-                    let ajaxText = [
-                        "유효기한",
-                        "주문번호",
-                        "교환처",
-                        "선물수신일",
-                        "쿠폰상태",
-                        "바코드",
-                    ];
-
-
-                    let table = document.getElementById("result-table");
-
-
-
-                    if (table.rows.length > 2) {
-                        while (table.rows.length > 1) table.deleteRow(1);
-                    }
-
-                    let i = ajaxData.length;
-                    while (i >= 0) {
-
-                        if (ajaxData[i]) {
-
-                            let row = table.insertRow(1);
-                            let cell1 = row.insertCell(0);
-                            let cell2 = row.insertCell(1);
-                            cell1.innerHTML = ajaxText[i];
-                            cell2.innerHTML = ajaxData[i];
+                        if (table.rows.length > 2) {
+                            while (table.rows.length > 1) table.deleteRow(1);
                         }
-                        i--;
+
+                        let i = ajaxData.length;
+                        while (i >= 0) {
+
+                            if (ajaxData[i]) {
+
+                                let row = table.insertRow(1);
+                                let cell1 = row.insertCell(0);
+                                let cell2 = row.insertCell(1);
+                                cell1.innerHTML = ajaxText[i];
+                                cell2.innerHTML = ajaxData[i];
+                            }
+                            i--;
+                        }
+                        document.getElementById('expire_date').value = data.expire_date;
+                        document.getElementById('orderno').value = data.orderno;
+                        document.getElementById('place').value = data.place;
+                        document.getElementById('recieved_date').value = data.recieved_date;
+                        document.getElementById('used').value = data.used;
+                        document.getElementById('barcode').value = data.barcode;
+                        document.getElementById('filepath').value = data.filepath;
+                        // alert(data.message);
+                        finalsubmitbtn.style.display = "block";
+                        modalButtonWrapper.style.display = "block";
+
+
                     }
-                    document.getElementById('expire_date').value = data.expire_date;
-                    document.getElementById('orderno').value = data.orderno;
-                    document.getElementById('place').value = data.place;
-                    document.getElementById('recieved_date').value = data.recieved_date;
-                    document.getElementById('used').value = data.used;
-                    document.getElementById('barcode').value = data.barcode;
-                    document.getElementById('filepath').value = data.filepath;
-                    // alert(data.message);
-                    finalsubmitbtn.style.display = "block";
-                    modalButtonWrapper.style.display = "block";
+                    else{
+                        alert(data.message);
+                    }
+
                 }
             })
         });
 
     });
+
 </script>
 
 
 {{-- ModalJCrop 관련 스크립트 --}}
 <script type="text/javascript">
-
     function getImage(path) {
         document.getElementById('cropbox').src = "/storage/temp_images/" + path;
 
@@ -392,6 +405,7 @@
 
         };
     };
+
 </script>
 
 
