@@ -112,8 +112,10 @@ class GiftconTradePostController extends Controller
     {
 
         $thispost = $trade;
-
-        $myGiftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
+        if (Auth::check())
+            $myGiftcons = Auth::user()->giftcons->where('on_trade', '!=', 1)->all();
+            else
+            $myGiftcons = 0;
 
         $giftcon = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
             ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
@@ -121,13 +123,8 @@ class GiftconTradePostController extends Controller
             ->where('giftcon_trade_posts.id', '=', $thispost->id)
             ->first();
 
-
-       
-
-
-
         $arraycomments = GiftconTradeComment::with('giftcons')
-        ->where('giftcon_trade_post_id', '=' ,$thispost->id)->get();
+            ->where('giftcon_trade_post_id', '=', $thispost->id)->get();
 
 
         // dd($comment);
@@ -153,7 +150,7 @@ class GiftconTradePostController extends Controller
                 break;
         }
 
-  
+
         if (count($thispost->comments) > 0) {
             // $thispostscomments = $thispost->comments;
 

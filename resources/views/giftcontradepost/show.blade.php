@@ -47,7 +47,8 @@
             <form method="POST" action="/post/{{$giftcon->id}}">
                 @csrf
                 @method('DELETE')
-                <button onclick="return confirm('정말 삭제하시겠습니까?')" type="submit" class="btn btn-danger" style="margin-left:5px;">Delete</button>
+                <button onclick="return confirm('정말 삭제하시겠습니까?')" type="submit" class="btn btn-danger"
+                    style="margin-left:5px;">Delete</button>
             </form>
         </div>
         @endif
@@ -55,7 +56,9 @@
         <br style="clear:both;">
         <hr>
         <br>
-
+        
+        @if(Auth::user())
+        @if (Auth::user()->id !== $thispost->user->id)
         <div style="text-align: center;">
             <button id="btn_checkGiftcons" onclick="checkGiftcons()" type="button" class="btn btn-info btn-lg">
                 {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"> --}}
@@ -63,26 +66,37 @@
         </div>
         <br>
         <hr>
-        <br>
-
+        @endif
+        @endif
+        {{-- 댓글(거래 제안) --}}
+        {{-- 댓글(거래 제안) --}}
         {{-- 댓글(거래 제안) --}}
         @foreach($arraycomments as $comment)
         {{ $comment->user->name }},
         {{ $comment->created_at->diffforhumans() }}
-        <div style="float: right; margin-left:12px;">
-            <form>
-                <input type="text" name="thiscommentid" value="{{ $comment->id }}" hidden>
-                <button onclick="return confirm('정말 교환하시겠습니까?\n취소하실 수 없습니다')" class="btn btn-primary" type="submit">승낙하기</button>
-            </form>
+        <div class="button-group">
+            {{-- 승낙하기 버튼 --}}
+            @if(Auth::user()->id === $thispost->user->id && $comment->traded !== 1)
+            <div style="float: right; margin-left:12px;">
+                <form>
+                    <input type="text" name="thiscommentid" value="{{ $comment->id }}" hidden>
+                    <button onclick="return confirm('정말 교환하시겠습니까?\n취소하실 수 없습니다')" class="btn btn-primary"
+                        type="submit">승낙하기</button>
+                </form>
+            </div>
+            @endif
+            
+            {{-- 삭제하기 버튼 --}}
+            @if(Auth::user()->id === $comment->user->id)
+            <div style="float: right; margin-left:12px;">
+                <form action="/giftcon/tradecomment/{{ $comment->id }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')" type="submit">X</button>
+                </form>
+            </div>
+            @endif
         </div>
-        <div style="float: right; margin-left:12px;">
-        <form action="/giftcon/tradecomment/{{ $comment->id }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')" type="submit">X</button>
-        </form>
-        </div>
-        
         <br>
         <br>
         <div class="row">
@@ -114,10 +128,10 @@
 
 
 
-        </>
         <br>
 
         {{-- 모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달모달 --}}
+        @if($myGiftcons !== 0)
         <div id="myModal" class="modal fade bd-example-modal-xl" role="dialog">
             <div class="modal-dialog modal-xl">
 
@@ -172,7 +186,7 @@
 
             </div>
         </div>
-
+        @endif
 
         @include('layouts.error')
 

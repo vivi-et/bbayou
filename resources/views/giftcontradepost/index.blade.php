@@ -22,7 +22,7 @@
             </p>
         </div>
     </section>
-    
+     
     @if(count($giftcons))
     <div class="album py-5 bg-light">
         <div class="container">
