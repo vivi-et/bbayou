@@ -28,7 +28,22 @@ class MyPageController extends Controller
      $posts = $user->giftcontradepost;
      $comments = $user->giftcontradecomment;
 
+
+
+    //  return $posts;
+    //  return Giftcon::find($posts[0]->giftcon_id)->title;
+
     
     return view('mypage.trade')->with('posts',$posts)->with('comments',$comments);
+ }
+
+ public function myposts()
+ {
+    $user = Auth::user();
+
+    $posts = $user->posts;
+    $comments = $user->comments;
+
+    return view('mypage.post')->with('posts',$posts)->with('comments',$comments);
  }
 }

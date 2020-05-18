@@ -72,13 +72,12 @@ class PostController extends Controller
     {
        $board = Board::find($request->board);
 
-
         $boardno = $board->id;
 
 
         $this->validate($request, [
 
-            'title' => 'required|max:40',
+            'title' => 'required|max:60',
             'body' => 'required',
 
         ]);
@@ -146,9 +145,32 @@ class PostController extends Controller
         }
 
 
+        $boardposts = Post::select('posts.*')
+        ->Join('boards', 'boards.id', '=', 'posts.board_id')
+        ->where('board_id', $post->board_id)
+        ->orderby('id','desc')
+        ->paginate(5);
 
 
-        return view('post.show')->with('post', $post);
+        switch ($post->board_id) {
+            case 'free':
+                $board = Board::find(1);
+                break;
+            case 'humor':
+                $board = Board::find(2);
+                break;
+            case 'game':
+                $board = Board::find(3);
+                break;
+            case 'sport':
+                $board = Board::find(4);
+                break;
+            default:
+                $board = 'error';
+                break;
+        }
+
+        return view('post.show')->with('post', $post)->with('boardposts',$boardposts);
         // return view('post.show', compact('package'));
     }
 
@@ -178,34 +200,33 @@ class PostController extends Controller
         }
         // PATCH /tasks/id
 
-        $boardno = $post->board_id;
-        $board = Board::find($boardno)->value('board_name');
+        // $boardno = $post->board_id;
+        $board = Board::find($post->board_id)->board_name;
 
 
 
         $this->validate($request, [
 
-            'title' => 'required|max:40',
+            'title' => 'required|max:60',
             'body' => 'required',
 
         ]);
-        // 수정시 이미지 그대로 두면팅김 나중에 할것
-        $body = $request->body;
+
+        $body = $request->input('body');
+
 
         $dom = new \DomDocument();
 
-        $dom->loadHtml($body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHtml('<?xml encoding="utf-8">' . $body, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $images = $dom->getElementsByTagName('img');
-
 
         foreach ($images as $k => $img) {
 
             $data = $img->getAttribute('src');
 
-
-
             list($type, $data) = explode(';', $data);
+
             list(, $data)      = explode(',', $data);
 
             $data = base64_decode($data);
@@ -220,9 +241,7 @@ class PostController extends Controller
 
             $img->setAttribute('src', $image_name);
         }
-
         $body = $dom->saveHTML();
-
 
 
 
@@ -233,21 +252,7 @@ class PostController extends Controller
         $post->save();
 
         return redirect('/board/' . $board);
-        // $post->update($request->all());
 
-
-        // $post->title = $request->input('title');
-        // $post->body = $request->input('body');
-        // $post->save();
-
-
-        // $update = Post::find($post->id);
-
-        // Post::create([
-        //     'title' => request('title'),
-        //     'body'=> request('body'),
-        //     'user_id'=> auth()->id(),
-        // ]);
 
     }
 

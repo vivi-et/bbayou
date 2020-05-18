@@ -46,13 +46,24 @@ class HomeController extends Controller
 
 
 
-        $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
-        ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
-        ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
-        ->get()->take(6);
+        // $giftcons = GiftconTradePost::select('giftcon_trade_posts.*', 'giftcons.*', 'users.name')
+        // ->Join('giftcons', 'giftcons.id', '=', 'giftcon_trade_posts.giftcon_id')
+        // ->Join('users', 'users.id', '=', 'giftcon_trade_posts.user_id')
+        // ->get()->take(6);
+
+        $tradeposts =  GiftconTradePost::latest()->get()->take(6);
+
+        $giftcons = collect(new Giftcon);
+        foreach ($tradeposts as $tradepost)
+            $giftcons->push(Giftcon::find($tradepost->giftcon_id));
+
+
 
 
         $posts = Post::latest()->get()->take(6);
-        return view('home')->with('giftcons', $giftcons)->with('boards',$boards);
+
+
+
+        return view('home')->with('giftcons', $giftcons)->with('boards', $boards)->with('tradeposts', $tradeposts);
     }
 }

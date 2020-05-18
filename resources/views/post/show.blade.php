@@ -30,7 +30,7 @@
     <br>
     <br>
     {!! $post->body !!}
- 
+
 
 
 
@@ -51,8 +51,8 @@
             <form method="POST" action="/post/{{$post->id}}">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger"
-                    style="margin-left:5px;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                <button type="submit" class="btn btn-danger" style="margin-left:5px;"
+                    onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
             </form>
         </div>
     </div>
@@ -73,10 +73,11 @@
                 @method('PATCH')
                 <input name="body" style="width: 100%; height:100px; margin-top:5px;" value="{{ $comment->body }}">
                 <button type="submit" class="btn" id="commenteditsubmitbtn" style="float: right">수정하기</button>
-                <button  type="button" class="btn" onclick="toggleEditForm()" id="commenteditcancelbtn" style="float: right">취소</button>
+                <button type="button" class="btn" onclick="toggleEditForm()" id="commenteditcancelbtn"
+                    style="float: right">취소</button>
                 <div style="clear: both;"></div>
             </form>
-            <div id="editdiv" style="width:100px; margin-top:5px; display:block">{{ $comment->body }}</div>
+            <div id="editdiv" style="width:100%; margin-top:5px; display:block">{{ $comment->body }}</div>
             <div id="commentbuttons" class="buttons" style="float: right">
                 <button id="toggleEditFormbtn" onclick="toggleEditForm()" class="btn">수정</button>
 
@@ -120,8 +121,42 @@
     </div>
 
     {{-- 추후 게시판 테이블 넣을것 --}}
+<br>
+<hr>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">제목</th>
+            <th scope="col">글쓴이</th>
+            <th scope="col">작성일</th>
+            <th scope="col">조회</th>
+            <th scope="col">추천</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach ($boardposts as $boardpost)
+        <tr>
+            <th scope="row">{{ $boardpost->id }}</th>
+
+            <td><a href="/post/{{ $boardpost->id }}">{{ $boardpost->title }} </a></td>
+            <td>{{ $boardpost->user->name }}</td>
+            <td>{{ $boardpost->created_at->diffforhumans()}}</td>
+            <td>{{ $boardpost->views }}</td>
+            <td>{{ $boardpost->ups }}</td>
+        </tr>
+
+        @endforeach
 
 
+
+
+    </tbody>
+</table>
+{{ $boardposts->links() }}
+<hr>
 
     @endsection
 
@@ -150,29 +185,36 @@
 }
     </script>
 
-<style>
-    #commentdeletebtn:hover{
-        background-color: red;
-    }
-    #toggleEditFormbtn:hover{
-        background-color: khaki;
 
-    }    
-    #commenteditsubmitbtn:hover{
-        background-color: khaki;
-
-    }    
-    #commenteditcancelbtn:hover{
-        background-color: red;
-
-    }
-</style>
 
 
     @endpush
 
+    @push('style')
+    <style>
+        #commentdeletebtn:hover {
+            background-color: red;
+        }
 
-{{-- 
+        #toggleEditFormbtn:hover {
+            background-color: khaki;
+
+        }
+
+        #commenteditsubmitbtn:hover {
+            background-color: khaki;
+
+        }
+
+        #commenteditcancelbtn:hover {
+            background-color: red;
+
+        }
+    </style>
+    @endpush
+
+
+    {{-- 
     <style>
         .center {
             display: block;

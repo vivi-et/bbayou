@@ -15,6 +15,7 @@ Auth::routes();
 
 // Route::get('/{giftcon}', 'TestController@show')->name('test');
 Route::get('/mypage/trades', 'MyPageController@mytrades' );
+Route::get('/mypage/posts', 'MyPageController@myposts' );
 Route::get('/test', 'TestController@index')->name('test');
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/giftcon/mygiftcons', 'GiftconController@mygiftcons');

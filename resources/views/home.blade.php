@@ -14,8 +14,8 @@
 
 <div style="text-align: center">
     <h3>최근 게시물들</h3>
-    </div>
-    <br>
+</div>
+<br>
 <div class="row">
     <br>
     @foreach ($boards as $board)
@@ -29,7 +29,9 @@
         <br>
         <ul class="list-group">
             @foreach ($board->posts->take(6) as $post)
-            <a href="/post/{{ $post->id }}" class="list-group-item">{{ $post->title }}</a>
+                <a href="/post/{{ $post->id }}" class="list-group-item" style="overflow: hidden; text-overflow: ellipsis; height:50px;">
+                    {{ $post->title }}
+                </a>
             @endforeach
         </ul>
 
@@ -45,13 +47,13 @@
 
 <br>
 
-@if(count($giftcons))
+@if(count($tradeposts))
 <br>
 <div style="text-align: center">
-<h3>거래중인 기프티콘들</h3>
+    <h3>거래중인 기프티콘들</h3>
 </div>
 <br>
-@include('layouts.card')
+@include('layouts.cardhome')
 @endif
 
 </main>

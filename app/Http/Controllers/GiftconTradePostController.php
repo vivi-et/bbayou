@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\GiftconTradePost;
+use App\GiftconTradePost    ;
 use App\GiftconTradeComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -226,11 +226,10 @@ class GiftconTradePostController extends Controller
         $thispostGiftcon->save();
 
 
-        $thispostGiftcon->delete();     //게시글 삭제
+        $thispost->delete();     //게시글 삭제
 
 
-        return redirect()->back();
-
+        return redirect()->action('GiftconTradePostController@index');
 
     }
 }
