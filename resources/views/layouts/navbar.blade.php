@@ -14,42 +14,43 @@
       <strong>GIFTCON</strong>
     </a>
 
-     <a href="/board/free" style="color: white; margin-left:10px;">
+    <a href="/board/free" style="color: white; margin-left:10px;">
       <strong>자유게시판</strong>
     </a>
 
-    
-     <a href="/board/humor" style="color: white; margin-left:10px;">
+
+    <a href="/board/humor" style="color: white; margin-left:10px;">
       <strong>유머게시판</strong>
     </a>
 
-    
-     <a href="/board/game" style="color: white; margin-left:10px;">
+
+    <a href="/board/game" style="color: white; margin-left:10px;">
       <strong>게임게시판</strong>
     </a>
 
-    
- <a href="/board/sport" style="color: white; margin-left:10px;">
+
+    <a href="/board/sport" style="color: white; margin-left:10px;">
       <strong>스포츠게시판</strong>
     </a>
 
-     <a href="/giftcon/mygiftcons" style="color: #FEE715FF; margin-left:10px;">
+    <a href="/giftcon/mygiftcons" style="color: #FEE715FF; margin-left:10px;">
       <strong>내 기프티콘</strong>
     </a>
+
 
 
 
     @if(Auth::check())
     <div class="ml-auto">
       <div class="dropdown">
-        <button class="btn"> <a href="#"> <strong>{{ Auth::user()->name}}님 안녕하세요!</strong>  </a></button>
+        <button class="btn"> <a href="#"> <strong>{{ Auth::user()->name}}님 안녕하세요!</strong> </a></button>
         <div class="dropdown-content">
           <a href="/mypage/trades">기프티콘 거래현황</a>
           <a href="/mypage/posts">내 글들</a>
           <a href="#">설정</a>
         </div>
       </div>
-  
+
 
 
       <a href="/logout">
@@ -70,54 +71,111 @@
   </div>
 </div>
 
+<div class="aa-input-container" id="aa-input-container">
+  <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for players or teams..."
+    name="search" autocomplete="off" />
+  <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+    <path
+      d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+  </svg>
+</div>
+
+@push('script')
+<script>
+  const client = algoliasearch("RHC6DFKJ3V", "077a01059053b34f8e788089f4f1f3f2");
+const index1 = client.initIndex('posts');
+const index2 = client.initIndex('giftcon_trade_posts');
+
+autocomplete('#aa-search-input', {}, [
+    {
+      source: autocomplete.sources.hits(index1, { hitsPerPage: 3 }),
+      displayKey: 'name',
+      templates: {
+        header: '<div class="aa-suggestions-category">게시글</div>',
+        suggestion({_highlightResult}) {
+          return `<span>${_highlightResult.title.value}</span><span>${_highlightResult.body.value}</span>`;
+        },
+        empty:function(result){
+            return "<br>"+result.query+" 에 대한 검색결과가 없습니다."
+        },
+      }
+    },
+    {
+      source: autocomplete.sources.hits(index2, { hitsPerPage: 3 }),
+      displayKey: 'name',
+      templates: {
+        header: '<div class="aa-suggestions-category">거래글</div>',
+        suggestion({_highlightResult}) {
+          return `<span>${_highlightResult.name.value}</span><span>${_highlightResult.location.value}</span>`;
+        }
+      }
+    }
+]).on('autocomplete:selected', function(event, suggestion,dataset){
+
+  console.log(suggestion);
+
+window.location.href = window.location.origin + '/post/' + suggestion.id;
+
+});
+
+</script>
+@endpush
+
+
 @push('style')
 
 <style>
   /* Dropdown Button */
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
+  .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
 
-.btn a{
-  color: white;
-}
+  .btn a {
+    color: white;
+  }
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
 
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
 
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+  }
 </style>
-    
+
 @endpush

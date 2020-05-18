@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class GiftconTradePost extends Model
 {
     protected $guarded = [];
+    use Searchable;
 
     //
     public function giftcon()

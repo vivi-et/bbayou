@@ -79,6 +79,7 @@ class GiftconTradePostController extends Controller
 
             GiftconTradePost::create([
                 'giftcon_id' => $giftcon->id,
+                'giftcon_title' => $giftcon->title,
                 'user_id' => Auth::user()->id,
             ]);
 
