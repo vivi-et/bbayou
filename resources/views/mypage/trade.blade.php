@@ -27,7 +27,7 @@
         <tr>
             <th scope="row">{{ $post->id }}</th>
 
-            <td><a href="/giftcon/trade/{{ $post->id }}">{{ Giftcon::find($post->giftcon_id)->title}}  [{{ count($post->comments) }}]</a></td>
+            <td><a href="/giftcon/trade/{{ $post->id }}">{{ Giftcon::find($post->giftcon_id)->title}} @if(count($post->comments)) [{{ count($post->comments) }}] @endif</a></td>
             <td>{{ $post->user->name }}</td>
             <td>{{ $post->created_at->diffforhumans()}}</td>
             <td><?php $status = $post->traded;

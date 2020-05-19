@@ -61,9 +61,11 @@
     <hr>
     @endif
 
+    @if(count($post->comments))
     <div class="comments">
         @foreach ($post->comments as $comment)
         <li class="list-group-item">
+            @if(Auth::check())
             @if(auth()->user()->id == $comment->user_id)
             <strong style="float: left;">{{ $comment->user->name }}</strong>
             <div style="float: left; margin-left:10px;">{{ $comment->created_at->diffforhumans() }}</div>
@@ -90,21 +92,22 @@
                 </form>
             </div>
             @endif
+            @endif
             <div style="clear: both;"></div>
 
         </li>
         @endforeach
     </div>
+    @endif
 
 
     <br>
 
     {{-- add a comment --}}
 
+    @if(Auth::check())
     <div>
-
         <div>
-
             <form method="POST" action="/comment/make/{{ $post->id }}">
                 @csrf
                 @method('POST')
@@ -119,44 +122,44 @@
             @include('layouts.error')
         </div>
     </div>
-
+    @endif
     {{-- 추후 게시판 테이블 넣을것 --}}
-<br>
-<hr>
+    <br>
+    <hr>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">제목</th>
-            <th scope="col">글쓴이</th>
-            <th scope="col">작성일</th>
-            <th scope="col">조회</th>
-            <th scope="col">추천</th>
-        </tr>
-    </thead>
-    <tbody>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">제목</th>
+                <th scope="col">글쓴이</th>
+                <th scope="col">작성일</th>
+                <th scope="col">조회</th>
+                <th scope="col">추천</th>
+            </tr>
+        </thead>
+        <tbody>
 
-        @foreach ($boardposts as $boardpost)
-        <tr>
-            <th scope="row">{{ $boardpost->id }}</th>
+            @foreach ($boardposts as $boardpost)
+            <tr>
+                <th scope="row">{{ $boardpost->id }}</th>
 
-            <td><a href="/post/{{ $boardpost->id }}">{{ $boardpost->title }} </a></td>
-            <td>{{ $boardpost->user->name }}</td>
-            <td>{{ $boardpost->created_at->diffforhumans()}}</td>
-            <td>{{ $boardpost->views }}</td>
-            <td>{{ $boardpost->ups }}</td>
-        </tr>
+                <td><a href="/post/{{ $boardpost->id }}">{{ $boardpost->title }} </a></td>
+                <td>{{ $boardpost->user->name }}</td>
+                <td>{{ $boardpost->created_at->diffforhumans()}}</td>
+                <td>{{ $boardpost->views }}</td>
+                <td>{{ $boardpost->ups }}</td>
+            </tr>
 
-        @endforeach
-
-
+            @endforeach
 
 
-    </tbody>
-</table>
-{{ $boardposts->links() }}
-<hr>
+
+
+        </tbody>
+    </table>
+    {{ $boardposts->links() }}
+    <hr>
 
     @endsection
 

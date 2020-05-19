@@ -22,7 +22,7 @@
     </div>
     
     <div class="form-group">
-        <textarea name="body" id="body" class="summernote" required></textarea>
+        <textarea name="body" id="body" class="summernote" required hidden></textarea>
     </div>
 
     <input type="hidden" id="board" name="board" value={{ $board->id }}>

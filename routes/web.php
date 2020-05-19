@@ -25,6 +25,8 @@ Route::post('/giftcon/action', 'AjaxUploadController@action')->name('ajaxupload.
 Route::post('/giftcon/crop', 'AjaxUploadController@crop')->name('ajaxupload.crop');
 Route::post('/comment/make/{post}', 'CommentController@store');
 
+Route::get('/board/{board}/search/{string}', 'BoardController@search');
+
 Route::get('/board/{board}', 'BoardController@index');
 Route::get('/post/create/{board}', 'PostController@create');
 

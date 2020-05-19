@@ -48,7 +48,7 @@
                 @csrf
                 @method('DELETE')
                 <button onclick="return confirm('정말 삭제하시겠습니까?')" type="submit" class="btn btn-danger"
-                    style="margin-left:5px;">Delete</button>
+                    style="margin-left:5px;">글 삭제</button>
             </form>
             <div style="clear:both;"></div>
         </div>

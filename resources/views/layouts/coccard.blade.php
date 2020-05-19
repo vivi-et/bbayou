@@ -1,3 +1,4 @@
+<?php use App\GiftconTradePost; ?>
 @push('header')
 <link href="{{ asset('css/card.css') }}" rel="stylesheet" />
 @endpush
@@ -64,16 +65,21 @@
                     </div>
                     @elseif($giftcon->on_trade == 1)
                     <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
-                        거래중입니다
+                        <?php 
+                            $trade = GiftconTradePost::where('giftcon_id', '=', $giftcon->id)->latest()->first();
+                            ?>
+                        <a href="/giftcon/trade/{{$trade->id}}">
+                            거래중입니다
+                        </a>
                     </div>
                     @else
                     <div class="clash-card__unit-stats clash-card__unit-stats--giant clearfix">
-                        <div class="one-third">
-                            <div class="stat">선물하기</div>
+                        <div class="one-third" onclick="checkGiftcons( '{{ $giftcon->id }}', '{{ $giftcon->title }}' )">
+                            <div class="stat" >선물하기</div>
                             <div class="stat-value">Present</div>
                         </div>
 
-                        <div class="one-third" tabindex="0" onclick="makeImage({{ $giftcon->id }})">
+                        <div class="one-third" onclick="return confirm('정말 사용하시겠습니까? \n더 이상 해당 기프티콘을 거래하실 수 없습니다')" tabindex="0" onclick="makeImage({{ $giftcon->id }})">
                             <div class="stat">사용하기</div>
                             <div class="stat-value">Use</div>
                         </div>

@@ -14,6 +14,49 @@ class BoardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+public function search(Request $request,String $board, String $string)
+{
+    //Route Model Binding 을 사용할경우 url에 board_name 대신 board_id 를 사용해야됨 -> 직관적이지 않은 url
+    switch ($board) {
+        case 'free':
+            $board = Board::find(1);
+            break;
+        case 'humor':
+            $board = Board::find(2);
+            break;
+        case 'game':
+            $board = Board::find(3);
+            break;
+        case 'sport':
+            $board = Board::find(4);
+            break;
+        default:
+            $board = 'error';
+            break;
+    }
+
+    $posts = Post::query()
+    ->where('board_id', '=', $board->id)
+    ->where('title', 'LIKE', "%{$string}%") 
+    ->orWhere('body', 'LIKE', "%{$string}%") 
+    ->paginate(20);
+
+    // return $posts;
+
+
+    
+return view('board.search')->with('board',$board)->with('posts',$posts)->with('value',$string);
+
+
+
+
+
+
+}
+
+
+
     public function index(string $board)
     {
 
