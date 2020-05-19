@@ -171,6 +171,11 @@ class GiftconController extends Controller
         ]);
     }
 
+    public function presentGiftcon(Request $request)
+    {
+        return 'this is /giftcon/present';
+    }
+
     /**
      * Remove the specified resource from storage.
      *

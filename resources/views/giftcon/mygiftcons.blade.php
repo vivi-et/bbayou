@@ -64,7 +64,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <form action="/giftcon/present" id="formPresentGiftcon" method="POST">
+                    @csrf
+                    <input type="text" name="username" id="submitUsername" hidden>
+                    <input type="text" name="giftconID" id="submitGiftconID" hidden>
+                    <button id="btnSubmitFormPresentGiftcon" type="submit" class="btn btn-primary">선물하기</button>
+                </form>
             </div>
         </div>
     </div>
@@ -108,15 +113,31 @@
     function checkGiftcons(giftcon_id, giftcon_title) {
     $('#myModal').modal('toggle');
 
-
+    let username = document.getElementById('user-search-input');
     let inputGiftconId = document.getElementById('inputGiftconId');
     let inputGiftconTitle = document.getElementById('inputGiftconTitle');
+    let formPresentGiftcon = document.getElementById('formPresentGiftcon');
+    let submitUsername = document.getElementById('submitUsername');
+    let submitGiftconID = document.getElementById('submitGiftconID');
+    let btnSubmitFormPresentGiftcon = document.getElementById('btnSubmitFormPresentGiftcon');
+
+
+
     inputGiftconId.value = giftcon_id;
     inputGiftconTitle.value = giftcon_title;
 
+    btnSubmitFormPresentGiftcon.addEventListener("click", function (event) {
+        event.preventDefault();
+        submitUsername.value = username.value;
+        submitGiftconID.value = giftcon_id;
 
-};
+        console.log(submitUsername.value);
+        console.log(submitGiftconID.value);
 
+        formPresentGiftcon.submit();
+
+});
+    }
 </script>
 
 <script>
@@ -139,7 +160,6 @@
       }
   ]).on('autocomplete:selected', function(event, suggestion, dataset){
   
-    console.log(dataset);
 
 //   window.location.href = window.location.origin + '/giftcon/trade/' + suggestion.id;
   
