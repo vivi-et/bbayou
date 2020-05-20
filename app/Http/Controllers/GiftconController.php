@@ -47,8 +47,11 @@ class GiftconController extends Controller
     {
 
         $giftcons = Auth::user()->giftcons->reverse();
+        $thisUserID = Auth::user()->id;
+        $name = Auth::user()->name;
 
-        return view('giftcon.mygiftcons')->with('giftcons', $giftcons);
+
+        return view('giftcon.mygiftcons')->with('giftcons', $giftcons)->with('name',$name)->with('thisUserID',$thisUserID);
     }
 
     /**
@@ -151,6 +154,10 @@ class GiftconController extends Controller
      */
     public function update(Request $request, Giftcon $giftcon)
     {
+        if($giftcon->used == 1 || $giftcon->user_id !== Auth::user()->id){
+            return redirect()->back()->withErrors('이미 사용했거나 없는 기프티콘입니다.');
+        }
+
         //기프티콘 사용처리할것
 
         $generator = new BarcodeGeneratorPNG();
@@ -173,7 +180,29 @@ class GiftconController extends Controller
 
     public function presentGiftcon(Request $request)
     {
-        return 'this is /giftcon/present';
+        
+        $username = $request->username;
+        $userID = $request->userID;
+        $giftconID = $request->giftconID;
+
+        $giftcon = Giftcon::find($giftconID);
+
+        if($giftcon->used == 1 || $giftcon->user_id !== Auth::user()->id){
+            return redirect()->back()->withErrors('이미 사용했거나 없는 기프티콘입니다.');
+        }
+
+        else{
+
+            $toThisUser = User::find($userID);
+
+            $giftcon->user_id = $userID;
+            $giftcon->save();
+
+            session()->flash('message', '기프티콘을 선물했습니다.');
+            return redirect()->back();
+
+
+        }
     }
 
     /**

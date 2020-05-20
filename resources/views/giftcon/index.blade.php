@@ -18,6 +18,11 @@
 
     @if(count($giftcons))
     @include('layouts.card')
+    @else
+    <div style="text-align: center;">
+
+        <h4>현재 거래중인 기프티콘이 없습니다.</h4>
+    </div>
 @endif
 
 

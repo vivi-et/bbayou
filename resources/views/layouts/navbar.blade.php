@@ -35,10 +35,11 @@
             <strong>스포츠게시판</strong>
         </a>
 
+        @if(Auth::check())
         <a href="/giftcon/mygiftcons" style="color: #FEE715FF; margin-left:10px;">
             <strong>내 기프티콘</strong>
         </a>
-
+        @endif
 
 
 
@@ -53,20 +54,18 @@
                 </div>
             </div>
 
-
-
             <a href="/logout">
-                <strong style="color: #FEE715FF; margin-left:30px">LOGOUT</strong>
+                <strong style="color: #FEE715FF; margin-left:30px">로그아웃</strong>
             </a>
 
         </div>
         @else
         <div class="ml-auto">
             <a href="/login">
-                <strong style="color: white;">LOGIN</strong>
+                <strong style="color: white;">로그인</strong>
             </a>
             <a href="/register">
-                <strong style="color: white;">REGISTER</strong>
+                <strong style="color: white;">회원가입</strong>
             </a>
         </div>
         @endif
@@ -209,7 +208,6 @@
     .dropdown:hover .dropbtn {
         background-color: #3e8e41;
     }
-
 </style>
 
 @endpush
