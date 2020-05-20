@@ -2,7 +2,8 @@
 
 
 @section('content')
-
+ 
+{{ $_SERVER["DOCUMENT_ROOT"] }}
 
 <section class="jumbotron text-center">
     <div class="container">
