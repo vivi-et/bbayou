@@ -231,7 +231,7 @@ class PostController extends Controller
 
             $data = base64_decode($data);
 
-            $image_name = "/upload/" . $board . time() . $k . '.png';
+            $image_name = "/upload/" . time() . $k . '.png';
 
             $path = public_path() . $image_name;
 

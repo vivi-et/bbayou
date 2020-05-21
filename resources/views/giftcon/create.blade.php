@@ -96,7 +96,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <img src="/storage/temp_images/1587974964455-4_1588712682.png" id="cropbox">
+                <img src="" id="cropbox">
                 <!-- This is the image we're attaching Jcrop to -->
 
                 <!-- This is the form that our event handler fills -->
